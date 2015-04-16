@@ -10,10 +10,10 @@ namespace Gibraltar.Agent.Web.Module
         public void Init(HttpApplication application)
         {
             _messageHandler = new MessageHandler();
-            application.BeginRequest += OnBeginRequest;
+            application.PostAuthenticateRequest += OnPostAuthenticateRequest;
         }
 
-        private void OnBeginRequest(object sender, EventArgs e)
+        private void OnPostAuthenticateRequest(object sender, EventArgs e)
         {
             _messageHandler.HandleRequest(new HttpContextWrapper(((HttpApplication)sender).Context)); ;
         }

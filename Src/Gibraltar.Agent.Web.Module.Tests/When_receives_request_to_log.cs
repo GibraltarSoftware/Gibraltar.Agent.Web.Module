@@ -1,6 +1,5 @@
 ﻿using System;
-using System.IO;
-using System.Web;
+using ExpectedObjects;
 using Gibraltar.Agent.Web.Module.Models;
 using NSubstitute;
 using NUnit.Framework;
@@ -8,27 +7,18 @@ using NUnit.Framework;
 namespace Gibraltar.Agent.Web.Module.Tests
 {
     [TestFixture]
-    public class When_receives_request_to_log
+    public class When_receives_request_to_log: TestBase
     {
-        private HttpContextBase _httpContext;
-        private HttpRequestBase _httpRequest;
-        private HttpResponseBase _httpResponse;
-        private MessageHandler _target;
-        private HttpApplication _app;
-        
 
-        [SetUp]
-        public void SetUp()
+        [Test]
+        public void Should_only_handle_POST([Values("GET", "PUT", "DELETE", "PATCH", "HEAD")] string method)
         {
-            _app = new HttpApplication();
-            _target = new MessageHandler();
+            _httpRequest.Url.Returns(new Uri("http://www.test.com/gibraltar/log"));
+            _httpRequest.HttpMethod.Returns(method);
 
-            _httpContext = Substitute.For<HttpContextBase>();
-            _httpRequest = Substitute.For<HttpRequestBase>();
-            _httpResponse = Substitute.For<HttpResponseBase>();
+            _target.HandleRequest(_httpContext);
 
-            _httpContext.Request.Returns(_httpRequest);
-            _httpContext.Response.Returns(_httpResponse);
+            Assert.That(_httpResponse.StatusCode, Is.EqualTo(0));        
         }
 
         [Test]
@@ -38,9 +28,8 @@ namespace Gibraltar.Agent.Web.Module.Tests
                                               "http://www.test.com/Gibraltar/Log",
                                               "http://www.test.com/gibraltar/log/")] string url)
         {
-            _httpRequest.Url.Returns(new Uri(url));
-
-            _target.HandleRequest(_httpContext);
+            
+            CallWithRequestBody("{\"Category\":\"test\"}",url);
 
             Assert.That(_httpResponse.StatusCode, Is.EqualTo(200));            
         }
@@ -52,20 +41,31 @@ namespace Gibraltar.Agent.Web.Module.Tests
 
             _target.JavaScriptLogger = fakeLogger;
 
-            using(var fakeInputStream = new MemoryStream())
-            using (var writer = new StreamWriter(fakeInputStream))
-            {
-                writer.Write("{\"Severity\":8,\"Category\":\"test\",\"Caption\":\"test logs message\"}");
-                writer.Flush();
-
-
-                _httpRequest.Url.Returns(new Uri("http://wwww.test.com/gibraltar/log"));
-                _httpRequest.InputStream.Returns(fakeInputStream);
-
-                _target.HandleRequest(_httpContext);
-            }
+            CallWithRequestBody("{\"Severity\":8,\"Category\":\"test\",\"Caption\":\"test logs message\"}", "http://wwww.test.com/gibraltar/log");
 
             fakeLogger.Received().LogMessage(Arg.Any<LogDetails>());
+        }
+
+
+        [Test]
+        public void Should_pass_expected_object_to_log()
+        {
+
+            var fakeLogger = Substitute.For<JavaScriptLogger>();
+
+            _target.JavaScriptLogger = fakeLogger;
+
+            CallWithRequestBody("{\"Severity\":8,\"Category\":\"test\",\"Caption\":\"test logs message\"}", "http://wwww.test.com/gibraltar/log");
+
+            var expected = new LogDetails
+            {
+                Severity = LogMessageSeverity.Information,
+                Category = "test",
+                Caption = "test logs message"
+            }.ToExpectedObject();
+
+            // ReSharper disable once SuspiciousTypeConversion.Global
+            fakeLogger.Received().LogMessage(Arg.Is<LogDetails>(x => expected.Equals(x)));
         }
     }
 }
