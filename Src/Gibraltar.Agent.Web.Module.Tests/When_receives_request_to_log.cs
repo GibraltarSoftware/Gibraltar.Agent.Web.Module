@@ -58,5 +58,31 @@ namespace Gibraltar.Agent.Web.Module.Tests
             // ReSharper disable once SuspiciousTypeConversion.Global
             fakeLogger.Received().LogMessage(Arg.Is<LogDetails>(x => expected.Equals(x)));
         }
+
+        [Test]
+        public void Should_pass_expected_object_with_details_to_logger()
+        {
+
+            var requestBody =
+                "{\"Severity\":8,\"Category\":\"test\",\"Caption\":\"test logs message\",\"Details\":\"{\\\"Client\\\":{\\\"description\\\":\\\"Firefox 37.0 32-bit on Windows 8.1 64-bit\\\",\\\"layout\\\":\\\"Gecko\\\",\\\"manufacturer\\\":null,\\\"name\\\":\\\"Firefox\\\",\\\"prerelease\\\":null,\\\"product\\\":null,\\\"ua\\\":\\\"Mozilla/5.0 (Windows NT 6.3; WOW64; rv:37.0) Gecko/20100101 Firefox/37.0\\\",\\\"version\\\":\\\"37.0\\\",\\\"os\\\":{\\\"architecture\\\":64,\\\"family\\\":\\\"Windows\\\",\\\"version\\\":\\\"8.1\\\"},\\\"size\\\":{\\\"width\\\":1102,\\\"height\\\":873}}}\"}";
+
+            var fakeLogger = Substitute.For<JavaScriptLogger>();
+
+            Target.JavaScriptLogger = fakeLogger;
+
+            SendRequest(requestBody, LogUrl);
+
+            var expected = new LogDetails()
+            {
+                Severity = LogMessageSeverity.Information,
+                Category = "test",
+                Caption = "test logs message",
+                Details = "{\"Client\":{\"description\":\"Firefox 37.0 32-bit on Windows 8.1 64-bit\",\"layout\":\"Gecko\",\"manufacturer\":null,\"name\":\"Firefox\",\"prerelease\":null,\"product\":null,\"ua\":\"Mozilla/5.0 (Windows NT 6.3; WOW64; rv:37.0) Gecko/20100101 Firefox/37.0\",\"version\":\"37.0\",\"os\":{\"architecture\":64,\"family\":\"Windows\",\"version\":\"8.1\"},\"size\":{\"width\":1102,\"height\":873}}}" 
+            }.ToExpectedObject();
+
+
+            // ReSharper disable once SuspiciousTypeConversion.Global
+            fakeLogger.Received().LogMessage(Arg.Is<LogDetails>(x => expected.Equals(x)));
+        }
     }
 }
