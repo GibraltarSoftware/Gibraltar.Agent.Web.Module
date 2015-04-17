@@ -9,56 +9,58 @@ namespace Gibraltar.Agent.Web.Module.Tests
 {
     public class TestBase
     {
-        protected HttpContextBase _httpContext;
-        protected HttpRequestBase _httpRequest;
-        protected HttpResponseBase _httpResponse;
-        protected MessageHandler _target;
-        protected MemoryStream _inputStream;
+        protected const string LogUrl = "http://www.test.com/gibraltar/log";
+        protected const string ExceptionUrl = "http://www.test.com/gibraltar/exception";
+
+        protected HttpContextBase HttpContext;
+        protected HttpRequestBase HttpRequest;
+        protected HttpResponseBase HttpResponse;
+        protected MessageHandler Target;
+        protected MemoryStream InputStream;
+
 
         [SetUp]
         public void SetUp()
         {
-            _target = new MessageHandler();
+            Target = new MessageHandler();
 
-            _httpContext = Substitute.For<HttpContextBase>();
-            _httpRequest = Substitute.For<HttpRequestBase>();
-            _httpResponse = Substitute.For<HttpResponseBase>();
+            HttpContext = Substitute.For<HttpContextBase>();
+            HttpRequest = Substitute.For<HttpRequestBase>();
+            HttpResponse = Substitute.For<HttpResponseBase>();
 
-            _inputStream = new MemoryStream();
-            _httpRequest.InputStream.Returns(_inputStream);
+            InputStream = new MemoryStream();
+            HttpRequest.InputStream.Returns(InputStream);
 
             var fakeUser = Substitute.For<IPrincipal>();
             var fakeIdentity = Substitute.For<IIdentity>();
             fakeIdentity.Name.Returns("");
             fakeUser.Identity.Returns(fakeIdentity);
 
+            HttpRequest.HttpMethod.Returns("POST");
 
-
-            _httpRequest.HttpMethod.Returns("POST");
-
-            _httpContext.Request.Returns(_httpRequest);
-            _httpContext.Response.Returns(_httpResponse);
-            _httpContext.User.Returns(fakeUser);            
+            HttpContext.Request.Returns(HttpRequest);
+            HttpContext.Response.Returns(HttpResponse);
+            HttpContext.User.Returns(fakeUser);            
         }
 
         [TearDown]
         public void TearDown()
         {
-            _inputStream.Dispose();
+            InputStream.Dispose();
         }
 
-        protected void CallWithRequestBody(string body, string url)
+        protected void SendRequest(string body, string url)
         {
-            using (var writer = new StreamWriter(_inputStream))
+            using (var writer = new StreamWriter(InputStream))
             {
                 writer.Write(body);
                 writer.Flush();
 
 
-                _httpRequest.Url.Returns(new Uri(url));
-                _httpRequest.InputStream.Returns(_inputStream);
+                HttpRequest.Url.Returns(new Uri(url));
+                HttpRequest.InputStream.Returns(InputStream);
 
-                _target.HandleRequest(_httpContext);
+                Target.HandleRequest(HttpContext);
             }            
         }
     }

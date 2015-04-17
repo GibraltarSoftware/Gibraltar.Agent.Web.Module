@@ -58,6 +58,7 @@
     <Compile Include="When_receives_request_not_interested_in.cs" />
     <Compile Include="When_receives_request_to_log.cs" />
     <Compile Include="When_receives_request_with_excption.cs" />
+    <Compile Include="When_validating_request.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Gibraltar.Agent.Web.Module\Gibraltar.Agent.Web.Module.csproj">

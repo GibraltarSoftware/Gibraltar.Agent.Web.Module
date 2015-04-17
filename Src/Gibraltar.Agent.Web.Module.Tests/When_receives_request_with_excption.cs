@@ -18,10 +18,11 @@ namespace Gibraltar.Agent.Web.Module.Tests
                                               "http://www.test.com/Gibraltar/Exception",
                                               "http://www.test.com/gibraltar/exception/")] string url)
         {
-            CallWithRequestBody("{\"Category\":\"JavaScript\"}",url);
+            SendRequest("{\"Category\":\"JavaScript\"}",url);
 
-            Assert.That(_httpResponse.StatusCode, Is.EqualTo(200));
+            Assert.That(HttpResponse.StatusCode, Is.EqualTo(200));
         }
+
 
         [Test]
         public void Should_call_logger()
@@ -31,9 +32,9 @@ namespace Gibraltar.Agent.Web.Module.Tests
 
             var fakeLogger = Substitute.For<JavaScriptLogger>();
 
-            _target.JavaScriptLogger = fakeLogger;
+            Target.JavaScriptLogger = fakeLogger;
 
-            CallWithRequestBody(requestBody, "http://wwww.test.com/gibraltar/exception");
+            SendRequest(requestBody, ExceptionUrl);
 
 
             fakeLogger.Received().LogException(Arg.Any<JavaScriptError>());
@@ -46,9 +47,9 @@ namespace Gibraltar.Agent.Web.Module.Tests
                  "{\"Category\":\"JavaScript\",\"Message\":\"Error: Test Error\",\"Url\":\"http://www.test.com/app.js\",\"StackTrace\":[\"createError/<@http://www.test.com/app.js:37:19\"],\"Cause\":\"\",\"Line\":37,\"Column\":18,\"Details\":\"\"}";
 
             var fakeLogger = Substitute.For<JavaScriptLogger>();
-            _target.JavaScriptLogger = fakeLogger;
+            Target.JavaScriptLogger = fakeLogger;
 
-            CallWithRequestBody(requestBody, "http://wwww.test.com/gibraltar/exception");
+            SendRequest(requestBody, ExceptionUrl);
 
             var expected = new JavaScriptError
             {

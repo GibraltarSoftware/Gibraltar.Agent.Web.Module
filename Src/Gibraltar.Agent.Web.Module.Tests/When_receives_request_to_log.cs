@@ -10,16 +10,7 @@ namespace Gibraltar.Agent.Web.Module.Tests
     public class When_receives_request_to_log: TestBase
     {
 
-        [Test]
-        public void Should_only_handle_POST([Values("GET", "PUT", "DELETE", "PATCH", "HEAD")] string method)
-        {
-            _httpRequest.Url.Returns(new Uri("http://www.test.com/gibraltar/log"));
-            _httpRequest.HttpMethod.Returns(method);
 
-            _target.HandleRequest(_httpContext);
-
-            Assert.That(_httpResponse.StatusCode, Is.EqualTo(0));        
-        }
 
         [Test]
         public void Should_return_200([Values("http://www.test.com/gibraltar/log",
@@ -29,9 +20,9 @@ namespace Gibraltar.Agent.Web.Module.Tests
                                               "http://www.test.com/gibraltar/log/")] string url)
         {
             
-            CallWithRequestBody("{\"Category\":\"test\"}",url);
+            SendRequest("{\"Category\":\"test\"}",url);
 
-            Assert.That(_httpResponse.StatusCode, Is.EqualTo(200));            
+            Assert.That(HttpResponse.StatusCode, Is.EqualTo(200));            
         }
 
         [Test]
@@ -39,9 +30,9 @@ namespace Gibraltar.Agent.Web.Module.Tests
         {
             var fakeLogger = Substitute.For<JavaScriptLogger>();
 
-            _target.JavaScriptLogger = fakeLogger;
+            Target.JavaScriptLogger = fakeLogger;
 
-            CallWithRequestBody("{\"Severity\":8,\"Category\":\"test\",\"Caption\":\"test logs message\"}", "http://wwww.test.com/gibraltar/log");
+            SendRequest("{\"Severity\":8,\"Category\":\"test\",\"Caption\":\"test logs message\"}", LogUrl);
 
             fakeLogger.Received().LogMessage(Arg.Any<LogDetails>());
         }
@@ -53,9 +44,9 @@ namespace Gibraltar.Agent.Web.Module.Tests
 
             var fakeLogger = Substitute.For<JavaScriptLogger>();
 
-            _target.JavaScriptLogger = fakeLogger;
+            Target.JavaScriptLogger = fakeLogger;
 
-            CallWithRequestBody("{\"Severity\":8,\"Category\":\"test\",\"Caption\":\"test logs message\"}", "http://wwww.test.com/gibraltar/log");
+            SendRequest("{\"Severity\":8,\"Category\":\"test\",\"Caption\":\"test logs message\"}", LogUrl);
 
             var expected = new LogDetails
             {

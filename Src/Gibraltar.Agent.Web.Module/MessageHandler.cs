@@ -21,82 +21,112 @@ namespace Gibraltar.Agent.Web.Module
             set { _javaScriptLogger = value; }
         }
 
+
         public void HandleRequest(HttpContextBase context)
         {
-
             var matched = _urlRegex.Match(context.Request.Url.LocalPath);
 
             if (matched.Success)
             {
                 var requestFor = matched.Groups[1].Value.ToLowerInvariant();
 
-                if (context.Request.HttpMethod.ToLowerInvariant() != "post")
+                if (!RequestIsValid(context, requestFor))
                 {
-                    // We have received a request which is specifically for us but on a method we don't support.
-                    // Record that this has happened and then let the request carry on and host application
-                    // deal with an invalid request
-
-                    Log.Write(LogMessageSeverity.Warning,LogSystem,0,null,LogWriteMode.Queued,CreateStandardRequestDetailXml(context),Category,"Invalid HttpMethod", "Received request for {0} but was not a {1} rather than a POST",requestFor, context.Request.HttpMethod);
                     return;
+                }
+
+                if (requestFor == "log")
+                {
+                    LogMessage(context);
                 }
                 
-                if (context.Request.InputStream.Length == 0)
+                if(requestFor == "exception")
                 {
-                    // No request body, log it and return InternalServerError to JS agent
-                    Log.Write(LogMessageSeverity.Information, LogSystem, 0, null, LogWriteMode.Queued, CreateStandardRequestDetailXml(context), Category, "Empty request body", "Request was received for {0} but no body was included in the POST", requestFor);
-                    context.Response.StatusCode = (int) HttpStatusCode.BadRequest;
-                    context.Response.End();
-
-                    return;
+                    LogException(context);
                 }
-
-
-                switch (requestFor)
-                {
-                    case "log":
-                        LogMessage(context);
-                        break;
-
-                    case "exception":
-                        LogException(context);
-                        break;
-
-                    default:
-                        Log.Write(LogMessageSeverity.Information, LogSystem, 0, null, LogWriteMode.Queued, CreateStandardRequestDetailXml(context),Category,"Unknown function requested", "Request received for {0} which is not supported by the module",requestFor);
-                        context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-                        context.Response.End(); 
-                        return;
-                }
-
-                context.Response.StatusCode = (int)HttpStatusCode.OK;
-                context.Response.End();         
             }
         }
 
+        private bool RequestIsValid(HttpContextBase context, string requestFor)
+        {
+            if (!ValidateMethod(context, requestFor)) return false;
 
-        public void LogMessage(HttpContextBase context)
+            if (!ValidateInputStream(context, requestFor)) return false;
+
+            return true;
+        }
+
+        private bool ValidateInputStream(HttpContextBase context, string requestFor)
+        {
+            if (context.Request.InputStream.Length == 0)
+            {
+                // No request body, log it and return InternalServerError to JS agent
+                Log.Write(LogMessageSeverity.Information, LogSystem, 0, null, LogWriteMode.Queued,
+                    CreateStandardRequestDetailXml(context), Category, "Empty request body",
+                    "Request was received for {0} but no body was included in the POST", requestFor);
+                ResponseHandled(context, HttpStatusCode.BadRequest);
+
+                return false;
+            }
+
+            if (context.Request.InputStream.Length > 2048)
+            {
+                Log.Write(LogMessageSeverity.Information, LogSystem, 0, null, LogWriteMode.Queued,
+                    CreateStandardRequestDetailXml(context), Category, "Request body exceeds limit",
+                    "Request was received for {0} but the body included exceeded the size limit of 2k and was {1}", requestFor, SizeSuffix(context.Request.InputStream.Length));
+                ResponseHandled(context, HttpStatusCode.BadRequest);                
+            }
+
+            return true;
+        }
+
+        private bool ValidateMethod(HttpContextBase context, string requestFor)
+        {
+            if (context.Request.HttpMethod.ToLowerInvariant() != "post")
+            {
+                // We have received a request which is specifically for us but on a method we don't support.
+                // Record that this has happened and then let the request carry on and host application
+                // deal with an invalid request
+
+                Log.Write(LogMessageSeverity.Warning, LogSystem, 0, null, LogWriteMode.Queued,
+                    CreateStandardRequestDetailXml(context), Category, "Invalid HttpMethod",
+                    "Received request for {0} but was not a {1} rather than a POST", requestFor, context.Request.HttpMethod);
+                return false;
+            }
+            return true;
+        }
+
+        private void LogMessage(HttpContextBase context)
         {
             var message = GetBody<LogDetails>(context);
 
             if (message != null)
             {
                 JavaScriptLogger.LogMessage(message);
-            }
 
+                ResponseHandled(context, HttpStatusCode.OK);
+            }
         }
 
-        public void LogException(HttpContextBase context)
+        private void LogException(HttpContextBase context)
         {
             var message = GetBody<JavaScriptError>(context);
 
             if (message != null)
             {
                 JavaScriptLogger.LogException(message);
+                
+                ResponseHandled(context, HttpStatusCode.OK);
             }
         }
 
+        private void ResponseHandled(HttpContextBase context, HttpStatusCode statusCode)
+        {
+            context.Response.StatusCode = (int)statusCode;
+            context.Response.End();
+        }
 
-        public T GetBody<T>(HttpContextBase context) where T:class 
+        private T GetBody<T>(HttpContextBase context) where T:class 
         {
             var body = ReadInputStream<T>(context);
 
@@ -107,8 +137,6 @@ namespace Gibraltar.Agent.Web.Module
 
             return null;
         }
-
-
 
         private string ReadInputStream<T>(HttpContextBase context)
         {
@@ -146,6 +174,7 @@ namespace Gibraltar.Agent.Web.Module
                     "An exception occured whilst attempting to deserialize the request body to {0}", typeof(T).Name);
                 requestBody = null;
             }
+
             return requestBody;
         }
 
@@ -158,6 +187,19 @@ namespace Gibraltar.Agent.Web.Module
                 context.Request.IsSecureConnection, context.Request.UserHostAddress, context.Request.UserHostName,
                 context.User.Identity.Name);
             return details;
+        }
+
+
+         readonly string[] SizeSuffixes = { "bytes", "KB", "MB", "GB" };
+         string SizeSuffix(long value)
+        {
+            if (value < 0) { return "-" + SizeSuffix(-value); }
+            if (value == 0) { return "0.0 bytes"; }
+
+            int mag = (int)Math.Log(value, 1024);
+            decimal adjustedSize = (decimal)value / (1L << (mag * 10));
+
+            return string.Format("{0:n1} {1}", adjustedSize, SizeSuffixes[mag]);
         }
     }
 
