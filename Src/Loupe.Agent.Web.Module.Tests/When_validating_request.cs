@@ -3,7 +3,7 @@ using System.IO;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace Gibraltar.Agent.Web.Module.Tests
+namespace Loupe.Agent.Web.Module.Tests
 {
     [TestFixture]
     public class When_validating_request: TestBase

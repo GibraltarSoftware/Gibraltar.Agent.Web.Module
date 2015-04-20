@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Web;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace Gibraltar.Agent.Web.Module.Tests
+namespace Loupe.Agent.Web.Module.Tests
 {
     [TestFixture]
     public class When_receives_unrelated_request:TestBase

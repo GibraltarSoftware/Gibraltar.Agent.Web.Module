@@ -1,6 +1,7 @@
 ﻿using System;
+using Gibraltar.Agent;
 
-namespace Gibraltar.Agent.Web.Module.Models
+namespace Loupe.Agent.Web.Module.Models
 {
     public class LogMessage
     {

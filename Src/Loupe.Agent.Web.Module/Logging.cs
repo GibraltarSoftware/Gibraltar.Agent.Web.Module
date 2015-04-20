@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Web;
 
-namespace Gibraltar.Agent.Web.Module
+namespace Loupe.Agent.Web.Module
 {
     public class Logging:IHttpModule
     {

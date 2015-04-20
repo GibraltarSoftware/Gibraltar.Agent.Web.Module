@@ -1,13 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Text.RegularExpressions;
 using System.Web;
-using Gibraltar.Agent.Web.Module.Models;
+using Gibraltar.Agent;
+using Loupe.Agent.Web.Module.Models;
 using Newtonsoft.Json;
 
-namespace Gibraltar.Agent.Web.Module
+namespace Loupe.Agent.Web.Module
 {
     public class MessageHandler
     {

@@ -1,8 +1,8 @@
-﻿using System;
-using ExpectedObjects;
+﻿using ExpectedObjects;
 using ExpectedObjects.Strategies;
+using System;
 
-namespace Gibraltar.Agent.Web.Module.Tests
+namespace Loupe.Agent.Web.Module.Tests
 {
     public class DateTimeOffSetComparisonStrategy:IComparisonStrategy
     {

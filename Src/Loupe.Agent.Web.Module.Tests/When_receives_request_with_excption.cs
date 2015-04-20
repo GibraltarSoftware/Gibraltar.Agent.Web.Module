@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using ExpectedObjects;
-using Gibraltar.Agent.Web.Module.Models;
+using Gibraltar.Agent;
+using Loupe.Agent.Web.Module.Models;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace Gibraltar.Agent.Web.Module.Tests
+namespace Loupe.Agent.Web.Module.Tests
 {
     [TestFixture]
     public class When_receives_request_with_excption:TestBase

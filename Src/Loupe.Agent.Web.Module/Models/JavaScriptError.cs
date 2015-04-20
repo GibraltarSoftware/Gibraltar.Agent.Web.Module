@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
-using Newtonsoft.Json;
 
-namespace Gibraltar.Agent.Web.Module.Models
+namespace Loupe.Agent.Web.Module.Models
 {
     /// <summary>
     /// Details of a JavaScript error

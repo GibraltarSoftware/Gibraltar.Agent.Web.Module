@@ -5,7 +5,7 @@ using System.Web;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace Gibraltar.Agent.Web.Module.Tests
+namespace Loupe.Agent.Web.Module.Tests
 {
     public class TestBase
     {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Gibraltar.Agent.Web.Module.Models
+namespace Loupe.Agent.Web.Module.Models
 {
     /// <summary>
     /// Defines a JavaScript exception

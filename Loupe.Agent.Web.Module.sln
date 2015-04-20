@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gibraltar.Agent.Web.Module", "Src\Gibraltar.Agent.Web.Module\Gibraltar.Agent.Web.Module.csproj", "{EA8936C9-44C3-4766-A515-E75A12B7F2C1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Loupe.Agent.Web.Module", "Src\Loupe.Agent.Web.Module\Loupe.Agent.Web.Module.csproj", "{EA8936C9-44C3-4766-A515-E75A12B7F2C1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gibraltar.Agent.Web.Module.Tests", "Src\Gibraltar.Agent.Web.Module.Tests\Gibraltar.Agent.Web.Module.Tests.csproj", "{4E7FB470-DE50-4F84-A919-9B305A7CE6C1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Loupe.Agent.Web.Module.Tests", "Src\Loupe.Agent.Web.Module.Tests\Loupe.Agent.Web.Module.Tests.csproj", "{4E7FB470-DE50-4F84-A919-9B305A7CE6C1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
