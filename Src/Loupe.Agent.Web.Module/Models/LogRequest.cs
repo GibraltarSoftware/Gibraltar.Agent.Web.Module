@@ -7,7 +7,7 @@ namespace Loupe.Agent.Web.Module.Models
         /// <summary>
         /// Stores session details e.g. client computer info
         /// </summary>
-        public string Session { get; set; }
+        public ClientSession Session { get; set; }
 
         /// <summary>
         /// List of <see cref="LogMessage"/> to be recorded

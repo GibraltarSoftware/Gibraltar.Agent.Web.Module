@@ -147,7 +147,7 @@ namespace Loupe.Agent.Web.Module
                 requestBody = JsonConvert.DeserializeObject<LogRequest>(body, new JsonSerializerSettings());
             }
             catch (Exception ex)
-            {
+            {           
                 Log.Write(LogMessageSeverity.Error, LogSystem, 0, ex, LogWriteMode.Queued,
                     CreateStandardRequestDetailXml(context), Category, "Error deserializing request body",
                     "An exception occured whilst attempting to deserialize the request body");
@@ -178,14 +178,6 @@ namespace Loupe.Agent.Web.Module
             decimal adjustedSize = (decimal)value / (1L << (mag * 10));
 
             return string.Format("{0:n1} {1}", adjustedSize, SizeSuffixes[mag]);
-        }
-    }
-
-    public class JavaScriptLogger
-    {
-        public virtual void Log(LogRequest logRequest)
-        {
-            
         }
     }
 }
