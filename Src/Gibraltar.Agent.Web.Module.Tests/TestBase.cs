@@ -9,7 +9,7 @@ namespace Gibraltar.Agent.Web.Module.Tests
 {
     public class TestBase
     {
-        protected const string LogUrl = "http://www.test.com/gibraltar/log";
+        protected const string LogUrl = "http://www.test.com/loupe/log";
         protected const string ExceptionUrl = "http://www.test.com/gibraltar/exception";
 
         protected HttpContextBase HttpContext;

@@ -45,9 +45,12 @@
   <ItemGroup>
     <Compile Include="Logging.cs" />
     <Compile Include="MessageHandler.cs" />
+    <Compile Include="Models\Error.cs" />
+    <Compile Include="Models\LogMessage.cs" />
     <Compile Include="Models\JavaScriptError.cs" />
     <Compile Include="Models\JavaScriptException.cs" />
-    <Compile Include="Models\LogDetails.cs" />
+    <Compile Include="Models\LogRequest.cs" />
+    <Compile Include="Models\MethodSourceInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

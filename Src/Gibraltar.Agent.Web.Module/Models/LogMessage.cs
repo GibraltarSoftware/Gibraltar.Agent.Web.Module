@@ -1,6 +1,8 @@
+﻿using System;
+
 namespace Gibraltar.Agent.Web.Module.Models
 {
-    public class LogDetails
+    public class LogMessage
     {
         /// <summary>
         /// Severity of the message
@@ -34,5 +36,25 @@ namespace Gibraltar.Agent.Web.Module.Models
         /// This is converted into the XML details
         /// </remarks>
         public string Details { get; set; }
+
+        /// <summary>
+        /// Optional. Details of a client side exception
+        /// </summary>
+        public Error Exception { get; set; }
+
+        /// <summary>
+        /// Information about the method that generated the message
+        /// </summary>
+        public MethodSourceInfo MethodSourceInfo { get; set; }
+
+        /// <summary>
+        /// Specifies when the log message was created on the client
+        /// </summary>
+        public DateTimeOffset TimeStamp { get; set; }
+
+        /// <summary>
+        /// Specifics the sequence number of the message
+        /// </summary>
+        public long Sequence { get; set; }
     }
 }

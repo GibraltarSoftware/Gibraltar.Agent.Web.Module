@@ -12,93 +12,130 @@ namespace Gibraltar.Agent.Web.Module.Tests
     {
 
         [Test]
-        public void Should_return_200([Values("http://www.test.com/gibraltar/exception",
-                                              "http://www.test.com/Gibraltar/exception",
-                                              "http://www.test.com/gibraltar/Exception",
-                                              "http://www.test.com/Gibraltar/Exception",
-                                              "http://www.test.com/gibraltar/exception/")] string url)
+        public void Should_pass_expected_exception_to_logger()
         {
-            SendRequest("{\"Category\":\"JavaScript\"}",url);
-
-            Assert.That(HttpResponse.StatusCode, Is.EqualTo(200));
-        }
-
-
-        [Test]
-        public void Should_call_logger()
-        {
-            var requestBody =
-                "{\"Category\":\"JavaScript\",\"Message\":\"Error: Test Error\",\"Url\":\"http://www.test.com/app.js\",\"StackTrace\":[\"createError/<@http://www.test.com/app.js:37:19\"],\"Cause\":\"\",\"Line\":37,\"Column\":18,\"Details\":\"\"}";
-
-            var fakeLogger = Substitute.For<JavaScriptLogger>();
-
-            Target.JavaScriptLogger = fakeLogger;
-
-            SendRequest(requestBody, ExceptionUrl);
-
-
-            fakeLogger.Received().LogException(Arg.Any<JavaScriptError>());
-        }
-
-        [Test]
-        public void Should_pass_expected_object_to_logger()
-        {
-            var requestBody =
-                 "{\"Category\":\"JavaScript\",\"Message\":\"Error: Test Error\",\"Url\":\"http://www.test.com/app.js\",\"StackTrace\":[\"createError/<@http://www.test.com/app.js:37:19\"],\"Cause\":\"\",\"Line\":37,\"Column\":18,\"Details\":\"\"}";
-
             var fakeLogger = Substitute.For<JavaScriptLogger>();
             Target.JavaScriptLogger = fakeLogger;
 
-            SendRequest(requestBody, ExceptionUrl);
+            SendRequest("{Session:'',LogMessages:[{severity: 8,category: 'Test',caption: 'test log',description: 'tests logs message',paramters: null,details: null,exception: {message:'TypeError: uninitializedObject is undefined',url:'http://www.test.com/app.js',stackTrace: [],cause:'', line: 37, column: 18},methodSourceInfo: {}}]}", LogUrl);
 
-            var expected = new JavaScriptError
+            var expected = new LogRequest
             {
-                Category = "JavaScript",
-                Message = "Error: Test Error",
-                Url = "http://www.test.com/app.js",
-                StackTrace = new List<string> {"createError/<@http://www.test.com/app.js:37:19"},
-                Cause = "",
-                Line = 37,
-                Column = 18,
-                Details = ""
+                Session = "",
+                LogMessages = new List<LogMessage>
+                {
+                    new LogMessage {
+                        Severity = LogMessageSeverity.Information,
+                        Category = "Test",
+                        Caption = "test log",
+                        Description = "tests logs message",
+                        Parameters = null,
+                        Details = null,
+                        Exception = new Error
+                        {
+                            Message = "TypeError: uninitializedObject is undefined",
+                            Url = "http://www.test.com/app.js",
+                            StackTrace = new List<string>(),
+                            Cause = "",
+                            Line = 37,
+                            Column = 18
+                        },
+                        MethodSourceInfo = new MethodSourceInfo(),
+                        Sequence = 0,
+                        TimeStamp = new DateTimeOffset()
+                    }
+                }
             }.ToExpectedObject();
 
 
             // ReSharper disable once SuspiciousTypeConversion.Global
-            fakeLogger.Received().LogException(Arg.Is<JavaScriptError>(x => expected.Equals(x)));
+            fakeLogger.Received().Log(Arg.Is<LogRequest>(x => expected.Equals(x)));
         }
 
         [Test]
-        public void Should_pass_expected_object_with_details_to_logger()
+        public void Should_pass_expected_object_with_stackTrace_to_logger()
         {
 
-            var requestBody =
-                "{\"Category\":\"JavaScript\",\"Message\":\"Error: Test Error\",\"Url\":\"http://www.test.com/app.js\",\"StackTrace\":[\"createError/<@http://www.test.com/app.js:37:19\"],\"Cause\":\"\",\"Line\":37,\"Column\":18,\"Details\":\"{\\\"Client\\\":{\\\"description\\\":\\\"Firefox 37.0 32-bit on Windows 8.1 64-bit\\\",\\\"layout\\\":\\\"Gecko\\\",\\\"manufacturer\\\":null,\\\"name\\\":\\\"Firefox\\\",\\\"prerelease\\\":null,\\\"product\\\":null,\\\"ua\\\":\\\"Mozilla/5.0 (Windows NT 6.3; WOW64; rv:37.0) Gecko/20100101 Firefox/37.0\\\",\\\"version\\\":\\\"37.0\\\",\\\"os\\\":{\\\"architecture\\\":64,\\\"family\\\":\\\"Windows\\\",\\\"version\\\":\\\"8.1\\\"},\\\"size\\\":{\\\"width\\\":1102,\\\"height\\\":873}}}\"}";
-
             var fakeLogger = Substitute.For<JavaScriptLogger>();
-
-            JavaScriptError actual = null;
-            fakeLogger.LogException(Arg.Do<JavaScriptError>(x => actual = x));
-
             Target.JavaScriptLogger = fakeLogger;
 
-            SendRequest(requestBody, ExceptionUrl);
+            SendRequest("{Session:'',LogMessages:[{severity: 8,category: 'Test',caption: 'test log',description: 'tests logs message',paramters: null,details: null,exception: {message:'TypeError: uninitializedObject is undefined',url:'http://www.test.com/app.js',stackTrace: [\"InnerItem/this.throwUnitializeError\", \"TestingStack/this.createError\", \"throwUninitializeError\"],cause:'', line: 37, column: 18},methodSourceInfo: {}}]}", LogUrl);
 
-            var expected = new JavaScriptError
+            var expected = new LogRequest
             {
-                Category = "JavaScript",
-                Message = "Error: Test Error",
-                Url = "http://www.test.com/app.js",
-                StackTrace = new List<string> { "createError/<@http://www.test.com/app.js:37:19" },
-                Cause = "",
-                Line = 37,
-                Column = 18,
-                Details = "{\"Client\":{\"description\":\"Firefox 37.0 32-bit on Windows 8.1 64-bit\",\"layout\":\"Gecko\",\"manufacturer\":null,\"name\":\"Firefox\",\"prerelease\":null,\"product\":null,\"ua\":\"Mozilla/5.0 (Windows NT 6.3; WOW64; rv:37.0) Gecko/20100101 Firefox/37.0\",\"version\":\"37.0\",\"os\":{\"architecture\":64,\"family\":\"Windows\",\"version\":\"8.1\"},\"size\":{\"width\":1102,\"height\":873}}}" // "{\\\"Client\\\":{\\\"description\\\":\\\"Firefox 37.0 32-bit on Windows 8.1 64-bit\\\",\\\"layout\\\":\\\"Gecko\\\",\\\"manufacturer\\\":null,\\\"name\\\":\\\"Firefox\\\",\\\"prerelease\\\":null,\\\"product\\\":null,\\\"ua\\\":\\\"Mozilla/5.0 (Windows NT 6.3; WOW64; rv:37.0) Gecko/20100101 Firefox/37.0\\\",\\\"version\\\":\\\"37.0\\\",\\\"os\\\":{\\\"architecture\\\":64,\\\"family\\\":\\\"Windows\\\",\\\"version\\\":\\\"8.1\\\"},\\\"size\\\":{\\\"width\\\":1102,\\\"height\\\":873}}}"
+                Session = "",
+                LogMessages = new List<LogMessage>
+                {
+                    new LogMessage {
+                        Severity = LogMessageSeverity.Information,
+                        Category = "Test",
+                        Caption = "test log",
+                        Description = "tests logs message",
+                        Parameters = null,
+                        Details = null,
+                        Exception = new Error
+                        {
+                            Message = "TypeError: uninitializedObject is undefined",
+                            Url = "http://www.test.com/app.js",
+                            StackTrace = new List<string> { "InnerItem/this.throwUnitializeError", "TestingStack/this.createError", "throwUninitializeError" },
+                            Cause = "",
+                            Line = 37,
+                            Column = 18
+                        },
+                        MethodSourceInfo = new MethodSourceInfo(),
+                        Sequence = 0,
+                        TimeStamp = new DateTimeOffset()
+                    }
+                }
             }.ToExpectedObject();
 
 
             // ReSharper disable once SuspiciousTypeConversion.Global
-            fakeLogger.Received().LogException(Arg.Is<JavaScriptError>(x => expected.Equals(x)));
+            fakeLogger.Received().Log(Arg.Is<LogRequest>(x => expected.Equals(x)));
+        }
+
+        [Test]
+        public void Should_have_session_details()
+        {
+            var requestBody =
+                "{Session:\"{\\\"Client\\\":{\\\"description\\\":\\\"Firefox 37.0 32-bit on Windows 8.1 64-bit\\\",\\\"layout\\\":\\\"Gecko\\\",\\\"manufacturer\\\":null,\\\"name\\\":\\\"Firefox\\\",\\\"prerelease\\\":null,\\\"product\\\":null,\\\"ua\\\":\\\"Mozilla/5.0 (Windows NT 6.3; WOW64; rv:37.0) Gecko/20100101 Firefox/37.0\\\",\\\"version\\\":\\\"37.0\\\",\\\"os\\\":{\\\"architecture\\\":64,\\\"family\\\":\\\"Windows\\\",\\\"version\\\":\\\"8.1\\\"},\\\"size\\\":{\\\"width\\\":1102,\\\"height\\\":873}}\",LogMessages:[{severity: 8,category: 'Test',caption: 'test log',description: 'tests logs message',paramters: null,details: null,exception: {message:'TypeError: uninitializedObject is undefined',url:'http://www.test.com/app.js',stackTrace: [\"InnerItem/this.throwUnitializeError\", \"TestingStack/this.createError\", \"throwUninitializeError\"],cause:'', line: 37, column: 18},methodSourceInfo: {}}]}";
+
+            var fakeLogger = Substitute.For<JavaScriptLogger>();
+            Target.JavaScriptLogger = fakeLogger;
+
+            SendRequest(requestBody, LogUrl);
+
+
+            var expected = new LogRequest
+            {
+                Session = "{\"Client\":{\"description\":\"Firefox 37.0 32-bit on Windows 8.1 64-bit\",\"layout\":\"Gecko\",\"manufacturer\":null,\"name\":\"Firefox\",\"prerelease\":null,\"product\":null,\"ua\":\"Mozilla/5.0 (Windows NT 6.3; WOW64; rv:37.0) Gecko/20100101 Firefox/37.0\",\"version\":\"37.0\",\"os\":{\"architecture\":64,\"family\":\"Windows\",\"version\":\"8.1\"},\"size\":{\"width\":1102,\"height\":873}}" ,
+                LogMessages = new List<LogMessage>
+                {
+                    new LogMessage {
+                        Severity = LogMessageSeverity.Information,
+                        Category = "Test",
+                        Caption = "test log",
+                        Description = "tests logs message",
+                        Parameters = null,
+                        Details = null,
+                        Exception = new Error
+                        {
+                            Message = "TypeError: uninitializedObject is undefined",
+                            Url = "http://www.test.com/app.js",
+                            StackTrace = new List<string> { "InnerItem/this.throwUnitializeError", "TestingStack/this.createError", "throwUninitializeError" },
+                            Cause = "",
+                            Line = 37,
+                            Column = 18
+                        },
+                        MethodSourceInfo = new MethodSourceInfo(),
+                        Sequence = 0,
+                        TimeStamp = new DateTimeOffset()
+                    }
+                }
+            }.ToExpectedObject();
+
+            // ReSharper disable once SuspiciousTypeConversion.Global
+            fakeLogger.Received().Log(Arg.Is<LogRequest>(x => expected.Equals(x)));
         }
     }
 }
