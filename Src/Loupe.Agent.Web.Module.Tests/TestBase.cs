@@ -16,10 +16,12 @@ namespace Loupe.Agent.Web.Module.Tests
         protected HttpResponseBase HttpResponse;
         protected MessageHandler Target;
         protected MemoryStream InputStream;
+        protected IPrincipal FakeUser;
+        protected IIdentity FakeIdentity;
 
 
         [SetUp]
-        public void SetUp()
+        public void BaseSetUp()
         {
             Target = new MessageHandler();
 
@@ -30,16 +32,16 @@ namespace Loupe.Agent.Web.Module.Tests
             InputStream = new MemoryStream();
             HttpRequest.InputStream.Returns(InputStream);
 
-            var fakeUser = Substitute.For<IPrincipal>();
-            var fakeIdentity = Substitute.For<IIdentity>();
-            fakeIdentity.Name.Returns("");
-            fakeUser.Identity.Returns(fakeIdentity);
+            FakeUser = Substitute.For<IPrincipal>();
+            FakeIdentity = Substitute.For<IIdentity>();
+            FakeIdentity.Name.Returns("");
+            FakeUser.Identity.Returns(FakeIdentity);
 
             HttpRequest.HttpMethod.Returns("POST");
 
             HttpContext.Request.Returns(HttpRequest);
             HttpContext.Response.Returns(HttpResponse);
-            HttpContext.User.Returns(fakeUser);            
+            HttpContext.User.Returns(FakeUser);            
         }
 
         [TearDown]
@@ -48,7 +50,7 @@ namespace Loupe.Agent.Web.Module.Tests
             InputStream.Dispose();
         }
 
-        protected void SendRequest(string body, string url)
+        protected void SendRequest(string body)
         {
             using (var writer = new StreamWriter(InputStream))
             {
@@ -56,7 +58,7 @@ namespace Loupe.Agent.Web.Module.Tests
                 writer.Flush();
 
 
-                HttpRequest.Url.Returns(new Uri(url));
+                HttpRequest.Url.Returns(new Uri(LogUrl));
                 HttpRequest.InputStream.Returns(InputStream);
 
                 Target.HandleRequest(HttpContext);

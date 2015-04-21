@@ -18,7 +18,7 @@ namespace Loupe.Agent.Web.Module.Tests
             var fakeLogger = Substitute.For<JavaScriptLogger>();
             Target.JavaScriptLogger = fakeLogger;
 
-            SendRequest("{Session:null,LogMessages:[{severity: 8,category: 'Test',caption: 'test log',description: 'tests logs message',paramters: null,details: null,exception: {message:'TypeError: uninitializedObject is undefined',url:'http://www.test.com/app.js',stackTrace: [],cause:'', line: 37, column: 18},methodSourceInfo: {}}]}", LogUrl);
+            SendRequest("{Session:null,LogMessages:[{severity: 8,category: 'Test',caption: 'test log',description: 'tests logs message',paramters: null,details: null,exception: {message:'TypeError: uninitializedObject is undefined',url:'http://www.test.com/app.js',stackTrace: [],cause:'', line: 37, column: 18},methodSourceInfo: {}}]}");
 
             var expected = new LogRequest
             {
@@ -45,7 +45,8 @@ namespace Loupe.Agent.Web.Module.Tests
                         Sequence = 0,
                         TimeStamp = new DateTimeOffset()
                     }
-                }
+                },
+                User = FakeUser
             }.ToExpectedObject();
 
 
@@ -60,7 +61,7 @@ namespace Loupe.Agent.Web.Module.Tests
             var fakeLogger = Substitute.For<JavaScriptLogger>();
             Target.JavaScriptLogger = fakeLogger;
 
-            SendRequest("{Session:null,LogMessages:[{severity: 8,category: 'Test',caption: 'test log',description: 'tests logs message',paramters: null,details: null,exception: {message:'TypeError: uninitializedObject is undefined',url:'http://www.test.com/app.js',stackTrace: [\"InnerItem/this.throwUnitializeError\", \"TestingStack/this.createError\", \"throwUninitializeError\"],cause:'', line: 37, column: 18},methodSourceInfo: {}}]}", LogUrl);
+            SendRequest("{Session:null,LogMessages:[{severity: 8,category: 'Test',caption: 'test log',description: 'tests logs message',paramters: null,details: null,exception: {message:'TypeError: uninitializedObject is undefined',url:'http://www.test.com/app.js',stackTrace: [\"InnerItem/this.throwUnitializeError\", \"TestingStack/this.createError\", \"throwUninitializeError\"],cause:'', line: 37, column: 18},methodSourceInfo: {}}]}");
 
             var expected = new LogRequest
             {
@@ -87,7 +88,8 @@ namespace Loupe.Agent.Web.Module.Tests
                         Sequence = 0,
                         TimeStamp = new DateTimeOffset()
                     }
-                }
+                },
+                User = FakeUser
             }.ToExpectedObject();
 
 
@@ -103,7 +105,7 @@ namespace Loupe.Agent.Web.Module.Tests
             var fakeLogger = Substitute.For<JavaScriptLogger>();
             Target.JavaScriptLogger = fakeLogger;
 
-            SendRequest(requestBody, LogUrl);
+            SendRequest(requestBody);
 
 
             var expected = new LogRequest
@@ -155,7 +157,8 @@ namespace Loupe.Agent.Web.Module.Tests
                         Sequence = 0,
                         TimeStamp = new DateTimeOffset()
                     }
-                }
+                },
+                User = FakeUser
             }.ToExpectedObject();
 
             // ReSharper disable once SuspiciousTypeConversion.Global

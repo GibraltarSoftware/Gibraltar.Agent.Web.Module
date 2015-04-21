@@ -3,5 +3,6 @@
     public class ClientSession
     {
         public ClientDetails Client { get; set; }
+
     }
 }

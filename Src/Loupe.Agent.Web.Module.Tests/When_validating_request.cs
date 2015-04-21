@@ -22,7 +22,7 @@ namespace Loupe.Agent.Web.Module.Tests
         [Test]
         public void Should_return_400_if_no_content_in_stream()
         {
-            SendRequest(null, LogUrl);
+            SendRequest(null);
 
             Assert.That(HttpResponse.StatusCode, Is.EqualTo(400));
         }

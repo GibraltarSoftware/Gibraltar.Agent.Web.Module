@@ -12,8 +12,6 @@ namespace Loupe.Agent.Web.Module.Tests
     public class When_receives_request_to_log: TestBase
     {
 
-
-
         [Test]
         public void Should_return_200([Values("http://www.test.com/loupe/log",
                                               "http://www.test.com/Loupe/log",
@@ -22,8 +20,8 @@ namespace Loupe.Agent.Web.Module.Tests
                                               "http://www.test.com/loupe/log/")] string url)
         {
             
-            SendRequest("{Session:null, LogMessages:[]}",url);
-
+            SendRequest("{Session:null, LogMessages:[]}");
+ 
             Assert.That(HttpResponse.StatusCode, Is.EqualTo(200));            
         }
 
@@ -34,7 +32,7 @@ namespace Loupe.Agent.Web.Module.Tests
 
             Target.JavaScriptLogger = fakeLogger;
 
-            SendRequest("{Session:null,LogMessages:[{severity: 8,category: 'Test',caption: 'test log',description: 'tests logs message',paramters: null,details: null,exception: {},methodSourceInfo: {}}]}", LogUrl);
+            SendRequest("{Session:null,LogMessages:[{severity: 8,category: 'Test',caption: 'test log',description: 'tests logs message',paramters: null,details: null,exception: {},methodSourceInfo: {}}]}");
 
             fakeLogger.Received().Log(Arg.Any<LogRequest>());
         }
@@ -46,7 +44,7 @@ namespace Loupe.Agent.Web.Module.Tests
             var fakeLogger = Substitute.For<JavaScriptLogger>();
             Target.JavaScriptLogger = fakeLogger;
 
-            SendRequest("{Session:null,LogMessages:[{severity: 8,category: 'Test',caption: 'test log',description: 'tests logs message',paramters: null,details: null,exception: {},methodSourceInfo: {}}]}", LogUrl);
+            SendRequest("{Session:null,LogMessages:[{severity: 8,category: 'Test',caption: 'test log',description: 'tests logs message',paramters: null,details: null,exception: {},methodSourceInfo: {}}]}");
 
             var expected = new LogRequest
             {
@@ -65,7 +63,8 @@ namespace Loupe.Agent.Web.Module.Tests
                         Sequence = 0,
                         TimeStamp = new DateTimeOffset()
                     }
-                }
+                },
+                User = FakeUser
             }.ToExpectedObject();
 
             // ReSharper disable once SuspiciousTypeConversion.Global
@@ -82,7 +81,7 @@ namespace Loupe.Agent.Web.Module.Tests
             fakeLogger.Log(Arg.Do<LogRequest>(x => actual = x));            
             Target.JavaScriptLogger = fakeLogger;
 
-            SendRequest(requestBody, LogUrl);
+            SendRequest(requestBody);
 
 
             var expected = new LogRequest
@@ -126,7 +125,8 @@ namespace Loupe.Agent.Web.Module.Tests
                         Sequence = 0,
                         TimeStamp = new DateTimeOffset()
                     }
-                }
+                },
+                User = FakeUser
             }.ToExpectedObject();
 
             // ReSharper disable once SuspiciousTypeConversion.Global
@@ -140,7 +140,7 @@ namespace Loupe.Agent.Web.Module.Tests
             var fakeLogger = Substitute.For<JavaScriptLogger>();
             Target.JavaScriptLogger = fakeLogger;
 
-            SendRequest("{Session:null,LogMessages:[{severity: 8,category: 'Test',caption: 'test log',description: 'tests logs message',paramters: null,details: null,exception: {},methodSourceInfo: { file: 'app.js', line: 18, column: 37}}]}", LogUrl);
+            SendRequest("{Session:null,LogMessages:[{severity: 8,category: 'Test',caption: 'test log',description: 'tests logs message',paramters: null,details: null,exception: {},methodSourceInfo: { file: 'app.js', line: 18, column: 37}}]}");
 
             var expected = new LogRequest
             {
@@ -165,7 +165,8 @@ namespace Loupe.Agent.Web.Module.Tests
                         Sequence = 0,
                         TimeStamp = new DateTimeOffset()
                     }
-                }
+                },
+                User = FakeUser
             }.ToExpectedObject();
 
             // ReSharper disable once SuspiciousTypeConversion.Global
@@ -181,9 +182,11 @@ namespace Loupe.Agent.Web.Module.Tests
             var jsonTimeStamp = timeStamp.ToString("yyyy-MM-ddTHH:mm:sszzz");
 
             var fakeLogger = Substitute.For<JavaScriptLogger>();
+            LogRequest actual = null;
+            fakeLogger.Log(Arg.Do<LogRequest>(x => actual = x));
             Target.JavaScriptLogger = fakeLogger;
 
-            SendRequest("{Session:null,LogMessages:[{severity: 8,category: 'Test',caption: 'test log',description: 'tests logs message',paramters: null,details: null,exception: {},methodSourceInfo: {}, timeStamp: '" + jsonTimeStamp + "', sequence: 1}]}", LogUrl);
+            SendRequest("{Session:null,LogMessages:[{severity: 8,category: 'Test',caption: 'test log',description: 'tests logs message',paramters: null,details: null,exception: {},methodSourceInfo: {}, timeStamp: '" + jsonTimeStamp + "', sequence: 1}]}");
 
             var expected = new LogRequest
             {
@@ -203,12 +206,14 @@ namespace Loupe.Agent.Web.Module.Tests
                         Sequence = 1,
                         TimeStamp = timeStamp
                     }
-                }
+                },
+                User = FakeUser
             }.ToExpectedObject()
              .Configure(ctx => ctx.PushStrategy<DateTimeOffSetComparisonStrategy>());
 
             // ReSharper disable once SuspiciousTypeConversion.Global
-            fakeLogger.Received().Log(Arg.Is<LogRequest>(x => expected.Equals(x)));
+            //fakeLogger.Received().Log(Arg.Is<LogRequest>(x => expected.Equals(x)));
+            expected.ShouldEqual(actual);
         }
     }
 }

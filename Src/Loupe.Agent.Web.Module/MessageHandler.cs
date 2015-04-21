@@ -94,11 +94,13 @@ namespace Loupe.Agent.Web.Module
 
         private void LogMessage(HttpContextBase context)
         {
-            var message = GetMessageFromRequestBody(context);
+            var logRequest = GetMessageFromRequestBody(context);
 
-            if (message != null)
+            if (logRequest != null)
             {
-                JavaScriptLogger.Log(message);
+                logRequest.User = context.User;
+
+                JavaScriptLogger.Log(logRequest);
 
                 ResponseHandled(context, HttpStatusCode.OK);
             }
@@ -108,12 +110,12 @@ namespace Loupe.Agent.Web.Module
         {
             var requestBody = ReadInputStream(context);
 
-            if (!string.IsNullOrWhiteSpace(requestBody))
+            if (string.IsNullOrWhiteSpace(requestBody))
             {
-                return DeserializeBody(context, requestBody);
+                return null;
             }
-
-            return null;
+            
+            return DeserializeBody(context, requestBody);
         }
 
         private string ReadInputStream(HttpContextBase context)

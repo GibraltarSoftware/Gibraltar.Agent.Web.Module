@@ -16,5 +16,10 @@
         /// Optional. The column number upon which the error occurred
         /// </summary>
         public int? Column { get; set; }
+
+        public bool IsEmpty()
+        {
+            return File == null && !Line.HasValue && !Column.HasValue;
+        }
     }
 }

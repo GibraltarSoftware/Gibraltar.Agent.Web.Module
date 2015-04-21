@@ -34,5 +34,14 @@ namespace Loupe.Agent.Web.Module.Models
         /// </summary>
         public int? Column { get; set; }
 
+
+        /// <summary>
+        /// Indicates if the class is in fact empty i.e created but with no values
+        /// </summary>
+        /// <returns></returns>
+        public bool IsEmpty()
+        {
+            return Message == null && Url == null && Cause == null && !Line.HasValue && !Column.HasValue;
+        }
     }
 }

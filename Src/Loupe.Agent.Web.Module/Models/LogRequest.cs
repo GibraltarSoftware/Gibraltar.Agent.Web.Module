@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Security.Principal;
 
 namespace Loupe.Agent.Web.Module.Models
 {
@@ -13,5 +14,10 @@ namespace Loupe.Agent.Web.Module.Models
         /// List of <see cref="LogMessage"/> to be recorded
         /// </summary>
         public List<LogMessage> LogMessages { get; set; }
+
+        /// <summary>
+        /// Current user
+        /// </summary>
+        public IPrincipal User { get; set; }
     }
 }

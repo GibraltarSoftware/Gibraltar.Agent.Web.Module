@@ -1,5 +1,6 @@
 ﻿using System;
 using Gibraltar.Agent;
+using Newtonsoft.Json;
 
 namespace Loupe.Agent.Web.Module.Models
 {
@@ -57,5 +58,6 @@ namespace Loupe.Agent.Web.Module.Models
         /// Specifics the sequence number of the message
         /// </summary>
         public long Sequence { get; set; }
+
     }
 }
