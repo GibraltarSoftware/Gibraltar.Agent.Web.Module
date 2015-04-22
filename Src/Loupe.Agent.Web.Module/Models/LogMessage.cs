@@ -42,7 +42,7 @@ namespace Loupe.Agent.Web.Module.Models
         /// <summary>
         /// Optional. Details of a client side exception
         /// </summary>
-        public Error Exception { get; set; }
+        public Exception Exception { get; set; }
 
         /// <summary>
         /// Information about the method that generated the message

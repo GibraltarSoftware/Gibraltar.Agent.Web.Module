@@ -51,7 +51,7 @@
     <Compile Include="MessageHandler.cs" />
     <Compile Include="Models\ClientDetails.cs" />
     <Compile Include="Models\ClientSession.cs" />
-    <Compile Include="Models\Error.cs" />
+    <Compile Include="Models\Exception.cs" />
     <Compile Include="Models\LogMessage.cs" />
     <Compile Include="Models\JavaScriptError.cs" />
     <Compile Include="Models\JavaScriptException.cs" />

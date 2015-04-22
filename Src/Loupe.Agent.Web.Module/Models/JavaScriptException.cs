@@ -7,7 +7,7 @@ namespace Loupe.Agent.Web.Module.Models
     /// <summary>
     /// Defines a JavaScript exception
     /// </summary>
-    public class JavaScriptException : Exception
+    public class JavaScriptException : System.Exception
     {
         private readonly string _stackTrace;
 
@@ -15,9 +15,7 @@ namespace Loupe.Agent.Web.Module.Models
         /// Create a new exception
         /// </summary>
         /// <param name="message">The exception message</param>
-        public JavaScriptException(string message) : base(message)
-        {
-        }
+        public JavaScriptException(string message) : base(message) { }
 
         /// <summary>
         /// Create a new exception

@@ -2,7 +2,7 @@
 
 namespace Loupe.Agent.Web.Module.Models
 {
-    public class Error
+    public class Exception
     {
         /// <summary>
         /// The message associated with the error
@@ -38,10 +38,15 @@ namespace Loupe.Agent.Web.Module.Models
         /// <summary>
         /// Indicates if the class is in fact empty i.e created but with no values
         /// </summary>
-        /// <returns></returns>
+        /// <remarks>This method is only used by the code creating a <see cref="JavaScriptException"/>
+        /// as such it only needs to know if message and stack trace are not null.
+        /// We need this method as if a request is recived with an empty object rather
+        /// than null for Error then JSON.net will create a new empty object with no data
+        /// which we don't want to log.</remarks>
+        /// <returns>true if necessary properties not null; otherwise false</returns>
         public bool IsEmpty()
         {
-            return Message == null && Url == null && Cause == null && !Line.HasValue && !Column.HasValue;
+            return Message == null && StackTrace != null;
         }
     }
 }

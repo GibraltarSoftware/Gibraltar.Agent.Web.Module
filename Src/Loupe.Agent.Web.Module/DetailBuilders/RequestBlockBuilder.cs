@@ -1,4 +1,5 @@
 ﻿using System.Web;
+using Gibraltar.Agent;
 
 namespace Loupe.Agent.Web.Module.DetailBuilders
 {
@@ -22,8 +23,26 @@ namespace Loupe.Agent.Web.Module.DetailBuilders
 
             DetailBuilder.Append("<Request>");
 
-            DetailBuilder.AppendFormat(detailsFormat, _context.Request.Browser.Browser, _context.Request.ContentType, _context.Request.ContentLength, _context.Request.IsLocal,
-                _context.Request.IsSecureConnection, _context.Request.UserHostAddress, _context.Request.UserHostName);
+            try
+            {
+                DetailBuilder.AppendFormat(detailsFormat, _context.Request.Browser.Browser, 
+                                                          _context.Request.ContentType, 
+                                                          _context.Request.ContentLength, 
+                                                          _context.Request.IsLocal,
+                                                          _context.Request.IsSecureConnection, 
+                                                          _context.Request.UserHostAddress, 
+                                                          _context.Request.UserHostName);
+            }
+            catch (System.Exception ex)
+            {
+#if DEBUG                
+                Log.Write(LogMessageSeverity.Error, "Loupe", 0, ex, LogWriteMode.Queued,""
+                    , "Loupe.Internal", "Exception building standard Request details block",
+                    "Exception occured whilst trying to build the standard Request details block, no request will be added to detail");
+#endif
+                DetailBuilder.Append(
+                    "We were unable to record details from the Request itself due to an exception occuring whilst extracting information from the Request.");
+            }
 
             if (_requestBody != null)
             {

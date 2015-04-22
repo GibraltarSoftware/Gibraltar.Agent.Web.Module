@@ -5,12 +5,21 @@ using Gibraltar.Agent;
 using Loupe.Agent.Web.Module.Models;
 using NSubstitute;
 using NUnit.Framework;
+using Exception = Loupe.Agent.Web.Module.Models.Exception;
 
 namespace Loupe.Agent.Web.Module.Tests
 {
     [TestFixture]
     public class When_receives_request_to_log: TestBase
     {
+        private JavaScriptLogger _fakeLogger;
+
+        [SetUp]
+        public void SetUp()
+        {
+            _fakeLogger = Substitute.For<JavaScriptLogger>();
+            Target.JavaScriptLogger = _fakeLogger;
+        }
 
         [Test]
         public void Should_return_200([Values("http://www.test.com/loupe/log",
@@ -28,22 +37,15 @@ namespace Loupe.Agent.Web.Module.Tests
         [Test]
         public void Should_call_logger()
         {
-            var fakeLogger = Substitute.For<JavaScriptLogger>();
-
-            Target.JavaScriptLogger = fakeLogger;
-
             SendRequest("{Session:null,LogMessages:[{severity: 8,category: 'Test',caption: 'test log',description: 'tests logs message',paramters: null,details: null,exception: {},methodSourceInfo: {}}]}");
 
-            fakeLogger.Received().Log(Arg.Any<LogRequest>());
+            _fakeLogger.Received().Log(Arg.Any<LogRequest>());
         }
 
 
         [Test]
         public void Should_pass_object_to_log()
         {
-            var fakeLogger = Substitute.For<JavaScriptLogger>();
-            Target.JavaScriptLogger = fakeLogger;
-
             SendRequest("{Session:null,LogMessages:[{severity: 8,category: 'Test',caption: 'test log',description: 'tests logs message',paramters: null,details: null,exception: {},methodSourceInfo: {}}]}");
 
             var expected = new LogRequest
@@ -58,7 +60,7 @@ namespace Loupe.Agent.Web.Module.Tests
                         Description = "tests logs message",
                         Parameters = null,
                         Details = null,
-                        Exception = new Error(),
+                        Exception = new Exception(),
                         MethodSourceInfo = new MethodSourceInfo(),
                         Sequence = 0,
                         TimeStamp = new DateTimeOffset()
@@ -68,7 +70,7 @@ namespace Loupe.Agent.Web.Module.Tests
             }.ToExpectedObject();
 
             // ReSharper disable once SuspiciousTypeConversion.Global
-            fakeLogger.Received().Log(Arg.Is<LogRequest>(x => expected.Equals(x)));
+            _fakeLogger.Received().Log(Arg.Is<LogRequest>(x => expected.Equals(x)));
         }
 
         [Test]
@@ -76,13 +78,7 @@ namespace Loupe.Agent.Web.Module.Tests
         {
             const string requestBody = "{ session: { client: {description:'Firefox 37.0 32-bit on Windows 8.1 64-bit',layout:'Gecko',manufacturer:null,name:'Firefox',prerelease:null,product:null,ua:'Mozilla/5.0 (Windows NT 6.3; WOW64; rv:37.0) Gecko/20100101 Firefox/37.0',version:'37.0',os:{architecture:64,family:'Windows',version:'8.1'},size:{width:1102,height:873}}},LogMessages:[{severity: 8,category: 'Test',caption: 'test log',description: 'tests logs message',paramters: null,details: null,exception: {},methodSourceInfo: {}}]}";
 
-            var fakeLogger = Substitute.For<JavaScriptLogger>();
-            LogRequest actual = null;
-            fakeLogger.Log(Arg.Do<LogRequest>(x => actual = x));            
-            Target.JavaScriptLogger = fakeLogger;
-
             SendRequest(requestBody);
-
 
             var expected = new LogRequest
             {
@@ -120,7 +116,7 @@ namespace Loupe.Agent.Web.Module.Tests
                         Description = "tests logs message",
                         Parameters = null,
                         Details = null,
-                        Exception = new Error(),
+                        Exception = new Exception(),
                         MethodSourceInfo = new MethodSourceInfo(),
                         Sequence = 0,
                         TimeStamp = new DateTimeOffset()
@@ -130,16 +126,12 @@ namespace Loupe.Agent.Web.Module.Tests
             }.ToExpectedObject();
 
             // ReSharper disable once SuspiciousTypeConversion.Global
-            //fakeLogger.Received().Log(Arg.Is<LogRequest>(x => expected.Equals(x)));
-            expected.ShouldEqual(actual);
+            _fakeLogger.Received().Log(Arg.Is<LogRequest>(x => expected.Equals(x)));
         }
 
         [Test]
         public void Should_have_methodSourceInfo()
         {
-            var fakeLogger = Substitute.For<JavaScriptLogger>();
-            Target.JavaScriptLogger = fakeLogger;
-
             SendRequest("{Session:null,LogMessages:[{severity: 8,category: 'Test',caption: 'test log',description: 'tests logs message',paramters: null,details: null,exception: {},methodSourceInfo: { file: 'app.js', line: 18, column: 37}}]}");
 
             var expected = new LogRequest
@@ -154,7 +146,7 @@ namespace Loupe.Agent.Web.Module.Tests
                         Description = "tests logs message",
                         Parameters = null,
                         Details = null,
-                        Exception = new Error(),
+                        Exception = new Exception(),
                         MethodSourceInfo = new MethodSourceInfo
                         {
                             File = "app.js",
@@ -170,7 +162,7 @@ namespace Loupe.Agent.Web.Module.Tests
             }.ToExpectedObject();
 
             // ReSharper disable once SuspiciousTypeConversion.Global
-            fakeLogger.Received().Log(Arg.Is<LogRequest>(x => expected.Equals(x)));            
+            _fakeLogger.Received().Log(Arg.Is<LogRequest>(x => expected.Equals(x)));            
         }
 
         [Test]
@@ -180,11 +172,6 @@ namespace Loupe.Agent.Web.Module.Tests
             var timeStamp = new DateTimeOffset(currentDateTime, TimeZoneInfo.Local.GetUtcOffset(DateTime.Now));
 
             var jsonTimeStamp = timeStamp.ToString("yyyy-MM-ddTHH:mm:sszzz");
-
-            var fakeLogger = Substitute.For<JavaScriptLogger>();
-            LogRequest actual = null;
-            fakeLogger.Log(Arg.Do<LogRequest>(x => actual = x));
-            Target.JavaScriptLogger = fakeLogger;
 
             SendRequest("{Session:null,LogMessages:[{severity: 8,category: 'Test',caption: 'test log',description: 'tests logs message',paramters: null,details: null,exception: {},methodSourceInfo: {}, timeStamp: '" + jsonTimeStamp + "', sequence: 1}]}");
 
@@ -201,7 +188,7 @@ namespace Loupe.Agent.Web.Module.Tests
                         Description = "tests logs message",
                         Parameters = null,
                         Details = null,
-                        Exception = new Error(),
+                        Exception = new Exception(),
                         MethodSourceInfo = new MethodSourceInfo(),
                         Sequence = 1,
                         TimeStamp = timeStamp
@@ -212,8 +199,17 @@ namespace Loupe.Agent.Web.Module.Tests
              .Configure(ctx => ctx.PushStrategy<DateTimeOffSetComparisonStrategy>());
 
             // ReSharper disable once SuspiciousTypeConversion.Global
-            //fakeLogger.Received().Log(Arg.Is<LogRequest>(x => expected.Equals(x)));
-            expected.ShouldEqual(actual);
+            _fakeLogger.Received().Log(Arg.Is<LogRequest>(x => expected.Equals(x)));
+        }
+
+        [Test]
+        public void Should_return_status_code_500_if_error_when_trying_to_log_to_loupe()
+        {
+            _fakeLogger.Log(Arg.Do<LogRequest>(x => { throw new System.Exception(); }));
+
+            SendRequest("{Session:null, LogMessages:[]}");
+
+            Assert.That(HttpResponse.StatusCode, Is.EqualTo(500));
         }
     }
 }
