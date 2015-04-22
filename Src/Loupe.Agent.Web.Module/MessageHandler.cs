@@ -26,9 +26,20 @@ namespace Loupe.Agent.Web.Module
 
         public void HandleRequest(HttpContextBase context)
         {
-            if (UrlMatch(context) && RequestIsValid(context))
+            try
             {
-                LogMessage(context);
+                if (UrlMatch(context) && RequestIsValid(context))
+                {
+                    LogMessage(context);
+                }
+            }
+            catch (Exception ex)
+            {
+#if DEBUG
+                Log.Write(LogMessageSeverity.Critical, LogSystem, 0, ex, LogWriteMode.Queued,
+                    CreateStandardRequestDetailXml(context), Category, "Exception attempting to process message",
+                    "Exception caught in top level catch block, this should have be caught by error handler specific to the part of the request processing that failed.");
+#endif
             }
         }
 
