@@ -44,9 +44,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DetailsBuilder.cs" />
+    <Compile Include="DetailBuilders\DetailsBuilderBase.cs" />
     <Compile Include="JavaScriptLogger.cs" />
     <Compile Include="Logging.cs" />
+    <Compile Include="DetailBuilders\LogMessageBlockBuilder.cs" />
     <Compile Include="MessageHandler.cs" />
     <Compile Include="Models\ClientDetails.cs" />
     <Compile Include="Models\ClientSession.cs" />
@@ -57,6 +58,7 @@
     <Compile Include="Models\LogRequest.cs" />
     <Compile Include="Models\MethodSourceInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="DetailBuilders\RequestBlockBuilder.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

@@ -15,7 +15,7 @@ namespace Loupe.Agent.Web.Module.Tests
 
             SendRequest(null);
 
-            Assert.That(HttpResponse.StatusCode, Is.EqualTo(0));
+            Assert.That(HttpResponse.StatusCode, Is.EqualTo(405));
         }
 
         [Test]
@@ -44,7 +44,7 @@ namespace Loupe.Agent.Web.Module.Tests
                 Target.HandleRequest(HttpContext);
             }
 
-            Assert.That(HttpResponse.StatusCode, Is.EqualTo(400));
+            Assert.That(HttpResponse.StatusCode, Is.EqualTo(413));
         }
     }
 }

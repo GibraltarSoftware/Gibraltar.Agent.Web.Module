@@ -1,10 +1,10 @@
 ﻿using System;
 using System.IO;
 using System.Net;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
 using Gibraltar.Agent;
+using Loupe.Agent.Web.Module.DetailBuilders;
 using Loupe.Agent.Web.Module.Models;
 using Newtonsoft.Json;
 
@@ -43,8 +43,12 @@ namespace Loupe.Agent.Web.Module
             return true;
         }
 
-        private void ResponseHandled(HttpContextBase context, HttpStatusCode statusCode)
+        private void ResponseHandled(HttpContextBase context, HttpStatusCode statusCode, string userDescription = null)
         {
+            if (!string.IsNullOrWhiteSpace(userDescription))
+            {
+                context.Response.StatusDescription = userDescription;
+            }
             context.Response.StatusCode = (int)statusCode;
             context.Response.End();
         }
@@ -60,7 +64,7 @@ namespace Loupe.Agent.Web.Module
                     "Request was received for but no body was included in the POST");
 #endif
 
-                ResponseHandled(context, HttpStatusCode.BadRequest);
+                ResponseHandled(context, HttpStatusCode.BadRequest, "Empty request body");
 
                 return false;
             }
@@ -72,7 +76,7 @@ namespace Loupe.Agent.Web.Module
                     CreateStandardRequestDetailXml(context), Category, "Request body exceeds limit",
                     "Request was received but the body included exceeded the size limit of 2k and was {0}", SizeSuffix(context.Request.InputStream.Length));   
 #endif       
-                ResponseHandled(context, HttpStatusCode.BadRequest);                
+                ResponseHandled(context, HttpStatusCode.RequestEntityTooLarge, "Request body exceeds size limit");                
             }
 
             return true;
@@ -80,7 +84,7 @@ namespace Loupe.Agent.Web.Module
 
         private bool ValidateMethod(HttpContextBase context)
         {
-            if (context.Request.HttpMethod.ToLowerInvariant() != "post")
+            if (context.Request.HttpMethod.ToUpperInvariant() != "POST")
             {
                 // We have received a request which is specifically for us but on a method we don't support.
                 // Record that this has happened and then let the request carry on and host application
@@ -90,6 +94,8 @@ namespace Loupe.Agent.Web.Module
                     CreateStandardRequestDetailXml(context), Category, "Invalid HttpMethod",
                     "Received request but was a {0} rather than a POST", context.Request.HttpMethod);
 #endif
+
+                ResponseHandled(context, HttpStatusCode.MethodNotAllowed, context.Request.HttpMethod + " not allowed. Use POST");
                 return false;
             }
 
@@ -168,23 +174,9 @@ namespace Loupe.Agent.Web.Module
 
         private string CreateStandardRequestDetailXml(HttpContextBase context, string requestBody = null)
         {
-            const string detailsFormat = "<UserAgent>{0}</UserAgent><ContentType>{1}</ContentType><ContentLength>{2}</ContentLength><IsLocal>{3}</IsLocal><IsSecureConnection>{4}</IsSecureConnection><UserHostAddress>{5}</UserHostAddress><UserHostName>{6}</UserHostName>";
+            var builder = new RequestBlockBuilder(context, requestBody);
 
-            var details = new StringBuilder();
-
-            details.Append("<Request>");
-
-            details.AppendFormat(detailsFormat, context.Request.Browser.Browser, context.Request.ContentType, context.Request.ContentLength, context.Request.IsLocal,
-                context.Request.IsSecureConnection, context.Request.UserHostAddress, context.Request.UserHostName);
-            
-            if (requestBody != null)
-            {
-                details.Append("<RequestBody>" + requestBody + "</RequestBody>");
-            }
-
-            details.Append("</Request>");
-
-            return details.ToString();
+            return builder.Build();
         }
 
 

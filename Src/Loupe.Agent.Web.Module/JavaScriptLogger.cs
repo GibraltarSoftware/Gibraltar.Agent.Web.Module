@@ -1,4 +1,5 @@
 ﻿using Gibraltar.Agent;
+using Loupe.Agent.Web.Module.DetailBuilders;
 using Loupe.Agent.Web.Module.Models;
 
 namespace Loupe.Agent.Web.Module
@@ -11,7 +12,7 @@ namespace Loupe.Agent.Web.Module
         /// <param name="logRequest">A request received from the agent to log information</param>
         public virtual void Log(LogRequest logRequest)
         {
-            var detailsBlockBuilder = new DetailsBuilder(logRequest);
+            var detailsBlockBuilder = new LogMessageBlockBuilder(logRequest);
 
             foreach (var logMessage in logRequest.LogMessages)
             {
