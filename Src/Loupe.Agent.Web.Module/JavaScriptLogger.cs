@@ -34,7 +34,7 @@ namespace Loupe.Agent.Web.Module
             }
         }
 
-        private JavaScriptException CreateJavaScriptException(LogMessage logMessage)
+        private static JavaScriptException CreateJavaScriptException(LogMessage logMessage)
         {
             JavaScriptException jsException = null;
             if (logMessage.Exception != null && !logMessage.Exception.IsEmpty())

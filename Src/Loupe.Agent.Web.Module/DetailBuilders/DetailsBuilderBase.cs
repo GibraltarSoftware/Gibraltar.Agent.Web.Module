@@ -10,7 +10,7 @@ namespace Loupe.Agent.Web.Module.DetailBuilders
     {
         private readonly XmlSerializerNamespaces _xmlNamespaces;
         private readonly XmlWriterSettings _xmlWriterSettings;
-        protected readonly StringBuilder DetailBuilder;
+        protected StringBuilder DetailBuilder;
 
         protected DetailsBuilderBase()
         {

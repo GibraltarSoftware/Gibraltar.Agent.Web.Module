@@ -65,7 +65,7 @@ namespace Loupe.Agent.Web.Module
             return true;
         }
 
-        private void ResponseHandled(HttpContextBase context, HttpStatusCode statusCode, string userDescription = null)
+        private static void ResponseHandled(HttpContextBase context, HttpStatusCode statusCode, string userDescription = null)
         {
             if (!string.IsNullOrWhiteSpace(userDescription))
             {
@@ -104,7 +104,7 @@ namespace Loupe.Agent.Web.Module
             return true;
         }
 
-        private bool ValidateMethod(HttpContextBase context)
+        private static bool ValidateMethod(HttpContextBase context)
         {
             if (context.Request.HttpMethod.ToUpperInvariant() != "POST")
             {
@@ -150,7 +150,7 @@ namespace Loupe.Agent.Web.Module
             }
         }
 
-        private LogRequest GetMessageFromRequestBody(HttpContextBase context) 
+        private static LogRequest GetMessageFromRequestBody(HttpContextBase context) 
         {
             var requestBody = ReadInputStream(context);
 
@@ -162,7 +162,7 @@ namespace Loupe.Agent.Web.Module
             return DeserializeBody(context, requestBody);
         }
 
-        private string ReadInputStream(HttpContextBase context)
+        private static string ReadInputStream(HttpContextBase context)
         {
             string body = null;
 
@@ -186,7 +186,7 @@ namespace Loupe.Agent.Web.Module
             return body;
         }
 
-        private LogRequest DeserializeBody(HttpContextBase context, string body)
+        private static LogRequest DeserializeBody(HttpContextBase context, string body)
         {
             LogRequest requestBody = null;
 
@@ -206,7 +206,7 @@ namespace Loupe.Agent.Web.Module
             return requestBody;
         }
 
-        private string CreateStandardRequestDetailXml(HttpContextBase context, string requestBody = null)
+        private static string CreateStandardRequestDetailXml(HttpContextBase context, string requestBody = null)
         {
             var builder = new RequestBlockBuilder(context, requestBody);
 

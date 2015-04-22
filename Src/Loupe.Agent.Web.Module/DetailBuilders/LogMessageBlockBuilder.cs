@@ -42,7 +42,7 @@ namespace Loupe.Agent.Web.Module.DetailBuilders
             return "<ClientDetails></ClientDetails>";
         }
 
-        private string TimeStampAndSequenceString(LogMessage logMessage)
+        private static string TimeStampAndSequenceString(LogMessage logMessage)
         {
             return string.Format("<TimeStamp>{0}</TimeStamp><Sequence>{1}</Sequence>", logMessage.TimeStamp,
                 logMessage.Sequence);
