@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Net;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
 using Gibraltar.Agent;
@@ -52,10 +53,12 @@ namespace Loupe.Agent.Web.Module
         {
             if (context.Request.InputStream.Length == 0)
             {
-                // No request body, log it and return InternalServerError to JS agent
+                // No request body return bad request
+#if DEBUG
                 Log.Write(LogMessageSeverity.Information, LogSystem, 0, null, LogWriteMode.Queued,
                     CreateStandardRequestDetailXml(context), Category, "Empty request body",
                     "Request was received for but no body was included in the POST");
+#endif
 
                 ResponseHandled(context, HttpStatusCode.BadRequest);
 
@@ -64,10 +67,11 @@ namespace Loupe.Agent.Web.Module
 
             if (context.Request.InputStream.Length > 2048)
             {
+#if DEBUG
                 Log.Write(LogMessageSeverity.Information, LogSystem, 0, null, LogWriteMode.Queued,
                     CreateStandardRequestDetailXml(context), Category, "Request body exceeds limit",
-                    "Request was received but the body included exceeded the size limit of 2k and was {0}", SizeSuffix(context.Request.InputStream.Length));
-                
+                    "Request was received but the body included exceeded the size limit of 2k and was {0}", SizeSuffix(context.Request.InputStream.Length));   
+#endif       
                 ResponseHandled(context, HttpStatusCode.BadRequest);                
             }
 
@@ -81,11 +85,11 @@ namespace Loupe.Agent.Web.Module
                 // We have received a request which is specifically for us but on a method we don't support.
                 // Record that this has happened and then let the request carry on and host application
                 // deal with an invalid request
-
+#if DEBUG
                 Log.Write(LogMessageSeverity.Warning, LogSystem, 0, null, LogWriteMode.Queued,
                     CreateStandardRequestDetailXml(context), Category, "Invalid HttpMethod",
                     "Received request but was a {0} rather than a POST", context.Request.HttpMethod);
-
+#endif
                 return false;
             }
 
@@ -132,9 +136,11 @@ namespace Loupe.Agent.Web.Module
             }
             catch (Exception ex)
             {
+#if DEBUG
                 Log.Write(LogMessageSeverity.Error, LogSystem, 0, ex, LogWriteMode.Queued,
                     CreateStandardRequestDetailXml(context), Category, "Error reading input stream",
                     "An exception occured whilst attempting to read the request input stream to enable deserialization of the data");
+#endif
             }
 
             return body;
@@ -150,23 +156,35 @@ namespace Loupe.Agent.Web.Module
             }
             catch (Exception ex)
             {           
+#if DEBUG
                 Log.Write(LogMessageSeverity.Error, LogSystem, 0, ex, LogWriteMode.Queued,
-                    CreateStandardRequestDetailXml(context), Category, "Error deserializing request body",
+                    CreateStandardRequestDetailXml(context,body), Category, "Error deserializing request body",
                     "An exception occured whilst attempting to deserialize the request body");
+#endif
             }
 
             return requestBody;
         }
 
-        private string CreateStandardRequestDetailXml(HttpContextBase context)
+        private string CreateStandardRequestDetailXml(HttpContextBase context, string requestBody = null)
         {
-            const string detailsFormat = "<Request><ContentType>{0}</ContentType><IsLocal>{1}</IsLocal><IsSecureConnection>{2}</IsSecureConnection><UserHostAddress>{3}</UserHostAddress><UserHostName>{4}</UserHostName><UserName>{5}</UserName></Request>";
+            const string detailsFormat = "<UserAgent>{0}</UserAgent><ContentType>{1}</ContentType><ContentLength>{2}</ContentLength><IsLocal>{3}</IsLocal><IsSecureConnection>{4}</IsSecureConnection><UserHostAddress>{5}</UserHostAddress><UserHostName>{6}</UserHostName>";
 
-            var details = string.Format(detailsFormat, context.Request.ContentType, context.Request.IsLocal,
-                context.Request.IsSecureConnection, context.Request.UserHostAddress, context.Request.UserHostName,
-                context.User.Identity.Name);
+            var details = new StringBuilder();
+
+            details.Append("<Request>");
+
+            details.AppendFormat(detailsFormat, context.Request.Browser.Browser, context.Request.ContentType, context.Request.ContentLength, context.Request.IsLocal,
+                context.Request.IsSecureConnection, context.Request.UserHostAddress, context.Request.UserHostName);
             
-            return details;
+            if (requestBody != null)
+            {
+                details.Append("<RequestBody>" + requestBody + "</RequestBody>");
+            }
+
+            details.Append("</Request>");
+
+            return details.ToString();
         }
 
 

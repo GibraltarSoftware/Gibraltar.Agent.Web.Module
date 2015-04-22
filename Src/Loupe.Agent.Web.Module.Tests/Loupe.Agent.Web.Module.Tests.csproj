@@ -57,6 +57,7 @@
     <Compile Include="When_init_module.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="When_logging_details.cs" />
+    <Compile Include="When_logging_validation_error.cs" />
     <Compile Include="When_receives_request_not_interested_in.cs" />
     <Compile Include="When_receives_request_to_log.cs" />
     <Compile Include="When_receives_request_with_excption.cs" />

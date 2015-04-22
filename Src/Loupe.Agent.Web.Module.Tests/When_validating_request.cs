@@ -11,10 +11,9 @@ namespace Loupe.Agent.Web.Module.Tests
         [Test]
         public void Should_only_handle_POST([Values("GET", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS")] string method)
         {
-            HttpRequest.Url.Returns(new Uri(LogUrl));
             HttpRequest.HttpMethod.Returns(method);
 
-            Target.HandleRequest(HttpContext);
+            SendRequest(null);
 
             Assert.That(HttpResponse.StatusCode, Is.EqualTo(0));
         }
