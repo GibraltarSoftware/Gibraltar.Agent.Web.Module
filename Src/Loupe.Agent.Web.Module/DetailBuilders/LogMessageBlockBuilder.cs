@@ -1,4 +1,6 @@
-﻿using Loupe.Agent.Web.Module.Models;
+﻿using System;
+using Gibraltar.Agent;
+using Loupe.Agent.Web.Module.Models;
 
 namespace Loupe.Agent.Web.Module.DetailBuilders
 {
@@ -39,13 +41,19 @@ namespace Loupe.Agent.Web.Module.DetailBuilders
                 return ObjectToXmlString(logRequest.Session.Client);
             }
 
-            return "<ClientDetails></ClientDetails>";
+            return null;
         }
 
         private static string TimeStampAndSequenceString(LogMessage logMessage)
         {
-            return string.Format("<TimeStamp>{0}</TimeStamp><Sequence>{1}</Sequence>", logMessage.TimeStamp,
-                logMessage.Sequence);
+            string timeStamp = null;
+
+            if (!logMessage.TimeStamp.Equals(new DateTimeOffset()))
+            {
+                timeStamp = string.Format("<TimeStamp>{0}</TimeStamp>",logMessage.TimeStamp);
+            }
+
+            return string.Format("{0}<Sequence>{1}</Sequence>", timeStamp,logMessage.Sequence);
         }
 
         private string CreateMethodSourceInfoString(LogMessage logMessage)
@@ -55,14 +63,14 @@ namespace Loupe.Agent.Web.Module.DetailBuilders
                 return ObjectToXmlString(logMessage.MethodSourceInfo);
             }
 
-            return "<MethodSourceInfo></MethodSourceInfo>";
+            return null;
         }
 
         private string UserSuppliedDetails(LogMessage logMessage)
         {
             if (string.IsNullOrWhiteSpace(logMessage.Details))
             {
-                return "<UserSupplied></UserSupplied>";
+                return null;
             }
 
             try

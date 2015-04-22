@@ -64,6 +64,20 @@ namespace Loupe.Agent.Web.Module.Tests
         }
 
         [Test]
+        public void Should_not_log_timestamp_if_not_provided()
+        {
+            SendRequest("{Session:null,LogMessages:[{severity: 4,category: 'Test',caption: 'test log',description: 'tests logs message',paramters: null,details: '',exception: {},methodSourceInfo: {}}]}");
+
+            WaitForEvent();
+
+            var loggedMessage = _eventArgs.Messages.FirstOrDefault();
+
+            Assert.That(loggedMessage, Is.Not.Null);
+
+            Assert.That(loggedMessage.Details, Is.Not.StringContaining("<TimeStamp>01/01/0001 00:00:00 +00:00</TimeStamp>"));            
+        }
+
+        [Test]
         public void Should_log_method_source_info_details()
         {
 
