@@ -28,7 +28,10 @@ namespace Loupe.Agent.Web.Module.Tests
 
             var expected = new LogRequest
             {
-                Session = null,
+                Session = new ClientSession
+                {
+                    SessionId = DefaultTestSessionId
+                },
                 LogMessages = new List<LogMessage>
                 {
                     new LogMessage {
@@ -67,7 +70,10 @@ namespace Loupe.Agent.Web.Module.Tests
 
             var expected = new LogRequest
             {
-                Session = null,
+                Session = new ClientSession
+                {
+                    SessionId = DefaultTestSessionId
+                },
                 LogMessages = new List<LogMessage>
                 {
                     new LogMessage {
@@ -131,7 +137,8 @@ namespace Loupe.Agent.Web.Module.Tests
                             Width = 1102,
                             Height = 873
                         }
-                    }
+                    },
+                    SessionId = DefaultTestSessionId
                 },
                 LogMessages = new List<LogMessage>
                 {

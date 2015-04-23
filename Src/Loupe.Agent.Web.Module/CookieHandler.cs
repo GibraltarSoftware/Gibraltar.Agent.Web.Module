@@ -28,6 +28,7 @@ namespace Loupe.Agent.Web.Module
             loupeCookie.HttpOnly = true;
             loupeCookie.Value = Guid.NewGuid().ToString();
             
+            context.Request.Cookies.Add(loupeCookie);
             context.Response.Cookies.Add(loupeCookie);            
         }
 

@@ -142,6 +142,7 @@ namespace Loupe.Agent.Web.Module
             if (logRequest != null)
             {
                 logRequest.User = context.User;
+                AddSessionId(context, logRequest);
 
                 try
                 {
@@ -159,6 +160,33 @@ namespace Loupe.Agent.Web.Module
                     ResponseHandled(context,HttpStatusCode.InternalServerError,"Unable to record log request");
                 }
             }
+        }
+
+        private void AddSessionId(HttpContextBase context, LogRequest logRequest)
+        {
+            var sessionCookie = context.Request.Cookies.Get("Loupe");
+
+            if (logRequest.Session == null)
+            {
+                logRequest.Session = new ClientSession();
+            }
+
+            if (sessionCookie == null && string.IsNullOrWhiteSpace(logRequest.Session.SessionId))
+            {
+#if DEBUG
+                Log.Write(LogMessageSeverity.Warning, LogSystem, 0, null, LogWriteMode.Queued,
+                    CreateStandardRequestDetailXml(context), Category, "No session Id",
+                    "No session cookie for Loupe or explicit session Id found on the request, not able to set session Id");
+#endif                
+                return;
+            }
+
+
+            if (sessionCookie != null && string.IsNullOrWhiteSpace(logRequest.Session.SessionId))
+            {
+                logRequest.Session.SessionId = sessionCookie.Value;    
+            }
+
         }
 
         private static LogRequest GetMessageFromRequestBody(HttpContextBase context) 

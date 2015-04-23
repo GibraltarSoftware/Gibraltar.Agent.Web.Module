@@ -13,6 +13,7 @@ namespace Loupe.Agent.Web.Module.Tests
         protected HttpContextBase HttpContext;
         protected HttpRequestBase HttpRequest;
         protected HttpResponseBase HttpResponse;
+        private string LoupeCookieName = "Loupe";
 
         [SetUp]
         public void SetUp()
@@ -36,13 +37,21 @@ namespace Loupe.Agent.Web.Module.Tests
         {
             target.HandleRequest(HttpContext);
 
-            Assert.That(HttpResponse.Cookies["Loupe"], Is.Not.Null);
+            Assert.That(HttpResponse.Cookies[LoupeCookieName], Is.Not.Null);
+        }
+
+        [Test]
+        public void Should_add_cookie_to_request_if_it_does_not_have_one()
+        {
+            target.HandleRequest(HttpContext);
+
+            Assert.That(HttpRequest.Cookies[LoupeCookieName], Is.Not.Null);            
         }
 
         [Test]
         public void Should_not_alter_existing_cookie()
         {
-            var loupeCookie = new HttpCookie("Loupe");
+            var loupeCookie = new HttpCookie(LoupeCookieName);
             loupeCookie.HttpOnly = true;
             loupeCookie.Value = Guid.Empty.ToString();
 
@@ -51,8 +60,8 @@ namespace Loupe.Agent.Web.Module.Tests
 
             target.HandleRequest(HttpContext);
 
-            Assert.That(HttpResponse.Cookies, Contains.Item("Loupe"));
-            Assert.That(HttpResponse.Cookies["Loupe"], Is.EqualTo(loupeCookie));
+            Assert.That(HttpResponse.Cookies, Contains.Item(LoupeCookieName));
+            Assert.That(HttpResponse.Cookies[LoupeCookieName], Is.EqualTo(loupeCookie));
         }
 
         [Test]
@@ -65,7 +74,7 @@ namespace Loupe.Agent.Web.Module.Tests
 
             target.HandleRequest(HttpContext);
 
-            Assert.That(HttpResponse.Cookies["Loupe"], Is.Null);
+            Assert.That(HttpResponse.Cookies[LoupeCookieName], Is.Null);
         }
 
         [Test]
@@ -80,7 +89,7 @@ namespace Loupe.Agent.Web.Module.Tests
 
             target.HandleRequest(HttpContext);
 
-            Assert.That(HttpResponse.Cookies["Loupe"], Is.Not.Null);
+            Assert.That(HttpResponse.Cookies[LoupeCookieName], Is.Not.Null);
         }
 
         [Test]

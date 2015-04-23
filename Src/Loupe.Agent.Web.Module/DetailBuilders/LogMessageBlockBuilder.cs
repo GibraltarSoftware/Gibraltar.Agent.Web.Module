@@ -8,6 +8,7 @@ namespace Loupe.Agent.Web.Module.DetailBuilders
     {
         private readonly LogRequest _request;
         private string _clientDetails;
+        private string _sessionDetails;
 
         public LogMessageBlockBuilder(LogRequest request)
         {
@@ -22,10 +23,17 @@ namespace Loupe.Agent.Web.Module.DetailBuilders
                 _clientDetails = CreateClientDetailString(_request);
             }
 
+            if (_sessionDetails == null)
+            {
+                _sessionDetails = SessionDetailString(_request);
+            }
+
             DetailBuilder.Clear();
 
             DetailBuilder.Append("<Details>");
-            DetailBuilder.Append(TimeStampAndSequenceString(logMessage));
+            DetailBuilder.Append(_sessionDetails);
+            DetailBuilder.Append(TimeStampDetailString(logMessage));
+            DetailBuilder.Append(SequenceDetailString(logMessage));
             DetailBuilder.Append(_clientDetails);
             DetailBuilder.Append(CreateMethodSourceInfoString(logMessage));
             DetailBuilder.Append(UserSuppliedDetails(logMessage));
@@ -44,16 +52,31 @@ namespace Loupe.Agent.Web.Module.DetailBuilders
             return null;
         }
 
-        private static string TimeStampAndSequenceString(LogMessage logMessage)
+        private static string SessionDetailString(LogRequest logRequest)
+        {
+            if (logRequest.Session != null && !string.IsNullOrWhiteSpace(logRequest.Session.SessionId))
+            {
+                return "<SessionId>" + logRequest.Session.SessionId + "</SessionId>";
+            }
+
+            return null;
+        }
+
+        private static string TimeStampDetailString(LogMessage logMessage)
         {
             string timeStamp = null;
 
             if (!logMessage.TimeStamp.Equals(new DateTimeOffset()))
             {
-                timeStamp = string.Format("<TimeStamp>{0}</TimeStamp>",logMessage.TimeStamp);
+                timeStamp = string.Format("<TimeStamp>{0}</TimeStamp>", logMessage.TimeStamp);
             }
 
-            return string.Format("{0}<Sequence>{1}</Sequence>", timeStamp,logMessage.Sequence);
+            return timeStamp;
+        }
+
+        private static string SequenceDetailString(LogMessage logMessage)
+        {
+            return string.Format("<Sequence>{0}</Sequence>", logMessage.Sequence);
         }
 
         private string CreateMethodSourceInfoString(LogMessage logMessage)

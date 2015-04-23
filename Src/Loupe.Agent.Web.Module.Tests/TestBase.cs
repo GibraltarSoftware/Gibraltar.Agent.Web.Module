@@ -18,7 +18,7 @@ namespace Loupe.Agent.Web.Module.Tests
         protected MemoryStream InputStream;
         protected IPrincipal FakeUser;
         protected IIdentity FakeIdentity;
-
+        protected string DefaultTestSessionId;
 
         [SetUp]
         public void BaseSetUp()
@@ -31,6 +31,7 @@ namespace Loupe.Agent.Web.Module.Tests
 
             InputStream = new MemoryStream();
             HttpRequest.InputStream.Returns(InputStream);
+            
 
             FakeUser = Substitute.For<IPrincipal>();
             FakeIdentity = Substitute.For<IIdentity>();
@@ -38,6 +39,9 @@ namespace Loupe.Agent.Web.Module.Tests
             FakeUser.Identity.Returns(FakeIdentity);
 
             HttpRequest.HttpMethod.Returns("POST");
+            HttpRequest.Cookies.Returns(new HttpCookieCollection());
+            HttpRequest.Cookies.Add(new HttpCookie("Loupe", Guid.Empty.ToString()));
+            DefaultTestSessionId = Guid.Empty.ToString();
 
             HttpContext.Request.Returns(HttpRequest);
             HttpContext.Response.Returns(HttpResponse);
