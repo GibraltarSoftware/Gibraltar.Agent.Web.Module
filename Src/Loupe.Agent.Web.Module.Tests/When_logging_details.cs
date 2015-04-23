@@ -60,7 +60,7 @@ namespace Loupe.Agent.Web.Module.Tests
 
             Assert.That(loggedMessage, Is.Not.Null);
 
-            Assert.That(loggedMessage.Details, Contains.Substring("<TimeStamp>" + timeStamp + "</TimeStamp><Sequence>1</Sequence>"));
+            Assert.That(loggedMessage.Details, Is.StringContaining("<TimeStamp>" + timeStamp + "</TimeStamp><Sequence>1</Sequence>"));
         }
 
         [Test]
@@ -89,7 +89,7 @@ namespace Loupe.Agent.Web.Module.Tests
 
             Assert.That(loggedMessage, Is.Not.Null);
 
-            Assert.That(loggedMessage.Details, Contains.Substring(ExpectedMethodSourceInfo));
+            Assert.That(loggedMessage.Details, Is.StringContaining(ExpectedMethodSourceInfo));
         }
 
         [Test]
@@ -103,7 +103,7 @@ namespace Loupe.Agent.Web.Module.Tests
 
             Assert.That(loggedMessage, Is.Not.Null);
 
-            Assert.That(loggedMessage.Details, Contains.Substring(ExpectedClientDetails));
+            Assert.That(loggedMessage.Details, Is.StringContaining(ExpectedClientDetails));
         }
 
         [Test]
@@ -117,7 +117,7 @@ namespace Loupe.Agent.Web.Module.Tests
 
             Assert.That(loggedMessage, Is.Not.Null);
 
-            Assert.That(loggedMessage.Details, Contains.Substring(ExpectedUserSuppliedJson));
+            Assert.That(loggedMessage.Details, Is.StringContaining(ExpectedUserSuppliedJson));
 
         }
 
@@ -132,7 +132,7 @@ namespace Loupe.Agent.Web.Module.Tests
 
             Assert.That(loggedMessage, Is.Not.Null);
 
-            Assert.That(loggedMessage.Details, Contains.Substring("<UserSupplied>this is user supplied details</UserSupplied>"));            
+            Assert.That(loggedMessage.Details, Is.StringContaining("<UserSupplied>this is user supplied details</UserSupplied>"));            
         }
 
         [Test]
@@ -157,6 +157,7 @@ namespace Loupe.Agent.Web.Module.Tests
             Assert.That(loggedMessage.Details, Is.EqualTo(expectedDetailsBlock));
             
         }
+
 
         void Log_MessageAlert(object sender, LogMessageAlertEventArgs e)
         {
