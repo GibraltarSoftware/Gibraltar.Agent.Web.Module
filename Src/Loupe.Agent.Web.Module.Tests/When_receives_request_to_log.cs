@@ -221,5 +221,14 @@ namespace Loupe.Agent.Web.Module.Tests
 
             Assert.That(HttpResponse.StatusCode, Is.EqualTo(500));
         }
+
+        [Test]
+        public void Should_not_call_logger_if_request_body_is_empty()
+        {
+            SendRequest(" ");
+
+            _fakeLogger.DidNotReceive().Log(Arg.Any<LogRequest>());
+            Assert.That(HttpResponse.StatusCode, Is.EqualTo(0));
+        }
     }
 }
