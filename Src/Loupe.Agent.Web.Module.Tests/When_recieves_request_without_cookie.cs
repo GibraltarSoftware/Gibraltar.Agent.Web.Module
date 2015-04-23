@@ -94,21 +94,8 @@ namespace Loupe.Agent.Web.Module.Tests
             target.HandleRequest(HttpContext);
 
 
-            Assert.That(HttpRequest.Cookies.Get("Lopupe"), Is.Not.Null);
-
+            Assert.That(HttpRequest.Cookies.Get("Lopupe"), Is.Null);
         }
 
-        [Test]
-        public void Should_add_cookie_to_header()
-        {
-            HttpRequest.Url.Returns(new Uri("http://www.test.com/"));
-
-            HttpRequest.CurrentExecutionFilePathExtension.Returns("");
-            HttpRequest.CurrentExecutionFilePath.Returns("/");
-
-            target.HandleRequest(HttpContext);
-
-            Assert.That(HttpResponse.Cookies["Loupe"], Is.Not.Null);            
-        }
     }
 }

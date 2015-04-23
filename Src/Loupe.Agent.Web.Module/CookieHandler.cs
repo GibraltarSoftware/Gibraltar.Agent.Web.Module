@@ -40,7 +40,7 @@ namespace Loupe.Agent.Web.Module
         private bool InterestedInRequest(HttpRequestBase request)
         {
             return extenstionWhiteList.Contains(request.CurrentExecutionFilePathExtension) &&
-                   !request.CurrentExecutionFilePath.Contains("_browserLink");
+                   !request.CurrentExecutionFilePath.Contains("__browserLink");
         }
     }
 }
