@@ -45,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CookieHandler.cs" />
     <Compile Include="DetailBuilders\DetailsBuilderBase.cs" />
     <Compile Include="JavaScriptLogger.cs" />
     <Compile Include="Logging.cs" />

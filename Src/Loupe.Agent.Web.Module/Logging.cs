@@ -6,11 +6,19 @@ namespace Loupe.Agent.Web.Module
     public class Logging:IHttpModule
     {
         private MessageHandler _messageHandler;
+        private CookieHandler _cookieHandler;
 
         public void Init(HttpApplication application)
         {
             _messageHandler = new MessageHandler();
+            _cookieHandler = new CookieHandler();
             application.PostAuthenticateRequest += OnPostAuthenticateRequest;
+            application.BeginRequest += application_BeginRequest;
+        }
+
+        void application_BeginRequest(object sender, EventArgs e)
+        {
+            _cookieHandler.HandleRequest(new HttpContextWrapper(((HttpApplication)sender).Context));
         }
 
         private void OnPostAuthenticateRequest(object sender, EventArgs e)
