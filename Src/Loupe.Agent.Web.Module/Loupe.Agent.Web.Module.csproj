@@ -45,12 +45,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CookieHandler.cs" />
+    <Compile Include="Handlers\CookieHandler.cs" />
     <Compile Include="DetailBuilders\DetailsBuilderBase.cs" />
+    <Compile Include="Handlers\CORSHandler.cs" />
+    <Compile Include="UrlCheck.cs" />
     <Compile Include="JavaScriptLogger.cs" />
     <Compile Include="Logging.cs" />
     <Compile Include="DetailBuilders\LogMessageBlockBuilder.cs" />
-    <Compile Include="MessageHandler.cs" />
+    <Compile Include="Handlers\MessageHandler.cs" />
     <Compile Include="Models\ClientDetails.cs" />
     <Compile Include="Models\ClientSession.cs" />
     <Compile Include="Models\Exception.cs" />

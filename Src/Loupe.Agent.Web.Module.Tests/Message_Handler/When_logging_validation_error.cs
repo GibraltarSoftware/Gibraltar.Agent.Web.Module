@@ -6,7 +6,7 @@ using Gibraltar.Agent;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace Loupe.Agent.Web.Module.Tests
+namespace Loupe.Agent.Web.Module.Tests.Message_Handler
 {
 #if DEBUG
     [TestFixture]

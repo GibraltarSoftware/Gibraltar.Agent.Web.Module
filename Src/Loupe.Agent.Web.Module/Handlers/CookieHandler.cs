@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Web;
 
-namespace Loupe.Agent.Web.Module
+namespace Loupe.Agent.Web.Module.Handlers
 {
     public class CookieHandler
     {

@@ -2,7 +2,7 @@
 using NSubstitute;
 using NUnit.Framework;
 
-namespace Loupe.Agent.Web.Module.Tests
+namespace Loupe.Agent.Web.Module.Tests.Message_Handler
 {
     [TestFixture]
     public class When_receives_unrelated_request:TestBase

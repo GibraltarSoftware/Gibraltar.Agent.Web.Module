@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Net;
-using System.Text.RegularExpressions;
 using System.Web;
 using Gibraltar.Agent;
 using Loupe.Agent.Web.Module.DetailBuilders;
@@ -9,14 +8,14 @@ using Loupe.Agent.Web.Module.Models;
 using Newtonsoft.Json;
 using Exception = System.Exception;
 
-namespace Loupe.Agent.Web.Module
+namespace Loupe.Agent.Web.Module.Handlers
 {
     public class MessageHandler
     {
         private const string LogSystem = "Loupe";
         private const string Category = "Loupe.Internal";
-        private readonly Regex _urlRegex = new Regex("/[Ll]oupe/[Ll]og(?!/.)", RegexOptions.Compiled);
         private JavaScriptLogger _javaScriptLogger;
+        private readonly UrlCheck _urlCheck;
 
         public JavaScriptLogger JavaScriptLogger
         {
@@ -24,11 +23,17 @@ namespace Loupe.Agent.Web.Module
             set { _javaScriptLogger = value; }
         }
 
+        public MessageHandler()
+        {
+            _urlCheck = new UrlCheck();   
+        }
+
         public void HandleRequest(HttpContextBase context)
         {
             try
             {
-                if (UrlMatch(context) && RequestIsValid(context))
+                
+                if (_urlCheck.IsLoupeUrl(context) && RequestIsValid(context))
                 {
                     LogMessage(context);
                 }
@@ -41,30 +46,6 @@ namespace Loupe.Agent.Web.Module
                     "Exception caught in top level catch block, this should have be caught by error handler specific to the part of the request processing that failed.");
 #endif
             }
-        }
-
-        private bool UrlMatch(HttpContextBase context)
-        {
-            try
-            {
-                var urlMatch = _urlRegex.Match(context.Request.Url.LocalPath);
-
-                return urlMatch.Success;
-            }
-            catch (Exception ex)
-            {
-                // for whatever reason the match has thrown an error, in 
-                // normal circumnstances this should not happen but to ensure
-                // we do not cause problems elsewhere we will swall this 
-                // exception and let the request continue through the pipeline
-#if DEBUG
-                Log.Write(LogMessageSeverity.Error, LogSystem, 0, ex, LogWriteMode.Queued,
-                    CreateStandardRequestDetailXml(context), Category, "Unable to match regex",
-                    "Exception thrown when attempting to match the regex against the local path");
-#endif
-            }
-
-            return false;
         }
 
         private bool RequestIsValid(HttpContextBase context)
@@ -253,6 +234,7 @@ namespace Loupe.Agent.Web.Module
         }
 
         private readonly string[] _sizeSuffixes = { "bytes", "KB", "MB", "GB" };
+
         private string SizeSuffix(long value)
         {
             if (value < 0) { return "-" + SizeSuffix(-value); }

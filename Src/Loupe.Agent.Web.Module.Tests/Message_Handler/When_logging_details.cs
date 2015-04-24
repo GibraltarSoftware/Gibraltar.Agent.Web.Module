@@ -3,10 +3,9 @@ using System.Linq;
 using System.Threading;
 using System.Web;
 using Gibraltar.Agent;
-using NSubstitute;
 using NUnit.Framework;
 
-namespace Loupe.Agent.Web.Module.Tests
+namespace Loupe.Agent.Web.Module.Tests.Message_Handler
 {
     /// <summary>
     /// All messages sent in these tests have their severity set to Warning to ensure that

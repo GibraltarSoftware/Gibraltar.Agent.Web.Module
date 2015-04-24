@@ -7,7 +7,7 @@ using NSubstitute;
 using NUnit.Framework;
 using Exception = Loupe.Agent.Web.Module.Models.Exception;
 
-namespace Loupe.Agent.Web.Module.Tests
+namespace Loupe.Agent.Web.Module.Tests.Message_Handler
 {
     [TestFixture]
     public class When_receives_request_to_log: TestBase

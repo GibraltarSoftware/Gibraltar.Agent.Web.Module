@@ -2,6 +2,7 @@
 using System.IO;
 using System.Security.Principal;
 using System.Web;
+using Loupe.Agent.Web.Module.Handlers;
 using NSubstitute;
 using NUnit.Framework;
 

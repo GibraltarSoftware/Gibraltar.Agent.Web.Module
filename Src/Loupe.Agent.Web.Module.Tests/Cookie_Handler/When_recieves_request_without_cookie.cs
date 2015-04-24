@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Web;
+using Loupe.Agent.Web.Module.Handlers;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace Loupe.Agent.Web.Module.Tests
+namespace Loupe.Agent.Web.Module.Tests.Cookie_Handler
 {
     [TestFixture]
     public class When_recieves_request_without_cookie
