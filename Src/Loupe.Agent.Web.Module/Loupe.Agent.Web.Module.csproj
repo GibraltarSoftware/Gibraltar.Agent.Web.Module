@@ -47,7 +47,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Handlers\HostCORSConfiguration.cs" />
+    <Compile Include="HostCORSConfiguration.cs" />
     <Compile Include="Handlers\CookieHandler.cs" />
     <Compile Include="DetailBuilders\DetailsBuilderBase.cs" />
     <Compile Include="Handlers\CORSHandler.cs" />
