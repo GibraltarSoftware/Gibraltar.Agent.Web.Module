@@ -6,6 +6,17 @@ namespace Loupe.Agent.Web.Module.Handlers
     public class CORSHandler
     {
         private readonly UrlCheck _urlCheck;
+        private HostCORSConfiguration _configruation;
+
+
+        /// <summary>
+        /// Allows tests to inject mock class for testing purposes
+        /// </summary>
+        internal HostCORSConfiguration Configruation
+        {
+            get { return _configruation ?? (_configruation = new HostCORSConfiguration()); }
+            set { _configruation = value; }
+        }
 
         public CORSHandler()
         {
@@ -16,9 +27,9 @@ namespace Loupe.Agent.Web.Module.Handlers
         {
             bool handled = false;
 
-
             if (IsCrossOriginRequest(context) && _urlCheck.IsLoupeUrl(context))
             {
+
                 if (context.Request.HttpMethod == "OPTIONS")
                 {
                     CreateResponse(context);
@@ -30,17 +41,38 @@ namespace Loupe.Agent.Web.Module.Handlers
             return handled;
         }
 
-        private static void CreateResponse(HttpContextBase context)
+        private void CreateResponse(HttpContextBase context)
+        {
+            AddAllowHeaders(context);
+
+            AddAllowOrigin(context);
+
+            AddAllowMethods(context);
+
+            context.Response.StatusCode = (int)HttpStatusCode.OK;
+        }
+
+        private static void AddAllowMethods(HttpContextBase context)
+        {
+            context.Response.AddHeader("Access-Control-Allow-Methods", "POST");
+        }
+
+        private void AddAllowOrigin(HttpContextBase context)
+        {
+            if (!_configruation.HasAllowOrigin())
+            {
+                context.Response.AddHeader("Access-Control-Allow-Origin", "*");
+            }
+        }
+
+        private void AddAllowHeaders(HttpContextBase context)
         {
             var requestHeader = context.Request.Headers.Get("Access-Control-Request-Headers");
 
-            if (requestHeader != null)
+            if (requestHeader != null & !_configruation.HasAllowHeaders())
             {
                 context.Response.AddHeader("Access-Control-Allow-Headers", requestHeader);
             }
-
-            context.Response.StatusCode = (int) HttpStatusCode.OK;
-            context.Response.AddHeader("Access-Control-Allow-Methods", "POST");
         }
 
 

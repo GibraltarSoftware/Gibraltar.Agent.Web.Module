@@ -17,7 +17,10 @@ namespace Loupe.Agent.Web.Module.Handlers
         private JavaScriptLogger _javaScriptLogger;
         private readonly UrlCheck _urlCheck;
 
-        public JavaScriptLogger JavaScriptLogger
+        /// <summary>
+        /// Allows tests to inject mock class for testing purposes
+        /// </summary>
+        internal JavaScriptLogger JavaScriptLogger
         {
             get { return _javaScriptLogger ?? (_javaScriptLogger = new JavaScriptLogger()); }
             set { _javaScriptLogger = value; }

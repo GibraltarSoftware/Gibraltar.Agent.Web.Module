@@ -23,12 +23,9 @@ namespace Loupe.Agent.Web.Module
         {
             var context = new HttpContextWrapper(((HttpApplication)sender).Context);
 
-            var handled = _corsHandler.HandleRequest(context);
-
-            if (handled)
+            if (_corsHandler.HandleRequest(context))
             {
                 ((HttpApplication)sender).CompleteRequest();
-                context.Response.End();
             }
             else
             {

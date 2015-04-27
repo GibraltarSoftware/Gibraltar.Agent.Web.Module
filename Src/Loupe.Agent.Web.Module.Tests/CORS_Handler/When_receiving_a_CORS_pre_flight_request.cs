@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Specialized;
-using System.Net.Http.Headers;
 using System.Web;
 using Loupe.Agent.Web.Module.Handlers;
 using NSubstitute;
@@ -11,22 +10,25 @@ namespace Loupe.Agent.Web.Module.Tests.CORS_Handler
     [TestFixture]
     public class When_receiving_a_CORS_pre_flight_request
     {
-        const string AccessControlAllowOrigin = "Access-Control-Allow-Origin";
+        
 
         private CORSHandler Target;
 
         private HttpContextBase HttpContext;
         private HttpRequestBase HttpRequest;
         private HttpResponseBase HttpResponse;
+        private HostCORSConfiguration _fakeConfig;
 
         private NameValueCollection httpResponseHeaders;
 
         [SetUp]
         public void SetUp()
         {
+
             HttpContext = Substitute.For<HttpContextBase>();
             HttpRequest = Substitute.For<HttpRequestBase>();
             HttpResponse = Substitute.For<HttpResponseBase>();
+            _fakeConfig = Substitute.For<HostCORSConfiguration>();
 
             httpResponseHeaders = new NameValueCollection();
 
@@ -42,6 +44,7 @@ namespace Loupe.Agent.Web.Module.Tests.CORS_Handler
             HttpContext.Response.Returns(HttpResponse);
 
             Target = new CORSHandler();
+            Target.Configruation = _fakeConfig;
         }
 
         private void AddToResponseHeaders(string name, string value)
@@ -66,7 +69,6 @@ namespace Loupe.Agent.Web.Module.Tests.CORS_Handler
         [Test]
         public void Should_not_handle_if_no_origin_header()
         {
-            
             HttpRequest.Url.Returns(new Uri("http://test.com/gibraltar/log"));
 
             var actual = Target.HandleRequest(HttpContext);
@@ -80,8 +82,6 @@ namespace Loupe.Agent.Web.Module.Tests.CORS_Handler
         {
             HttpRequest.HttpMethod.Returns("OPTIONS");
             HttpRequest.Headers.Add("Origin","http://www.mysite.com/loupe/log");
-            HttpRequest.Headers.Add("Access-Control-Request-Headers", "content-type");
-            HttpRequest.Headers.Add("content-type","application/json");
 
             HttpRequest.Url.Returns(new Uri("http://test.com/loupe/log"));
 
@@ -89,7 +89,73 @@ namespace Loupe.Agent.Web.Module.Tests.CORS_Handler
 
             Assert.That(actual, Is.True);
             Assert.That(HttpResponse.Headers["Access-Control-Allow-Methods"],Is.EqualTo("POST"));
-            Assert.That(HttpResponse.Headers["Access-Control-Allow-Headers"], Is.EqualTo("content-type"));
         }
-    }
+
+        [Test]
+        public void Should_include_allow_headers_if_present_on_request()
+        {
+            _fakeConfig.AllowHeaders().Returns(false);
+
+            HttpRequest.HttpMethod.Returns("OPTIONS");
+            HttpRequest.Headers.Add("Origin", "http://www.mysite.com/loupe/log");
+            HttpRequest.Headers.Add("Access-Control-Request-Headers", "content-type");
+
+            HttpRequest.Url.Returns(new Uri("http://test.com/loupe/log"));
+
+            var actual = Target.HandleRequest(HttpContext);
+
+            Assert.That(actual, Is.True);
+            Assert.That(HttpResponse.Headers["Access-Control-Allow-Headers"], Is.EqualTo("content-type"));            
+        }
+
+        [Test]
+        public void Should_not_add_CORS_header_if_in_customHeaders_in_config()
+        {
+            _fakeConfig.AllowOrigin().Returns(true);
+
+            HttpRequest.HttpMethod.Returns("OPTIONS");
+            HttpRequest.Headers.Add("Origin", "http://www.mysite.com/loupe/log");
+
+            HttpRequest.Url.Returns(new Uri("http://test.com/loupe/log"));
+
+            var actual = Target.HandleRequest(HttpContext);
+
+            Assert.That(actual, Is.True);
+
+            Assert.That(HttpResponse.Headers["Access-Control-Allow-Origin"], Is.Null);
+        }
+
+        [Test]
+        public void Should_not_add_CORS_header_if_not_set_in_config()
+        {
+            _fakeConfig.AllowOrigin().Returns(false);
+
+            HttpRequest.HttpMethod.Returns("OPTIONS");
+            HttpRequest.Headers.Add("Origin", "http://www.mysite.com/loupe/log");
+
+            HttpRequest.Url.Returns(new Uri("http://test.com/loupe/log"));
+
+            var actual = Target.HandleRequest(HttpContext);
+
+            Assert.That(actual, Is.True);
+
+            Assert.That(HttpResponse.Headers["Access-Control-Allow-Origin"], Is.EqualTo("*"));
+        }
+
+        [Test]
+        public void Should_not_add_allow_headers_if_set_in_config()
+        {
+            _fakeConfig.AllowHeaders().Returns(true);
+            HttpRequest.HttpMethod.Returns("OPTIONS");
+            HttpRequest.Headers.Add("Origin", "http://www.mysite.com/loupe/log");
+            HttpRequest.Headers.Add("Access-Control-Request-Headers", "content-type");
+
+            HttpRequest.Url.Returns(new Uri("http://test.com/loupe/log"));
+
+            var actual = Target.HandleRequest(HttpContext);
+
+            Assert.That(actual, Is.True);
+            Assert.That(HttpResponse.Headers["Access-Control-Allow-Headers"], Is.Null);                  
+        }
+    } 
 }
