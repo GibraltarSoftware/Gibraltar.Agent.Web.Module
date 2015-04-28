@@ -8,7 +8,7 @@ namespace Loupe.Agent.Web.Module.Handlers
     {
         readonly List<string> _extenstionWhiteList = new List<string>{".html", ".htm",".aspx" ,""}; 
 
-        private const string CookieName = "Loupe";
+        private const string CookieName = "LoupeSessionId";
 
         public void HandleRequest(HttpContextBase context)
         {

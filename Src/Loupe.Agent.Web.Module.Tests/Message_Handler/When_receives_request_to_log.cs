@@ -25,7 +25,7 @@ namespace Loupe.Agent.Web.Module.Tests.Message_Handler
         }
 
         [Test]
-        public void Should_return_200([Values("http://www.test.com/loupe/log",
+        public void Should_return_204([Values("http://www.test.com/loupe/log",
                                               "http://www.test.com/Loupe/log",
                                               "http://www.test.com/loupe/Log",
                                               "http://www.test.com/Loupe/Log",
@@ -34,7 +34,7 @@ namespace Loupe.Agent.Web.Module.Tests.Message_Handler
             
             SendRequest("{Session:null, LogMessages:[]}");
  
-            Assert.That(HttpResponse.StatusCode, Is.EqualTo(200));            
+            Assert.That(HttpResponse.StatusCode, Is.EqualTo(204));            
         }
 
         [Test]
@@ -68,7 +68,7 @@ namespace Loupe.Agent.Web.Module.Tests.Message_Handler
                         Details = null,
                         Exception = new Exception(),
                         MethodSourceInfo = new MethodSourceInfo(),
-                        Sequence = 0,
+                        Sequence = null,
                         TimeStamp = new DateTimeOffset()
                     }
                 },
@@ -125,7 +125,7 @@ namespace Loupe.Agent.Web.Module.Tests.Message_Handler
                         Details = null,
                         Exception = new Exception(),
                         MethodSourceInfo = new MethodSourceInfo(),
-                        Sequence = 0,
+                        Sequence = null,
                         TimeStamp = new DateTimeOffset()
                     }
                 },
@@ -164,7 +164,7 @@ namespace Loupe.Agent.Web.Module.Tests.Message_Handler
                             Column = 37
 
                         },
-                        Sequence = 0,
+                        Sequence = null,
                         TimeStamp = new DateTimeOffset()
                     }
                 },
@@ -240,7 +240,7 @@ namespace Loupe.Agent.Web.Module.Tests.Message_Handler
             HttpRequest.Cookies.Clear();
 
             var sessionId = Guid.NewGuid().ToString();
-            var loupeCookie = new HttpCookie("Loupe", sessionId);
+            var loupeCookie = new HttpCookie(LoupeCookieName, sessionId);
 
             HttpRequest.Cookies.Add(loupeCookie);
 

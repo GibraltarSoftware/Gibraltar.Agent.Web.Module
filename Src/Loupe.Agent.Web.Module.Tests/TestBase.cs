@@ -11,6 +11,7 @@ namespace Loupe.Agent.Web.Module.Tests
     public class TestBase
     {
         protected const string LogUrl = "http://www.test.com/loupe/log";
+        protected const string LoupeCookieName = "LoupeSessionId";
 
         protected HttpContextBase HttpContext;
         protected HttpRequestBase HttpRequest;
@@ -41,7 +42,7 @@ namespace Loupe.Agent.Web.Module.Tests
 
             HttpRequest.HttpMethod.Returns("POST");
             HttpRequest.Cookies.Returns(new HttpCookieCollection());
-            HttpRequest.Cookies.Add(new HttpCookie("Loupe", Guid.Empty.ToString()));
+            HttpRequest.Cookies.Add(new HttpCookie(LoupeCookieName, Guid.Empty.ToString()));
             DefaultTestSessionId = Guid.Empty.ToString();
 
             HttpContext.Request.Returns(HttpRequest);

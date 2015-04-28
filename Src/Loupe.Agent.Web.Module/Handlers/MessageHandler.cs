@@ -145,7 +145,7 @@ namespace Loupe.Agent.Web.Module.Handlers
                 {
                     JavaScriptLogger.Log(logRequest);
 
-                    ResponseHandled(context, HttpStatusCode.OK);
+                    ResponseHandled(context, HttpStatusCode.NoContent);
                 }
                 catch (Exception ex)
                 {
@@ -161,7 +161,7 @@ namespace Loupe.Agent.Web.Module.Handlers
 
         private void AddSessionId(HttpContextBase context, LogRequest logRequest)
         {
-            var sessionCookie = context.Request.Cookies.Get("Loupe");
+            var sessionCookie = context.Request.Cookies.Get("LoupeSessionId");
 
             context.Items.Add("LoupeSessionId", "");
 

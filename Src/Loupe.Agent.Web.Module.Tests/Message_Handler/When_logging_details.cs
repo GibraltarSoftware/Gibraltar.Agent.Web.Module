@@ -157,7 +157,7 @@ namespace Loupe.Agent.Web.Module.Tests.Message_Handler
             HttpRequest.Cookies.Clear();
 
             var sessionId = Guid.NewGuid().ToString();
-            var loupeCookie = new HttpCookie("Loupe", sessionId);
+            var loupeCookie = new HttpCookie(LoupeCookieName, sessionId);
 
             HttpRequest.Cookies.Add(loupeCookie);
 
@@ -227,7 +227,7 @@ namespace Loupe.Agent.Web.Module.Tests.Message_Handler
             HttpRequest.Cookies.Clear();
 
             var sessionId = Guid.NewGuid().ToString();
-            var loupeCookie = new HttpCookie("Loupe", sessionId);
+            var loupeCookie = new HttpCookie(LoupeCookieName, sessionId);
 
             HttpRequest.Cookies.Add(loupeCookie);
 

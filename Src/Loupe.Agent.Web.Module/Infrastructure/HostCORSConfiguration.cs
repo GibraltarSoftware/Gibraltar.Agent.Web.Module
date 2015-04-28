@@ -61,7 +61,7 @@ namespace Loupe.Agent.Web.Module.Infrastructure
         {
             GlobalHeaders = new Dictionary<string, string>();
 
-            var doc = LoadXmlForSystemWebServerSection;
+            var doc = LoadXmlForSystemWebServerSection();
 
             var headers = GetElementByPath(doc, "httpProtocol.customHeaders");
 
@@ -83,20 +83,17 @@ namespace Loupe.Agent.Web.Module.Infrastructure
             }
         }
 
-        private XDocument LoadXmlForSystemWebServerSection
+        private XDocument LoadXmlForSystemWebServerSection()
         {
-            get
-            {
-                var configuration = WebConfigurationManager.OpenWebConfiguration("~");
+            var configuration = WebConfigurationManager.OpenWebConfiguration("~");
 
-                var webServerConfig = configuration.GetSection("system.webServer");
+            var webServerConfig = configuration.GetSection("system.webServer");
 
-                var xml = webServerConfig.SectionInformation.GetRawXml();
+            var xml = webServerConfig.SectionInformation.GetRawXml();
 
 
-                var doc = XDocument.Parse(xml);
-                return doc;
-            }
+            var doc = XDocument.Parse(xml);
+            return doc;
         }
 
         public XElement GetElementByPath(XDocument document, string path)

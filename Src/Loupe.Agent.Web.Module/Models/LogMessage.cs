@@ -57,7 +57,7 @@ namespace Loupe.Agent.Web.Module.Models
         /// <summary>
         /// Specifics the sequence number of the message
         /// </summary>
-        public long Sequence { get; set; }
+        public long? Sequence { get; set; }
 
     }
 }

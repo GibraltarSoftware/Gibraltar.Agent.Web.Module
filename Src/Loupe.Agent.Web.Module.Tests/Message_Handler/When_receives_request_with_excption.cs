@@ -52,7 +52,7 @@ namespace Loupe.Agent.Web.Module.Tests.Message_Handler
                             Column = 18
                         },
                         MethodSourceInfo = new MethodSourceInfo(),
-                        Sequence = 0,
+                        Sequence = null,
                         TimeStamp = new DateTimeOffset()
                     }
                 },
@@ -94,7 +94,7 @@ namespace Loupe.Agent.Web.Module.Tests.Message_Handler
                             Column = 18
                         },
                         MethodSourceInfo = new MethodSourceInfo(),
-                        Sequence = 0,
+                        Sequence = null,
                         TimeStamp = new DateTimeOffset()
                     }
                 },
@@ -160,7 +160,7 @@ namespace Loupe.Agent.Web.Module.Tests.Message_Handler
                             Column = 18
                         },
                         MethodSourceInfo = new MethodSourceInfo(),
-                        Sequence = 0,
+                        Sequence = null,
                         TimeStamp = new DateTimeOffset()
                     }
                 },

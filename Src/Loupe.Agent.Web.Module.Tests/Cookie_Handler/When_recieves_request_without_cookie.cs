@@ -15,7 +15,7 @@ namespace Loupe.Agent.Web.Module.Tests.Cookie_Handler
         protected HttpContextBase HttpContext;
         protected HttpRequestBase HttpRequest;
         protected HttpResponseBase HttpResponse;
-        private const string LoupeCookieName = "Loupe";
+        private const string LoupeCookieName = "LoupeSessionId";
 
         [SetUp]
         public void SetUp()
