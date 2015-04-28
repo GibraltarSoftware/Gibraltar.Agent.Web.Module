@@ -54,6 +54,7 @@
     <Reference Include="System.Web" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AssemblySetup.cs" />
     <Compile Include="CORS_Handler\CORSTestBase.cs" />
     <Compile Include="CORS_Handler\When_receiving_CORS_request.cs" />
     <Compile Include="DateTimeOffSetComparison.cs" />
