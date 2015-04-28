@@ -32,14 +32,25 @@ namespace Loupe.Agent.Web.Module.Handlers
             _urlCheck = new UrlCheck();   
         }
 
-        public void HandleRequest(HttpContextBase context)
+        public bool HandleRequest(HttpContextBase context)
         {
+            var handled = false;
+
             try
             {
-                
-                if (_urlCheck.IsLoupeUrl(context) && RequestIsValid(context))
+                if (_urlCheck.IsLoupeUrl(context))
                 {
-                    LogMessage(context);
+                    // if the request is for loupe then we want to 
+                    // indicate its handled so the actual module
+                    // completes the request when this method 
+                    // exits
+                    handled = true;
+
+                    if (RequestIsValid(context))
+                    {
+                        LogMessage(context);                        
+                    }
+
                 }
             }
             catch (Exception ex)
@@ -50,6 +61,8 @@ namespace Loupe.Agent.Web.Module.Handlers
                     "Exception caught in top level catch block, this should have be caught by error handler specific to the part of the request processing that failed.");
 #endif
             }
+
+            return handled;
         }
 
         private bool RequestIsValid(HttpContextBase context)
@@ -68,7 +81,6 @@ namespace Loupe.Agent.Web.Module.Handlers
                 context.Response.StatusDescription = userDescription;
             }
             context.Response.StatusCode = (int)statusCode;
-            context.Response.End();
         }
 
         private bool ValidateInputStream(HttpContextBase context)
@@ -151,6 +163,8 @@ namespace Loupe.Agent.Web.Module.Handlers
         {
             var sessionCookie = context.Request.Cookies.Get("Loupe");
 
+            context.Items.Add("LoupeSessionId", "");
+
             if (logRequest.Session == null)
             {
                 logRequest.Session = new ClientSession();
@@ -172,6 +186,9 @@ namespace Loupe.Agent.Web.Module.Handlers
                 logRequest.Session.SessionId = sessionCookie.Value;    
             }
 
+            // store the id in the HttpContext so available to agents in 
+            // actual code base for logging
+            context.Items["LoupeSessionId"]= logRequest.Session.SessionId;
         }
 
         private static LogRequest GetMessageFromRequestBody(HttpContextBase context) 

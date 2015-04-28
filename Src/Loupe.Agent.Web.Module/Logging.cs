@@ -35,7 +35,14 @@ namespace Loupe.Agent.Web.Module
 
         private void OnPostAuthenticateRequest(object sender, EventArgs e)
         {
-            _messageHandler.HandleRequest(new HttpContextWrapper(((HttpApplication)sender).Context)); ;
+            var application = (HttpApplication) sender;
+
+            var handled = _messageHandler.HandleRequest(new HttpContextWrapper(application.Context));
+
+            if (handled)
+            {
+               application.CompleteRequest();
+            }
         }
 
         // Implemented as part of IHttpModule

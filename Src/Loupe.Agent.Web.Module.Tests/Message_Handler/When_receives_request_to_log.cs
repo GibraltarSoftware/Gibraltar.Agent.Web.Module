@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Web;
 using ExpectedObjects;
 using Gibraltar.Agent;
 using Loupe.Agent.Web.Module.Infrastructure;
@@ -230,6 +232,40 @@ namespace Loupe.Agent.Web.Module.Tests.Message_Handler
 
             _fakeLogger.DidNotReceive().Log(Arg.Any<LogRequest>());
             Assert.That(HttpResponse.StatusCode, Is.EqualTo(0));
+        }
+
+        [Test]
+        public void Should_store_session_id_from_cookie_in_HttpContext_Items()
+        {
+            HttpRequest.Cookies.Clear();
+
+            var sessionId = Guid.NewGuid().ToString();
+            var loupeCookie = new HttpCookie("Loupe", sessionId);
+
+            HttpRequest.Cookies.Add(loupeCookie);
+
+            var items = new Dictionary<object, object>();
+            HttpContext.Items.Returns(items);
+
+            SendRequest("{Session:null, LogMessages:[]}");
+
+            Assert.That(items.Count, Is.EqualTo(1));
+            Assert.That(items.First().Value, Is.EqualTo(sessionId));
+            
+        }
+
+        [Test]
+        public void Should_store_session_id_from_message_in_HttpContext_items()
+        {
+            HttpRequest.Cookies.Clear();
+
+            var items = new Dictionary<object, object>();
+            HttpContext.Items.Returns(items);
+
+            SendRequest("{Session:{sessionId: 'abc-123'}, LogMessages:[]}");
+
+            Assert.That(items.Count, Is.EqualTo(1));
+            Assert.That(items.First().Value, Is.EqualTo("abc-123"));            
         }
     }
 }
