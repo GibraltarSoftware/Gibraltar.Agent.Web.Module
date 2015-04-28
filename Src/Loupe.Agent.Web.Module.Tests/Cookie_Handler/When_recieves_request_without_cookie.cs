@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Specialized;
 using System.Web;
 using Loupe.Agent.Web.Module.Handlers;
 using NSubstitute;
@@ -14,7 +15,7 @@ namespace Loupe.Agent.Web.Module.Tests.Cookie_Handler
         protected HttpContextBase HttpContext;
         protected HttpRequestBase HttpRequest;
         protected HttpResponseBase HttpResponse;
-        private string LoupeCookieName = "Loupe";
+        private const string LoupeCookieName = "Loupe";
 
         [SetUp]
         public void SetUp()
@@ -24,14 +25,15 @@ namespace Loupe.Agent.Web.Module.Tests.Cookie_Handler
             HttpResponse = Substitute.For<HttpResponseBase>();
 
             HttpRequest.Cookies.Returns(new HttpCookieCollection());
+            HttpRequest.Headers.Returns(new NameValueCollection());
             HttpResponse.Cookies.Returns(new HttpCookieCollection());
+
 
             HttpContext.Request.Returns(HttpRequest);
             HttpContext.Response.Returns(HttpResponse);
 
             target = new CookieHandler();
         }
-
 
         [Test]
         public void Should_add_cookie_to_response_if_it_does_not_have_one()
@@ -104,8 +106,17 @@ namespace Loupe.Agent.Web.Module.Tests.Cookie_Handler
             target.HandleRequest(HttpContext);
 
 
-            Assert.That(HttpRequest.Cookies.Get("Lopupe"), Is.Null);
+            Assert.That(HttpRequest.Cookies.Get(LoupeCookieName), Is.Null);
         }
 
+        [Test]
+        public void Should_not_add_cookie_for_CORS_request()
+        {
+            HttpRequest.Headers.Add("Origin", "http://www.mysite.com/loupe/log");
+            target.HandleRequest(HttpContext);
+
+
+            Assert.That(HttpRequest.Cookies.Get(LoupeCookieName), Is.Null);
+        }
     }
 }

@@ -6,7 +6,7 @@ namespace Loupe.Agent.Web.Module.Handlers
 {
     public class CookieHandler
     {
-        readonly List<string> extenstionWhiteList = new List<string>{".html", ".htm",".aspx" ,""}; 
+        readonly List<string> _extenstionWhiteList = new List<string>{".html", ".htm",".aspx" ,""}; 
 
         private const string CookieName = "Loupe";
 
@@ -14,7 +14,6 @@ namespace Loupe.Agent.Web.Module.Handlers
         {
             if (InterestedInRequest(context.Request))
             {
-
                 if (CookieDoesNotExist(context.Request))
                 {
                     AddSessionCookie(context);
@@ -40,8 +39,15 @@ namespace Loupe.Agent.Web.Module.Handlers
 
         private bool InterestedInRequest(HttpRequestBase request)
         {
-            return extenstionWhiteList.Contains(request.CurrentExecutionFilePathExtension) &&
+            // cookies not supported for CORS
+            if (request.Headers.Get("Origin") != null)
+            {
+                return false;
+            }
+
+            return _extenstionWhiteList.Contains(request.CurrentExecutionFilePathExtension) &&
                    !request.CurrentExecutionFilePath.Contains("__browserLink");
         }
+
     }
 }
