@@ -3,7 +3,7 @@ using System.Linq;
 using System.Web.Configuration;
 using System.Xml.Linq;
 
-namespace Loupe.Agent.Web.Module
+namespace Loupe.Agent.Web.Module.Infrastructure
 {
     public class HostCORSConfiguration
     {

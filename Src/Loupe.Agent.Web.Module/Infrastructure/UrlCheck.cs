@@ -3,7 +3,7 @@ using System.Text.RegularExpressions;
 using System.Web;
 using Gibraltar.Agent;
 
-namespace Loupe.Agent.Web.Module
+namespace Loupe.Agent.Web.Module.Infrastructure
 {
     public class UrlCheck
     {

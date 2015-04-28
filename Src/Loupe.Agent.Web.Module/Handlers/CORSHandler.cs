@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using System.Web;
 using Gibraltar.Agent;
+using Loupe.Agent.Web.Module.Infrastructure;
 
 namespace Loupe.Agent.Web.Module.Handlers
 {

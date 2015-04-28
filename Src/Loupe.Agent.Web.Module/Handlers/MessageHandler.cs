@@ -4,6 +4,7 @@ using System.Net;
 using System.Web;
 using Gibraltar.Agent;
 using Loupe.Agent.Web.Module.DetailBuilders;
+using Loupe.Agent.Web.Module.Infrastructure;
 using Loupe.Agent.Web.Module.Models;
 using Newtonsoft.Json;
 using Exception = System.Exception;

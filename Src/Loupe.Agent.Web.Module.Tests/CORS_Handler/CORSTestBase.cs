@@ -2,6 +2,7 @@
 using System.Collections.Specialized;
 using System.Web;
 using Loupe.Agent.Web.Module.Handlers;
+using Loupe.Agent.Web.Module.Infrastructure;
 using NSubstitute;
 using NUnit.Framework;
 

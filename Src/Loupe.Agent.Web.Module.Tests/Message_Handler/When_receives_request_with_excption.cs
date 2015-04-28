@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using ExpectedObjects;
 using Gibraltar.Agent;
+using Loupe.Agent.Web.Module.Infrastructure;
 using Loupe.Agent.Web.Module.Models;
 using NSubstitute;
 using NUnit.Framework;

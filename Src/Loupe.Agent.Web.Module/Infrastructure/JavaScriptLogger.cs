@@ -2,7 +2,7 @@
 using Loupe.Agent.Web.Module.DetailBuilders;
 using Loupe.Agent.Web.Module.Models;
 
-namespace Loupe.Agent.Web.Module
+namespace Loupe.Agent.Web.Module.Infrastructure
 {
     public class JavaScriptLogger
     {

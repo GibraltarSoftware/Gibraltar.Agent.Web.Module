@@ -47,12 +47,12 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="HostCORSConfiguration.cs" />
+    <Compile Include="Infrastructure\HostCORSConfiguration.cs" />
     <Compile Include="Handlers\CookieHandler.cs" />
     <Compile Include="DetailBuilders\DetailsBuilderBase.cs" />
     <Compile Include="Handlers\CORSHandler.cs" />
-    <Compile Include="UrlCheck.cs" />
-    <Compile Include="JavaScriptLogger.cs" />
+    <Compile Include="Infrastructure\UrlCheck.cs" />
+    <Compile Include="Infrastructure\JavaScriptLogger.cs" />
     <Compile Include="Logging.cs" />
     <Compile Include="DetailBuilders\LogMessageBlockBuilder.cs" />
     <Compile Include="Handlers\MessageHandler.cs" />
