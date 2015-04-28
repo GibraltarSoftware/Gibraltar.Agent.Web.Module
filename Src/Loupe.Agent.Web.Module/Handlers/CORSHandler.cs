@@ -74,6 +74,8 @@ namespace Loupe.Agent.Web.Module.Handlers
 
             AddAllowMethods(context);
 
+            AddMaxAge(context);
+
             context.Response.StatusCode = (int)HttpStatusCode.OK;
         }
 
@@ -110,6 +112,16 @@ namespace Loupe.Agent.Web.Module.Handlers
             if (requestHeader != null & !Configuration.GlobalAllowHeaders)
             {
                 context.Response.AddHeader("Access-Control-Allow-Headers", requestHeader);
+            }
+        }
+
+        private void AddMaxAge(HttpContextBase context)
+        {
+            if (!Configuration.GlobalMaxAge)
+            {
+                // to reduce number of pre-flight requests set the max
+                // age to 20 mins (1200 seconds)
+                context.Response.AddHeader("Access-Control-Max-Age","1200");
             }
         }
 

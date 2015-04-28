@@ -63,7 +63,41 @@ namespace Loupe.Agent.Web.Module.Tests.CORS_Handler
         }
 
         [Test]
-        public void Should_not_add_CORS_header_if_in_customHeaders_in_config()
+        public void Should_include_max_age_header_if_not_in_config()
+        {
+            FakeConfigProvider.GlobalMaxAge.Returns(false);
+
+            HttpRequest.HttpMethod.Returns("OPTIONS");
+            HttpRequest.Headers.Add("Origin", "http://www.mysite.com/loupe/log");
+
+            HttpRequest.Url.Returns(new Uri("http://test.com/loupe/log"));
+
+            var actual = Target.HandleRequest(HttpContext);
+
+            Assert.That(actual, Is.True);
+
+            Assert.That(HttpResponse.Headers["Access-Control-Max-Age"], Is.Not.Null);            
+        }
+
+        [Test]
+        public void Should_not_include_max_age_header_if_set_in_config()
+        {
+            FakeConfigProvider.GlobalMaxAge.Returns(true);
+
+            HttpRequest.HttpMethod.Returns("OPTIONS");
+            HttpRequest.Headers.Add("Origin", "http://www.mysite.com/loupe/log");
+
+            HttpRequest.Url.Returns(new Uri("http://test.com/loupe/log"));
+
+            var actual = Target.HandleRequest(HttpContext);
+
+            Assert.That(actual, Is.True);
+
+            Assert.That(HttpResponse.Headers["Access-Control-Max-Age"], Is.Null);
+        }
+
+        [Test]
+        public void Should_not_add_allow_origin_header_if_in_customHeaders_in_config()
         {
             FakeConfigProvider.GlobalAllowOrigin.Returns(true);
 
@@ -80,7 +114,7 @@ namespace Loupe.Agent.Web.Module.Tests.CORS_Handler
         }
 
         [Test]
-        public void Should_not_add_CORS_header_if_not_set_in_config()
+        public void Should_not_add_allow_origin_header_if_not_set_in_config()
         {
             HttpRequest.HttpMethod.Returns("OPTIONS");
             HttpRequest.Headers.Add("Origin", "http://www.mysite.com/loupe/log");
