@@ -5,8 +5,8 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Loupe.Agent.Web.Module")]
-[assembly: AssemblyDescription("HttpModule that handles request to log information & exceptions")]
+[assembly: AssemblyTitle("Loupe Agent HttpModule")]
+[assembly: AssemblyDescription("HttpModule that handles requests from Loupe JavaScript agent to log information & exceptions")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Gibraltar Software Inc.")]
 [assembly: AssemblyProduct("Loupe.Agent.Web.Module")]

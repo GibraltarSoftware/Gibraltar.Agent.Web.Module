@@ -69,9 +69,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="Loupe.Agent.Web.Module.nuspec" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
+    <None Include="web.config.install.xdt" />
+    <None Include="web.config.uninstall.xdt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
