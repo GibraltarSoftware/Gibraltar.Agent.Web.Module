@@ -65,7 +65,7 @@ namespace Loupe.Agent.Web.Module.Tests.CORS_Handler
         [Test]
         public void Should_not_add_CORS_header_if_in_customHeaders_in_config()
         {
-            FakeConfigProvider.HasAllowOrigin().Returns(true);
+            FakeConfigProvider.GlobalAllowOrigin.Returns(true);
 
             HttpRequest.HttpMethod.Returns("OPTIONS");
             HttpRequest.Headers.Add("Origin", "http://www.mysite.com/loupe/log");
@@ -97,7 +97,7 @@ namespace Loupe.Agent.Web.Module.Tests.CORS_Handler
         [Test]
         public void Should_not_add_allow_headers_if_set_in_config()
         {
-            FakeConfigProvider.HasAllowHeaders().Returns(true);
+            FakeConfigProvider.GlobalAllowHeaders.Returns(true);
             HttpRequest.HttpMethod.Returns("OPTIONS");
             HttpRequest.Headers.Add("Origin", "http://www.mysite.com/loupe/log");
             HttpRequest.Headers.Add("Access-Control-Request-Headers", "content-type");
@@ -113,7 +113,7 @@ namespace Loupe.Agent.Web.Module.Tests.CORS_Handler
         [Test]
         public void Should_return_500_if_error_during_processing()
         {
-            FakeConfigProvider.HasAllowOrigin().Returns(x => { throw new Exception("Error"); });
+            FakeConfigProvider.GlobalAllowOrigin.Returns(x => { throw new Exception("Error"); });
             HttpRequest.HttpMethod.Returns("OPTIONS");
             HttpRequest.Headers.Add("Origin", "http://www.mysite.com/loupe/log");
 

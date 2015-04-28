@@ -89,7 +89,7 @@ namespace Loupe.Agent.Web.Module.Handlers
 
         private void AddAllowMethods(HttpContextBase context)
         {
-            if (!Configuration.HasAllowMethods())
+            if (!Configuration.GlobalAllowMethods)
             {
                 context.Response.AddHeader("Access-Control-Allow-Methods", "POST");
             }
@@ -97,7 +97,7 @@ namespace Loupe.Agent.Web.Module.Handlers
 
         private void AddAllowOrigin(HttpContextBase context)
         {
-            if (!Configuration.HasAllowOrigin())
+            if (!Configuration.GlobalAllowOrigin)
             {
                 context.Response.AddHeader("Access-Control-Allow-Origin", "*");
             }
@@ -107,7 +107,7 @@ namespace Loupe.Agent.Web.Module.Handlers
         {
             var requestHeader = context.Request.Headers.Get("Access-Control-Request-Headers");
 
-            if (requestHeader != null & !Configuration.HasAllowHeaders())
+            if (requestHeader != null & !Configuration.GlobalAllowHeaders)
             {
                 context.Response.AddHeader("Access-Control-Allow-Headers", requestHeader);
             }

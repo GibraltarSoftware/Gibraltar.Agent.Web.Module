@@ -25,9 +25,9 @@ namespace Loupe.Agent.Web.Module.Tests.CORS_Handler
             HttpRequest = Substitute.For<HttpRequestBase>();
             HttpResponse = Substitute.For<HttpResponseBase>();
             FakeConfigProvider = Substitute.For<HostCORSConfiguration>();
-            FakeConfigProvider.HasAllowOrigin().Returns(false);
-            FakeConfigProvider.HasAllowHeaders().Returns(false);
-            FakeConfigProvider.HasAllowMethods().Returns(false);
+            FakeConfigProvider.GlobalAllowOrigin.Returns(false);
+            FakeConfigProvider.GlobalAllowHeaders.Returns(false);
+            FakeConfigProvider.GlobalAllowMethods.Returns(false);
 
             httpResponseHeaders = new NameValueCollection();
 

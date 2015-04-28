@@ -14,19 +14,28 @@ namespace Loupe.Agent.Web.Module
         private Dictionary<string, string> GlobalHeaders { get; set; }
 
 
-        public virtual bool HasAllowOrigin()
+        public virtual bool GlobalAllowOrigin
         {
-            return HasHeader(AccessControlAllowOrigin);
+            get
+            {
+                return HasHeader(AccessControlAllowOrigin);    
+            }
         }
 
-        public virtual bool HasAllowHeaders()
+        public virtual bool GlobalAllowHeaders
         {
-            return HasHeader(AccessControlAllowHeaders);
+            get
+            {
+                return HasHeader(AccessControlAllowHeaders);
+            }
         }
 
-        public virtual bool HasAllowMethods()
+        public virtual bool GlobalAllowMethods
         {
-            return HasHeader(AccessControlAllowMethods);
+            get
+            {
+                return HasHeader(AccessControlAllowMethods);  
+            }
         }
 
         private bool HasHeader(string header)
