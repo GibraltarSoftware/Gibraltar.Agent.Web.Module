@@ -181,7 +181,7 @@ namespace Loupe.Agent.Web.Module.Tests.Message_Handler
             var currentDateTime = DateTime.Now;
             var timeStamp = new DateTimeOffset(currentDateTime, TimeZoneInfo.Local.GetUtcOffset(DateTime.Now));
 
-            var jsonTimeStamp = timeStamp.ToString("yyyy-MM-ddTHH:mm:sszzz");
+            var jsonTimeStamp = timeStamp.ToString("yyyy-MM-ddTHH:mm:ss.fffzzz");
 
             SendRequest("{Session:null,LogMessages:[{severity: 8,category: 'Test',caption: 'test log',description: 'tests logs message',paramters: null,details: null,exception: {},methodSourceInfo: {}, timeStamp: '" + jsonTimeStamp + "', sequence: 1}]}");
 

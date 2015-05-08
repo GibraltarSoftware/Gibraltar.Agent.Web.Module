@@ -51,7 +51,7 @@ namespace Loupe.Agent.Web.Module.Tests.Message_Handler
             var currentDateTime = DateTime.Now;
             var timeStamp = new DateTimeOffset(currentDateTime, TimeZoneInfo.Local.GetUtcOffset(DateTime.Now));
 
-            var jsonTimeStamp = timeStamp.ToString("yyyy-MM-ddTHH:mm:sszzz");
+            var jsonTimeStamp = timeStamp.ToString("yyyy-MM-ddTHH:mm:ss.fffzzz");
 
             SendRequest("{ session: { client: {description:'Firefox 37.0 32-bit on Windows 8.1 64-bit',layout:'Gecko',manufacturer:null,name:'Firefox',prerelease:null,product:null,ua:'Mozilla/5.0 (Windows NT 6.3; WOW64; rv:37.0) Gecko/20100101 Firefox/37.0',version:'37.0',os:{architecture:64,family:'Windows',version:'8.1'},size:{width:1102,height:873}}},LogMessages:[{severity: 4,category: 'Test',caption: 'test log',description: 'tests logs message',paramters: null,details: null,exception: {},methodSourceInfo: {}, timeStamp: '" + jsonTimeStamp + "', sequence: 1}]}");
 
@@ -234,7 +234,7 @@ namespace Loupe.Agent.Web.Module.Tests.Message_Handler
             var currentDateTime = DateTime.Now;
             var timeStamp = new DateTimeOffset(currentDateTime, TimeZoneInfo.Local.GetUtcOffset(DateTime.Now));
 
-            var jsonTimeStamp = timeStamp.ToString("yyyy-MM-ddTHH:mm:sszzz");
+            var jsonTimeStamp = timeStamp.ToString("yyyy-MM-ddTHH:mm:ss.fffzzz");
 
             SendRequest("{ session: { client: {description:'Firefox 37.0 32-bit on Windows 8.1 64-bit',layout:'Gecko',manufacturer:null,name:'Firefox',prerelease:null,product:null,ua:'Mozilla/5.0 (Windows NT 6.3; WOW64; rv:37.0) Gecko/20100101 Firefox/37.0',version:'37.0',os:{architecture:64,family:'Windows',version:'8.1'},size:{width:1102,height:873}}},LogMessages:[{severity: 4,category: 'Test',caption: 'test log',description: 'tests logs message',paramters: null,details: \"{ numericValue: 1, stringValue: 'text value', objectValue: {childNumber: 3, childText: 'child text'}}\",exception: {},methodSourceInfo: {file:'app.js', line: 3, column: 5}, timeStamp: '" + jsonTimeStamp + "', sequence: 1}]}");
 

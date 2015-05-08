@@ -21,8 +21,8 @@ namespace Loupe.Agent.Web.Module.Tests
                 return false;
             }
 
-            var expectedTimeSpan = new TimeSpan(expectedOffset.Day, expectedOffset.Hour, expectedOffset.Second);
-            var actualTimeSpan = new TimeSpan(actualOffset.Day, actualOffset.Hour, actualOffset.Second);
+            var expectedTimeSpan = new TimeSpan(expectedOffset.Day, expectedOffset.Hour, expectedOffset.Second, expectedOffset.Millisecond);
+            var actualTimeSpan = new TimeSpan(actualOffset.Day, actualOffset.Hour, actualOffset.Second, actualOffset.Millisecond);
 
             return expectedTimeSpan == actualTimeSpan;
 
