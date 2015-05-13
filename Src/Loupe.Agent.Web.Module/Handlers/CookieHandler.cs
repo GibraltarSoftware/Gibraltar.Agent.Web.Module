@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Web;
+using Loupe.Agent.Web.Module.Infrastructure;
 
 namespace Loupe.Agent.Web.Module.Handlers
 {
@@ -45,8 +46,7 @@ namespace Loupe.Agent.Web.Module.Handlers
                 return false;
             }
 
-            return _extenstionWhiteList.Contains(request.CurrentExecutionFilePathExtension) &&
-                   !request.CurrentExecutionFilePath.Contains("__browserLink");
+            return request.InterestedInRequest();
         }
 
     }
