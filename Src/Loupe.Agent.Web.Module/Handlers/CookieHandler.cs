@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Web;
 using Loupe.Agent.Web.Module.Infrastructure;
 
@@ -7,9 +6,8 @@ namespace Loupe.Agent.Web.Module.Handlers
 {
     public class CookieHandler
     {
-        readonly List<string> _extenstionWhiteList = new List<string>{".html", ".htm",".aspx" ,""}; 
-
         private const string CookieName = "LoupeSessionId";
+        private const string LoupeSessionHeader = "LoupeSessionId";
 
         public void HandleRequest(HttpContextBase context)
         {
@@ -19,7 +17,15 @@ namespace Loupe.Agent.Web.Module.Handlers
                 {
                     AddSessionCookie(context);
                 }
+
+                AddContextItem(context);
             }
+        }
+
+        private void AddContextItem(HttpContextBase context)
+        {
+            var sessionId = context.Request.Cookies[CookieName].Value;
+            context.Items.Add(LoupeSessionHeader,sessionId);
         }
 
         private void AddSessionCookie(HttpContextBase context)

@@ -9,12 +9,14 @@ namespace Loupe.Agent.Web.Module
         private CORSHandler _corsHandler;
         private MessageHandler _messageHandler;
         private CookieHandler _cookieHandler;
+        private HeaderHandler _headerHandler;
 
         public void Init(HttpApplication application)
         {
             _corsHandler = new CORSHandler();
             _messageHandler = new MessageHandler();
             _cookieHandler = new CookieHandler();
+            _headerHandler = new HeaderHandler();
             application.PostAuthenticateRequest += OnPostAuthenticateRequest;
             application.BeginRequest += application_BeginRequest;
         }
@@ -30,6 +32,7 @@ namespace Loupe.Agent.Web.Module
             else
             {
                 _cookieHandler.HandleRequest(context);
+                _headerHandler.HandleRequest(context);
             }
         }
 

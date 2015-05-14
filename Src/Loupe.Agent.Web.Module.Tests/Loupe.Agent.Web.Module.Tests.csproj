@@ -55,6 +55,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblySetup.cs" />
+    <Compile Include="Cookie_Handler\When_receives_request_with_cookie.cs" />
     <Compile Include="CORS_Handler\CORSTestBase.cs" />
     <Compile Include="CORS_Handler\When_receiving_CORS_request.cs" />
     <Compile Include="DateTimeOffSetComparison.cs" />
