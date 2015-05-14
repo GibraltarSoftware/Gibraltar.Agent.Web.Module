@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.IO;
 using System.Security.Principal;
 using System.Web;
@@ -21,6 +22,8 @@ namespace Loupe.Agent.Web.Module.Tests
         protected IPrincipal FakeUser;
         protected IIdentity FakeIdentity;
         protected string DefaultTestSessionId;
+        protected string DefaultAgentSessionId;
+        protected Hashtable contextItems;
 
         [SetUp]
         public void BaseSetUp()
@@ -41,10 +44,14 @@ namespace Loupe.Agent.Web.Module.Tests
             FakeUser.Identity.Returns(FakeIdentity);
 
             HttpRequest.HttpMethod.Returns("POST");
-            HttpRequest.Cookies.Returns(new HttpCookieCollection());
-            HttpRequest.Cookies.Add(new HttpCookie(LoupeCookieName, Guid.Empty.ToString()));
             DefaultTestSessionId = Guid.Empty.ToString();
+            DefaultAgentSessionId = "8C6005BE-D7A9-46C1-BE7C-49228903A540";
 
+            contextItems = new Hashtable();
+            SetContextLoupeSessionId(DefaultTestSessionId);
+            SetContextAgentSessionId(DefaultAgentSessionId);
+
+            HttpContext.Items.Returns(contextItems);
             HttpContext.Request.Returns(HttpRequest);
             HttpContext.Response.Returns(HttpResponse);
             HttpContext.User.Returns(FakeUser);            
@@ -54,6 +61,21 @@ namespace Loupe.Agent.Web.Module.Tests
         public void TearDown()
         {
             InputStream.Dispose();
+        }
+
+        protected void ClearLoupeSessionIdValue()
+        {
+            SetContextLoupeSessionId("");
+        }
+
+        protected void SetContextLoupeSessionId(string value)
+        {
+            contextItems["LoupeSessionId"] = value;
+        }
+
+        protected void SetContextAgentSessionId(string value)
+        {
+            contextItems["LoupeAgentSessionId"] = value;
         }
 
         protected void SendRequest(string body)

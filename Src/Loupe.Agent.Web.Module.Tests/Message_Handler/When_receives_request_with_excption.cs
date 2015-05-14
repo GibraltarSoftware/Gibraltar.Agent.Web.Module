@@ -29,10 +29,6 @@ namespace Loupe.Agent.Web.Module.Tests.Message_Handler
 
             var expected = new LogRequest
             {
-                Session = new ClientSession
-                {
-                    SessionId = DefaultTestSessionId
-                },
                 LogMessages = new List<LogMessage>
                 {
                     new LogMessage {
@@ -53,7 +49,9 @@ namespace Loupe.Agent.Web.Module.Tests.Message_Handler
                         },
                         MethodSourceInfo = new MethodSourceInfo(),
                         Sequence = null,
-                        TimeStamp = new DateTimeOffset()
+                        TimeStamp = new DateTimeOffset(),
+                        SessionId = DefaultTestSessionId,
+                        AgentSessionId = DefaultAgentSessionId
                     }
                 },
                 User = FakeUser
@@ -71,10 +69,6 @@ namespace Loupe.Agent.Web.Module.Tests.Message_Handler
 
             var expected = new LogRequest
             {
-                Session = new ClientSession
-                {
-                    SessionId = DefaultTestSessionId
-                },
                 LogMessages = new List<LogMessage>
                 {
                     new LogMessage {
@@ -95,7 +89,9 @@ namespace Loupe.Agent.Web.Module.Tests.Message_Handler
                         },
                         MethodSourceInfo = new MethodSourceInfo(),
                         Sequence = null,
-                        TimeStamp = new DateTimeOffset()
+                        TimeStamp = new DateTimeOffset(),
+                        SessionId = DefaultTestSessionId,
+                        AgentSessionId = DefaultAgentSessionId
                     }
                 },
                 User = FakeUser
@@ -138,8 +134,7 @@ namespace Loupe.Agent.Web.Module.Tests.Message_Handler
                             Width = 1102,
                             Height = 873
                         }
-                    },
-                    SessionId = DefaultTestSessionId
+                    }
                 },
                 LogMessages = new List<LogMessage>
                 {
@@ -161,7 +156,9 @@ namespace Loupe.Agent.Web.Module.Tests.Message_Handler
                         },
                         MethodSourceInfo = new MethodSourceInfo(),
                         Sequence = null,
-                        TimeStamp = new DateTimeOffset()
+                        TimeStamp = new DateTimeOffset(),
+                        SessionId = DefaultTestSessionId,
+                        AgentSessionId = DefaultAgentSessionId
                     }
                 },
                 User = FakeUser

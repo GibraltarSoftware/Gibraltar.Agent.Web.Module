@@ -23,15 +23,10 @@ namespace Loupe.Agent.Web.Module.DetailBuilders
                 _clientDetails = CreateClientDetailString(_request);
             }
 
-            if (_sessionDetails == null)
-            {
-                _sessionDetails = SessionDetailString(_request);
-            }
-
             DetailBuilder.Clear();
 
             DetailBuilder.Append("<Details>");
-            DetailBuilder.Append(_sessionDetails);
+            DetailBuilder.Append(SessionDetailString(logMessage));
             DetailBuilder.Append(TimeStampDetailString(logMessage));
             DetailBuilder.Append(SequenceDetailString(logMessage));
             DetailBuilder.Append(_clientDetails);
@@ -52,14 +47,21 @@ namespace Loupe.Agent.Web.Module.DetailBuilders
             return null;
         }
 
-        private static string SessionDetailString(LogRequest logRequest)
+        private static string SessionDetailString(LogMessage message)
         {
-            if (logRequest.Session != null && !string.IsNullOrWhiteSpace(logRequest.Session.SessionId))
+            string sessionDetails = null;
+                
+            if (!string.IsNullOrWhiteSpace(message .SessionId))
             {
-                return "<SessionId>" + logRequest.Session.SessionId + "</SessionId>";
+                sessionDetails = "<SessionId>" + message.SessionId + "</SessionId>";
             }
 
-            return null;
+            if (!string.IsNullOrWhiteSpace(message.AgentSessionId))
+            {
+                sessionDetails = sessionDetails + "<AgentSessionId>" + message.AgentSessionId + "</AgentSessionId>";
+            }
+
+            return sessionDetails;
         }
 
         private static string TimeStampDetailString(LogMessage logMessage)

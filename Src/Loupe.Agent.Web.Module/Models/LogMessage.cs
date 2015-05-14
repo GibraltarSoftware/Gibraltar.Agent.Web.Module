@@ -59,5 +59,14 @@ namespace Loupe.Agent.Web.Module.Models
         /// </summary>
         public long? Sequence { get; set; }
 
+        /// <summary>
+        /// SessionId from either cookie or set by client
+        /// </summary>
+        public string SessionId { get; set; }
+
+        /// <summary>
+        /// Session Id as set by JS Agent when it started
+        /// </summary>
+        public string AgentSessionId { get; set; }
     }
 }

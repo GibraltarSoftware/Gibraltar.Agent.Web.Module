@@ -161,34 +161,34 @@ namespace Loupe.Agent.Web.Module.Handlers
 
         private void AddSessionId(HttpContextBase context, LogRequest logRequest)
         {
-            var sessionCookie = context.Request.Cookies.Get("LoupeSessionId");
+            var sessionId = context.Items["LoupeSessionId"];
+            var agentSessionId = context.Items["LoupeAgentSessionId"];
 
-            context.Items.Add("LoupeSessionId", "");
-
-            if (logRequest.Session == null)
+            for (int i = 0; i < logRequest.LogMessages.Count; i++)
             {
-                logRequest.Session = new ClientSession();
-            }
+                var message = logRequest.LogMessages[i];
 
-            if (sessionCookie == null && string.IsNullOrWhiteSpace(logRequest.Session.SessionId))
-            {
+                if (sessionId == null && string.IsNullOrWhiteSpace(message.SessionId))
+                {
 #if DEBUG
-                Log.Write(LogMessageSeverity.Warning, LogSystem, 0, null, LogWriteMode.Queued,
-                    CreateStandardRequestDetailXml(context), Category, "No session Id",
-                    "No session cookie for Loupe or explicit session Id found on the request, not able to set session Id");
-#endif                
-                return;
+                    Log.Write(LogMessageSeverity.Warning, LogSystem, 0, null, LogWriteMode.Queued,
+                        CreateStandardRequestDetailXml(context), Category, "No session Id",
+                        "No session in context for Loupe or explicit session Id found on the request, not able to set session Id");
+#endif
+                    continue;
+                }
+
+                if (string.IsNullOrWhiteSpace(message.SessionId))
+                {
+                    message.SessionId = sessionId.ToString();
+                }
+
+                if (string.IsNullOrWhiteSpace(message.AgentSessionId))
+                {
+                    message.AgentSessionId = agentSessionId.ToString();
+                }
+
             }
-
-
-            if (sessionCookie != null && string.IsNullOrWhiteSpace(logRequest.Session.SessionId))
-            {
-                logRequest.Session.SessionId = sessionCookie.Value;    
-            }
-
-            // store the id in the HttpContext so available to agents in 
-            // actual code base for logging
-            context.Items["LoupeSessionId"]= logRequest.Session.SessionId;
         }
 
         private static LogRequest GetMessageFromRequestBody(HttpContextBase context) 

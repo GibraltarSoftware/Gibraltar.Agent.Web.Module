@@ -5,8 +5,8 @@ namespace Loupe.Agent.Web.Module.Handlers
 {
     public class HeaderHandler
     {
-        private const string clientHeaderName = "loupe-client-session";
-        private const string loupeContextItemName = "LoupeClientSessionId";
+        private const string clientHeaderName = "loupe-agent-sessionId";
+        private const string loupeContextItemName = "LoupeAgentSessionId";
 
         public void HandleRequest(HttpContextBase context)
         {
@@ -28,7 +28,7 @@ namespace Loupe.Agent.Web.Module.Handlers
 
         private void CreateContextItem(HttpContextBase context)
         {
-            context.Items.Add(loupeContextItemName, null);
+            context.Items.Add(loupeContextItemName, "");
         }
 
         private void AddValueToContext(HttpContextBase context)

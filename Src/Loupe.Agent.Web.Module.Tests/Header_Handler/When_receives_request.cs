@@ -16,7 +16,7 @@ namespace Loupe.Agent.Web.Module.Tests.Header_Handler
         protected HttpRequestBase HttpRequest;
         protected HttpResponseBase HttpResponse;
         private Hashtable items;
-        private string loupeHeader = "loupe-client-session";
+        private string loupeHeader = "loupe-agent-sessionId";
 
         [SetUp]
         public void SetUp()
@@ -44,7 +44,7 @@ namespace Loupe.Agent.Web.Module.Tests.Header_Handler
 
             target.HandleRequest(HttpContext);
 
-            Assert.That(items.Keys, Has.Member("LoupeClientSessionId"));
+            Assert.That(items.Keys, Has.Member("LoupeAgentSessionId"));
         }
 
         [Test]
@@ -56,7 +56,7 @@ namespace Loupe.Agent.Web.Module.Tests.Header_Handler
 
             target.HandleRequest(HttpContext);
 
-            Assert.That(items["LoupeClientSessionId"], Is.EqualTo(clientSessionId));
+            Assert.That(items["LoupeAgentSessionId"], Is.EqualTo(clientSessionId));
         }
 
         [Test]
@@ -64,11 +64,11 @@ namespace Loupe.Agent.Web.Module.Tests.Header_Handler
         {
             target.HandleRequest(HttpContext);
 
-            Assert.That(items.Keys, Has.Member("LoupeClientSessionId"));
+            Assert.That(items.Keys, Has.Member("LoupeAgentSessionId"));
         }
 
         [Test]
-        public void Should_not_value_to_context_items_for_non_html_resource([Values("imagee/test.jpg", "Content/site.css", "Scripts/app.js", "elmah.axd")] string file)
+        public void Should_not_value_to_context_items_for_non_html_resource([Values("image/test.jpg", "Content/site.css", "Scripts/app.js", "elmah.axd")] string file)
         {
             HttpRequest.Url.Returns(new Uri("http://www.test.com/" + file));
 
@@ -95,7 +95,7 @@ namespace Loupe.Agent.Web.Module.Tests.Header_Handler
 
             target.HandleRequest(HttpContext);
 
-            Assert.That(items["LoupeClientSessionId"], Is.EqualTo(clientSessionId));
+            Assert.That(items["LoupeAgentSessionId"], Is.EqualTo(clientSessionId));
         }
 
         [Test]

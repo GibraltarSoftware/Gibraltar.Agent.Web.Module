@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using ExpectedObjects;
 using Gibraltar.Agent;
 using Loupe.Agent.Web.Module.Infrastructure;
@@ -53,10 +51,6 @@ namespace Loupe.Agent.Web.Module.Tests.Message_Handler
 
             var expected = new LogRequest
             {
-                Session = new ClientSession
-                {
-                    SessionId = DefaultTestSessionId
-                },
                 LogMessages = new List<LogMessage>
                 {
                     new LogMessage {
@@ -69,7 +63,9 @@ namespace Loupe.Agent.Web.Module.Tests.Message_Handler
                         Exception = new Exception(),
                         MethodSourceInfo = new MethodSourceInfo(),
                         Sequence = null,
-                        TimeStamp = new DateTimeOffset()
+                        TimeStamp = new DateTimeOffset(),
+                        SessionId = DefaultTestSessionId,
+                        AgentSessionId = DefaultAgentSessionId
                     }
                 },
                 User = FakeUser
@@ -111,8 +107,7 @@ namespace Loupe.Agent.Web.Module.Tests.Message_Handler
                            Width = 1102,
                            Height = 873
                        }
-                   },
-                   SessionId = DefaultTestSessionId
+                   }
                 },
                 LogMessages = new List<LogMessage>
                 {
@@ -126,7 +121,9 @@ namespace Loupe.Agent.Web.Module.Tests.Message_Handler
                         Exception = new Exception(),
                         MethodSourceInfo = new MethodSourceInfo(),
                         Sequence = null,
-                        TimeStamp = new DateTimeOffset()
+                        TimeStamp = new DateTimeOffset(),
+                        SessionId = DefaultTestSessionId,
+                        AgentSessionId = DefaultAgentSessionId
                     }
                 },
                 User = FakeUser
@@ -143,10 +140,6 @@ namespace Loupe.Agent.Web.Module.Tests.Message_Handler
 
             var expected = new LogRequest
             {
-                Session = new ClientSession
-                {
-                    SessionId = DefaultTestSessionId
-                },
                 LogMessages = new List<LogMessage>
                 {
                     new LogMessage {
@@ -165,7 +158,9 @@ namespace Loupe.Agent.Web.Module.Tests.Message_Handler
 
                         },
                         Sequence = null,
-                        TimeStamp = new DateTimeOffset()
+                        TimeStamp = new DateTimeOffset(),
+                        SessionId = DefaultTestSessionId,
+                        AgentSessionId = DefaultAgentSessionId
                     }
                 },
                 User = FakeUser
@@ -187,10 +182,6 @@ namespace Loupe.Agent.Web.Module.Tests.Message_Handler
 
             var expected = new LogRequest
             {
-                Session = new ClientSession
-                {
-                    SessionId = DefaultTestSessionId
-                },
                 LogMessages = new List<LogMessage>
                 {
                     new LogMessage
@@ -204,7 +195,9 @@ namespace Loupe.Agent.Web.Module.Tests.Message_Handler
                         Exception = new Exception(),
                         MethodSourceInfo = new MethodSourceInfo(),
                         Sequence = 1,
-                        TimeStamp = timeStamp
+                        TimeStamp = timeStamp,
+                        SessionId = DefaultTestSessionId,
+                        AgentSessionId = DefaultAgentSessionId
                     }
                 },
                 User = FakeUser
@@ -235,37 +228,40 @@ namespace Loupe.Agent.Web.Module.Tests.Message_Handler
         }
 
         [Test]
-        public void Should_store_session_id_from_cookie_in_HttpContext_Items()
+        public void Should_have_agent_session_id()
         {
-            HttpRequest.Cookies.Clear();
+            SendRequest("{Session:null,LogMessages:[{severity: 8,category: 'Test',caption: 'test log',description: 'tests logs message',paramters: null,details: null,exception: {},methodSourceInfo: { file: 'app.js', line: 18, column: 37}}]}");
 
-            var sessionId = Guid.NewGuid().ToString();
-            var loupeCookie = new HttpCookie(LoupeCookieName, sessionId);
+            var expected = new LogRequest
+            {
+                LogMessages = new List<LogMessage>
+                {
+                    new LogMessage {
+                        Severity = LogMessageSeverity.Information,
+                        Category = "Test",
+                        Caption = "test log",
+                        Description = "tests logs message",
+                        Parameters = null,
+                        Details = null,
+                        Exception = new Exception(),
+                        MethodSourceInfo = new MethodSourceInfo
+                        {
+                            File = "app.js",
+                            Line = 18,
+                            Column = 37
 
-            HttpRequest.Cookies.Add(loupeCookie);
+                        },
+                        Sequence = null,
+                        TimeStamp = new DateTimeOffset(),
+                        SessionId = DefaultTestSessionId,
+                        AgentSessionId = DefaultAgentSessionId
+                    }
+                },
+                User = FakeUser
+            }.ToExpectedObject();
 
-            var items = new Dictionary<object, object>();
-            HttpContext.Items.Returns(items);
-
-            SendRequest("{Session:null, LogMessages:[]}");
-
-            Assert.That(items.Count, Is.EqualTo(1));
-            Assert.That(items.First().Value, Is.EqualTo(sessionId));
-            
-        }
-
-        [Test]
-        public void Should_store_session_id_from_message_in_HttpContext_items()
-        {
-            HttpRequest.Cookies.Clear();
-
-            var items = new Dictionary<object, object>();
-            HttpContext.Items.Returns(items);
-
-            SendRequest("{Session:{sessionId: 'abc-123'}, LogMessages:[]}");
-
-            Assert.That(items.Count, Is.EqualTo(1));
-            Assert.That(items.First().Value, Is.EqualTo("abc-123"));            
+            // ReSharper disable once SuspiciousTypeConversion.Global
+            _fakeLogger.Received().Log(Arg.Is<LogRequest>(x => expected.Equals(x)));
         }
     }
 }
