@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Loupe.Agent.Web.Module", "S
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Loupe.Agent.Web.Module.Tests", "Src\Loupe.Agent.Web.Module.Tests\Loupe.Agent.Web.Module.Tests.csproj", "{4E7FB470-DE50-4F84-A919-9B305A7CE6C1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Loupe.Agent.Web.Module.MVCTest", "Src\Loupe.Agent.Web.Module.MVCTest\Loupe.Agent.Web.Module.MVCTest.csproj", "{7F6A0788-29C5-4F28-AF4D-E51137335F54}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{4E7FB470-DE50-4F84-A919-9B305A7CE6C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4E7FB470-DE50-4F84-A919-9B305A7CE6C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4E7FB470-DE50-4F84-A919-9B305A7CE6C1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7F6A0788-29C5-4F28-AF4D-E51137335F54}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7F6A0788-29C5-4F28-AF4D-E51137335F54}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7F6A0788-29C5-4F28-AF4D-E51137335F54}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7F6A0788-29C5-4F28-AF4D-E51137335F54}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
