@@ -60,6 +60,7 @@
     <Compile Include="CORS_Handler\When_receiving_CORS_request.cs" />
     <Compile Include="DateTimeOffSetComparison.cs" />
     <Compile Include="Header_Handler\When_receives_request.cs" />
+    <Compile Include="Message_Handler\When_providing_source_information.cs" />
     <Compile Include="TestBase.cs" />
     <Compile Include="When_init_module.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

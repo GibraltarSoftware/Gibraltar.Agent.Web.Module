@@ -242,7 +242,6 @@ namespace Loupe.Agent.Web.Module.Tests.Message_Handler
                                        ExpectedClientDetails + ExpectedMethodSourceInfo + ExpectedUserSuppliedJson + "</Details>";
 
             Assert.That(loggedMessage.Details, Is.EqualTo(expectedDetailsBlock));
-            
         }
 
 

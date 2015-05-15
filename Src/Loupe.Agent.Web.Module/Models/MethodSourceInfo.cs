@@ -19,7 +19,7 @@
 
         public bool IsEmpty()
         {
-            return File == null && !Line.HasValue && !Column.HasValue;
+            return string.IsNullOrWhiteSpace(File) && !Line.HasValue && !Column.HasValue;
         }
     }
 }

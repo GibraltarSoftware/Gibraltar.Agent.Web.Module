@@ -53,6 +53,7 @@
     <Compile Include="DetailBuilders\DetailsBuilderBase.cs" />
     <Compile Include="Handlers\CORSHandler.cs" />
     <Compile Include="Infrastructure\Extension.cs" />
+    <Compile Include="Infrastructure\SourceProvider.cs" />
     <Compile Include="Infrastructure\UrlCheck.cs" />
     <Compile Include="Infrastructure\JavaScriptLogger.cs" />
     <Compile Include="Logging.cs" />
@@ -61,8 +62,8 @@
     <Compile Include="Models\ClientDetails.cs" />
     <Compile Include="Models\ClientSession.cs" />
     <Compile Include="Models\Exception.cs" />
+    <Compile Include="Models\JavaScriptMessageSource.cs" />
     <Compile Include="Models\LogMessage.cs" />
-    <Compile Include="Models\JavaScriptError.cs" />
     <Compile Include="Models\JavaScriptException.cs" />
     <Compile Include="Models\LogRequest.cs" />
     <Compile Include="Models\MethodSourceInfo.cs" />

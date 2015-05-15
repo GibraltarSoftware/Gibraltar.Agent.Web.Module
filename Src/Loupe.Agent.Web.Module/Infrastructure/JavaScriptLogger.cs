@@ -13,6 +13,7 @@ namespace Loupe.Agent.Web.Module.Infrastructure
         public virtual void Log(LogRequest logRequest)
         {
             var detailsBlockBuilder = new LogMessageBlockBuilder(logRequest);
+            var sourceProvider = new JavaScriptSourceProvider();
 
             foreach (var logMessage in logRequest.LogMessages)
             {
@@ -20,17 +21,19 @@ namespace Loupe.Agent.Web.Module.Infrastructure
 
                 var detailsBlock = detailsBlockBuilder.Build(logMessage);
 
-                Gibraltar.Agent.Log.Write(logMessage.Severity, 
-                                          "Loupe", 
-                                          0, 
-                                          jsException, 
+                
+
+                Gibraltar.Agent.Log.Write(logMessage.Severity,
+                                          "Loupe",
+                                           sourceProvider.ProcessMessage(logMessage),
+                                           "",
+                                          jsException,
                                           LogWriteMode.Queued,
-                                          detailsBlock, 
-                                          logMessage.Category, 
-                                          logMessage.Caption, 
+                                          detailsBlock,
+                                          logMessage.Category,
+                                          logMessage.Caption,
                                           logMessage.Description,
                                           logMessage.Parameters);
-
             }
         }
 
