@@ -17,9 +17,21 @@
     @Scripts.Render("~/bundles/bootstrap")
     @Scripts.Render("~/bundles/logging")
     @RenderSection("scripts", required: false)
-    <script>
-        var logFunctions = new Logging();
-        var handler = new Handlers(window.jQuery, logFunctions);
-    </script>
+<script>
+    if (window.addEventListener) {
+        window.addEventListener("storage", handle_storage, false);
+    } else {
+        window.attachEvent("onstorage", handle_storage);
+    };
+
+    function handle_storage(e) {
+        if (!e) { e = window.event; }
+
+        //alert('storage called');
+    }
+
+    var logFunctions = new Logging();
+    var handler = new Handlers(window.jQuery, logFunctions);
+</script>
 </body>
 </html>

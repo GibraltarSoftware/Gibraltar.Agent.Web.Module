@@ -21,11 +21,11 @@ namespace Loupe.Agent.Web.Module.Infrastructure
 
                 var detailsBlock = detailsBlockBuilder.Build(logMessage);
 
-                
+                var messageSource = sourceProvider.ProcessMessage(logMessage);
 
                 Gibraltar.Agent.Log.Write(logMessage.Severity,
                                           "Loupe",
-                                           sourceProvider.ProcessMessage(logMessage),
+                                           messageSource,
                                            "",
                                           jsException,
                                           LogWriteMode.Queued,

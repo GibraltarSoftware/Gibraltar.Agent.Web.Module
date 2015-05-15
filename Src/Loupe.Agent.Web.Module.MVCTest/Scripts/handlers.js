@@ -23,4 +23,13 @@
     $('#logWrite').click(function (e) {
         logging.write();
     });
+
+    $('#unhandledException').click(function (e) {
+        logging.unhandledException();
+    });
+    
+    $('#ajaxCall').click(function (e) {
+        logging.ajaxCall();
+    });
+    
 }

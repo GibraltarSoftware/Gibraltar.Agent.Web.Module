@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Web.Mvc;
 
 namespace Loupe.Agent.Web.Module.MVCTest.Controllers
@@ -10,21 +8,21 @@ namespace Loupe.Agent.Web.Module.MVCTest.Controllers
     {
         public ActionResult Index()
         {
-            return View();
-        }
-
-        public ActionResult About()
-        {
-            ViewBag.Message = "Your application description page.";
+            ViewBag.SessionId = ControllerContext.HttpContext.Items["LoupeSessionId"].ToString();
 
             return View();
         }
 
-        public ActionResult Contact()
+        public HttpResponseMessage data()
         {
-            ViewBag.Message = "Your contact page.";
 
-            return View();
+            var resp = new HttpResponseMessage()
+            {
+                Content = new StringContent("{\"fakeData\":\"123\"}")
+            };
+            resp.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+
+            return resp;
         }
     }
 }
