@@ -49,6 +49,65 @@ namespace Loupe.Agent.Web.Module.Tests.Message_Handler
             Assert.That(target.LineNumber, Is.EqualTo(5));
         }
 
+
+        [Test]
+        public void Should_have_method_set_even_if_no_file()
+        {
+            var message = new LogMessage
+            {
+                MethodSourceInfo = new MethodSourceInfo
+                {
+                    Method = "theFunction",
+                    Line = 5
+                }
+            };
+
+            var target = _sourceProvider.ProcessMessage(message);
+
+            Assert.That(target.ClassName, Is.Null);
+            Assert.That(target.MethodName, Is.EqualTo("theFunction"));
+            Assert.That(target.FileName, Is.Null);
+            Assert.That(target.LineNumber, Is.EqualTo(5));
+        }
+
+        [Test]
+        public void Should_have_line_number_even_if_has_no_other_info()
+        {
+            var message = new LogMessage
+            {
+                MethodSourceInfo = new MethodSourceInfo
+                {
+                    Line = 5
+                }
+            };
+
+            var target = _sourceProvider.ProcessMessage(message);
+
+            Assert.That(target.ClassName, Is.Null);
+            Assert.That(target.MethodName, Is.Null);
+            Assert.That(target.FileName, Is.Null);
+            Assert.That(target.LineNumber, Is.EqualTo(5));
+        }
+
+        [Test]
+        public void Should_create_method_source_info_even_if_only_has_column_number()
+        {
+            var message = new LogMessage
+            {
+                MethodSourceInfo = new MethodSourceInfo
+                {
+                    Column = 5
+                }
+            };
+
+            var target = _sourceProvider.ProcessMessage(message);
+
+            Assert.That(target.ClassName, Is.Null);
+            Assert.That(target.MethodName, Is.Null);
+            Assert.That(target.FileName, Is.Null);
+            Assert.That(target.LineNumber, Is.EqualTo(0));
+        }
+
         [Test]
         public void Should_have_properties_set_from_firefox_stack()
         {
