@@ -66,10 +66,13 @@
         var header = requestHeader.headerName;
         var headerValue = requestHeader.headerValue;
 
+        var loupeHeader = {};
+        loupeHeader[header] = headerValue;
+
         $.ajax({
             type: "GET",
             url: '/home/data',
-            headers: { header: headerValue }
+            headers: loupeHeader
         }).done(function (data) {
             $('#ajaxCallResult').text("succeeded");
         }).error(function(jqXHR, textStatus) {
@@ -79,6 +82,19 @@
 
     function getInputVal(inputName) {
         return $(inputName).val();
+    }
+
+    function createMethodSourceInfo() {
+        var file = getInputVal("#fileInput");
+        var method = getInputVal('#methodInput');
+        var line = getInputVal("#lineInput");
+        var column = getInputVal("#columnInput");
+
+        if (file || method || line || column) {
+            return new loupe.MethodSourceInfo(file, method, line, column);
+        }
+
+        return null;
     }
 
     function getData() {
@@ -95,6 +111,9 @@
             exception = new Error(exceptionMessage);
         }
 
+        var methodSourceInfo = createMethodSourceInfo();
+        
+
         return {
             category: getInputVal("#categoryInput"),
             caption: getInputVal("#captionInput"),
@@ -102,11 +121,7 @@
             parameters: parameters,
             details: getInputVal("#detailsInput"),
             exception: exception,
-            methodSourceInfo: {
-                file:getInputVal("#fileInput"),
-                line: getInputVal("#lineInput"),
-                column: getInputVal("#columnInput")
-            }
+            methodSourceInfo: methodSourceInfo
         };
     }
 
