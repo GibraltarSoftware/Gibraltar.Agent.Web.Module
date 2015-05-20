@@ -4,6 +4,7 @@ using System.IO;
 using System.Security.Principal;
 using System.Web;
 using Loupe.Agent.Web.Module.Handlers;
+using Loupe.Agent.Web.Module.Infrastructure;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -12,7 +13,6 @@ namespace Loupe.Agent.Web.Module.Tests
     public class TestBase
     {
         protected const string LogUrl = "http://www.test.com/loupe/log";
-        protected const string LoupeCookieName = "LoupeSessionId";
 
         protected HttpContextBase HttpContext;
         protected HttpRequestBase HttpRequest;
@@ -23,7 +23,7 @@ namespace Loupe.Agent.Web.Module.Tests
         protected IIdentity FakeIdentity;
         protected string DefaultTestSessionId;
         protected string DefaultAgentSessionId;
-        protected Hashtable contextItems;
+        protected Hashtable ContextItems;
 
         [SetUp]
         public void BaseSetUp()
@@ -47,20 +47,27 @@ namespace Loupe.Agent.Web.Module.Tests
             DefaultTestSessionId = Guid.Empty.ToString();
             DefaultAgentSessionId = "8C6005BE-D7A9-46C1-BE7C-49228903A540";
 
-            contextItems = new Hashtable();
+            ContextItems = new Hashtable();
             SetContextLoupeSessionId(DefaultTestSessionId);
             SetContextAgentSessionId(DefaultAgentSessionId);
 
-            HttpContext.Items.Returns(contextItems);
+
+            HttpContext.Items.Returns(ContextItems);
             HttpContext.Request.Returns(HttpRequest);
             HttpContext.Response.Returns(HttpResponse);
-            HttpContext.User.Returns(FakeUser);            
+            HttpContext.User.Returns(FakeUser);
+            HttpContext.Cache.Returns(HttpRuntime.Cache);
+
         }
 
         [TearDown]
         public void TearDown()
         {
             InputStream.Dispose();
+            foreach (DictionaryEntry entry in HttpRuntime.Cache)
+            {
+                HttpRuntime.Cache.Remove((string)entry.Key);
+            }
         }
 
         protected void ClearLoupeSessionIdValue()
@@ -70,12 +77,12 @@ namespace Loupe.Agent.Web.Module.Tests
 
         protected void SetContextLoupeSessionId(string value)
         {
-            contextItems["LoupeSessionId"] = value;
+            ContextItems[Constants.SessionId] = value;
         }
 
         protected void SetContextAgentSessionId(string value)
         {
-            contextItems["LoupeAgentSessionId"] = value;
+            ContextItems[Constants.AgentSessionId] = value;
         }
 
         protected void SendRequest(string body)

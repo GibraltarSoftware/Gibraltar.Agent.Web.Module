@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Specialized;
 using System.Web;
 using Loupe.Agent.Web.Module.Handlers;
+using Loupe.Agent.Web.Module.Infrastructure;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -44,7 +45,7 @@ namespace Loupe.Agent.Web.Module.Tests.Header_Handler
 
             target.HandleRequest(HttpContext);
 
-            Assert.That(items.Keys, Has.Member("LoupeAgentSessionId"));
+            Assert.That(items.Keys, Has.Member(Constants.AgentSessionId));
         }
 
         [Test]
@@ -56,7 +57,7 @@ namespace Loupe.Agent.Web.Module.Tests.Header_Handler
 
             target.HandleRequest(HttpContext);
 
-            Assert.That(items["LoupeAgentSessionId"], Is.EqualTo(clientSessionId));
+            Assert.That(items[Constants.AgentSessionId], Is.EqualTo(clientSessionId));
         }
 
         [Test]
@@ -64,7 +65,7 @@ namespace Loupe.Agent.Web.Module.Tests.Header_Handler
         {
             target.HandleRequest(HttpContext);
 
-            Assert.That(items.Keys, Has.Member("LoupeAgentSessionId"));
+            Assert.That(items.Keys, Has.Member(Constants.AgentSessionId));
         }
 
         [Test]
@@ -95,7 +96,7 @@ namespace Loupe.Agent.Web.Module.Tests.Header_Handler
 
             target.HandleRequest(HttpContext);
 
-            Assert.That(items["LoupeAgentSessionId"], Is.EqualTo(clientSessionId));
+            Assert.That(items[Constants.AgentSessionId], Is.EqualTo(clientSessionId));
         }
 
         [Test]

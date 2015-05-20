@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Specialized;
 using System.Web;
 using Loupe.Agent.Web.Module.Handlers;
+using Loupe.Agent.Web.Module.Infrastructure;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -17,8 +18,6 @@ namespace Loupe.Agent.Web.Module.Tests.Cookie_Handler
         protected HttpRequestBase HttpRequest;
         protected HttpResponseBase HttpResponse;
         private Hashtable items;
-        private const string LoupeCookieName = "LoupeSessionId";
-        private const string LoupeSessionHeader = "LoupeSessionId";
 
         [SetUp]
         public void SetUp()
@@ -42,7 +41,7 @@ namespace Loupe.Agent.Web.Module.Tests.Cookie_Handler
         [Test]
         public void Should_not_alter_existing_cookie()
         {
-            var loupeCookie = new HttpCookie(LoupeCookieName);
+            var loupeCookie = new HttpCookie(Constants.SessionId);
             loupeCookie.HttpOnly = true;
             loupeCookie.Value = Guid.Empty.ToString();
 
@@ -51,8 +50,8 @@ namespace Loupe.Agent.Web.Module.Tests.Cookie_Handler
 
             target.HandleRequest(HttpContext);
 
-            Assert.That(HttpResponse.Cookies, Contains.Item(LoupeCookieName));
-            Assert.That(HttpResponse.Cookies[LoupeCookieName], Is.EqualTo(loupeCookie));
+            Assert.That(HttpResponse.Cookies, Contains.Item(Constants.SessionId));
+            Assert.That(HttpResponse.Cookies[Constants.SessionId], Is.EqualTo(loupeCookie));
         }
 
         [Test]
@@ -65,7 +64,7 @@ namespace Loupe.Agent.Web.Module.Tests.Cookie_Handler
 
             target.HandleRequest(HttpContext);
 
-            Assert.That(items.Keys, Has.No.Member(LoupeSessionHeader));
+            Assert.That(items.Keys, Has.No.Member(Constants.SessionId));
         }
 
         [Test]
@@ -73,7 +72,7 @@ namespace Loupe.Agent.Web.Module.Tests.Cookie_Handler
         {
             var clientSessionId = Guid.NewGuid().ToString();
 
-            var loupeCookie = new HttpCookie(LoupeCookieName);
+            var loupeCookie = new HttpCookie(Constants.SessionId);
             loupeCookie.HttpOnly = true;
             loupeCookie.Value = clientSessionId;
 
@@ -87,7 +86,7 @@ namespace Loupe.Agent.Web.Module.Tests.Cookie_Handler
 
             target.HandleRequest(HttpContext);
 
-            Assert.That(items[LoupeSessionHeader], Is.EqualTo(clientSessionId));
+            Assert.That(items[Constants.SessionId], Is.EqualTo(clientSessionId));
         }
 
         [Test]
@@ -100,7 +99,7 @@ namespace Loupe.Agent.Web.Module.Tests.Cookie_Handler
 
             target.HandleRequest(HttpContext);
 
-            Assert.That(items.Keys, Has.No.Member(LoupeSessionHeader));
+            Assert.That(items.Keys, Has.No.Member(Constants.SessionId));
         }
     }
 }

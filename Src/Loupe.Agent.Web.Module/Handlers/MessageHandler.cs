@@ -136,8 +136,8 @@ namespace Loupe.Agent.Web.Module.Handlers
         {
             var logRequest = GetMessageFromRequestBody(context);
 
-            if (logRequest != null)
-            {
+            if (logRequest != null) {
+                CacheClientDetails(context, logRequest);
                 logRequest.User = context.User;
                 AddSessionId(context, logRequest);
 
@@ -159,10 +159,18 @@ namespace Loupe.Agent.Web.Module.Handlers
             }
         }
 
+        private void CacheClientDetails(HttpContextBase context, LogRequest logRequest) 
+        {
+            var sessionId = context.Items[Constants.SessionId] as string;
+            if (sessionId != null && logRequest.Session != null && logRequest.Session.Client != null) {
+                context.Cache.Insert(sessionId, logRequest.Session.Client);     
+            }
+        }
+
         private void AddSessionId(HttpContextBase context, LogRequest logRequest)
         {
-            var sessionId = context.Items["LoupeSessionId"];
-            var agentSessionId = context.Items["LoupeAgentSessionId"];
+            var sessionId = context.Items[Constants.SessionId];
+            var agentSessionId = context.Items[Constants.AgentSessionId];
 
             for (int i = 0; i < logRequest.LogMessages.Count; i++)
             {

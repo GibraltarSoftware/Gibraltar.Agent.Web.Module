@@ -2,7 +2,9 @@
 using System.Linq;
 using System.Threading;
 using System.Web;
+using ExpectedObjects;
 using Gibraltar.Agent;
+using Loupe.Agent.Web.Module.Models;
 using NUnit.Framework;
 
 namespace Loupe.Agent.Web.Module.Tests.Message_Handler
@@ -204,7 +206,7 @@ namespace Loupe.Agent.Web.Module.Tests.Message_Handler
         [Test]
         public void Should_not_output_session_id_in_details_if_no_cookie_or_id_in_request()
         {
-            contextItems.Clear();
+            ContextItems.Clear();
 
             SendRequest("{Session:{ client: {description:'Firefox 37.0 32-bit on Windows 8.1 64-bit',layout:'Gecko',manufacturer:null,name:'Firefox',prerelease:null,product:null,ua:'Mozilla/5.0 (Windows NT 6.3; WOW64; rv:37.0) Gecko/20100101 Firefox/37.0',version:'37.0',os:{architecture:64,family:'Windows',version:'8.1'},size:{width:1102,height:873}}},LogMessages:[{severity: 4,category: 'Test',caption: 'test log',description: 'tests logs message',paramters: null,details: null,exception: null,methodSourceInfo: null}]}");
 
@@ -244,6 +246,68 @@ namespace Loupe.Agent.Web.Module.Tests.Message_Handler
             Assert.That(loggedMessage.Details, Is.EqualTo(expectedDetailsBlock));
         }
 
+        [Test]
+        public void Should_cache_client_details()
+        {
+            SendRequest("{session: { client: {description:'Firefox 37.0 32-bit on Windows 8.1 64-bit',layout:'Gecko',manufacturer:null,name:'Firefox',prerelease:null,product:null,ua:'Mozilla/5.0 (Windows NT 6.3; WOW64; rv:37.0) Gecko/20100101 Firefox/37.0',version:'37.0',os:{architecture:64,family:'Windows',version:'8.1'},size:{width:1102,height:873}}},logMessages:[{severity: 4,category: 'Test',caption: 'test log',description: 'tests logs message',paramters: null,details: null,exception: {},methodSourceInfo: {file:'app.js', line: 3, column: 5}}]}");
+
+            WaitForEvent();
+
+            var expected = CreateClientDetails().ToExpectedObject();
+
+            expected.ShouldEqual(HttpContext.Cache[DefaultTestSessionId]);
+
+        }
+
+        [Test]
+        public void Should_not_remove_cached_item_if_no_client_details_sent_on_subsequent_request() {
+            var existingDetails = CreateClientDetails();
+            
+            HttpContext.Cache.Insert(DefaultTestSessionId, existingDetails);
+
+            SendRequest("{Session:null,LogMessages:[{severity: 4,category: 'Test',caption: 'test log',description: 'tests logs message',paramters: null,details: null,exception: null,methodSourceInfo: null}]}");
+
+            WaitForEvent();
+
+            var expected = existingDetails.ToExpectedObject();
+
+            expected.ShouldEqual(HttpContext.Cache[DefaultTestSessionId]);
+        }
+
+        [Test]
+        public void Should_not_add_multiple_details_to_cache_for_same_session() {
+            var existingDetails = CreateClientDetails();
+
+            HttpContext.Cache.Insert(DefaultTestSessionId, existingDetails);
+
+            SendRequest("{session: { client: {description:'Firefox 37.0 32-bit on Windows 8.1 64-bit',layout:'Gecko',manufacturer:null,name:'Firefox',prerelease:null,product:null,ua:'Mozilla/5.0 (Windows NT 6.3; WOW64; rv:37.0) Gecko/20100101 Firefox/37.0',version:'37.0',os:{architecture:64,family:'Windows',version:'8.1'},size:{width:1102,height:873}}},logMessages:[{severity: 4,category: 'Test',caption: 'test log',description: 'tests logs message',paramters: null,details: null,exception: {},methodSourceInfo: {file:'app.js', line: 3, column: 5}}]}");
+
+            WaitForEvent();
+
+            Assert.That(HttpContext.Cache.Count, Is.EqualTo(1));
+        }
+
+        private ClientDetails CreateClientDetails() {
+           return new ClientDetails
+            {
+                Description = "Firefox 37.0 32-bit on Windows 8.1 64-bit",
+                Layout = "Gecko",
+                Name = "Firefox",
+                UserAgentString = "Mozilla/5.0 (Windows NT 6.3; WOW64; rv:37.0) Gecko/20100101 Firefox/37.0",
+                Version = "37.0",
+                OS = new ClientOS
+                {
+                    Architecture = 64,
+                    Family = "Windows",
+                    Version = "8.1"
+                },
+                Size = new ClientDimensions
+                {
+                    Height = 873,
+                    Width = 1102
+                }
+            };            
+        }
 
         void Log_MessageAlert(object sender, LogMessageAlertEventArgs e)
         {
