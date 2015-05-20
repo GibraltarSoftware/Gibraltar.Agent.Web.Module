@@ -6,9 +6,6 @@ namespace Loupe.Agent.Web.Module.Handlers
 {
     public class CookieHandler
     {
-        private const string CookieName = "LoupeSessionId";
-        private const string LoupeSessionHeader = "LoupeSessionId";
-
         public void HandleRequest(HttpContextBase context)
         {
             if (InterestedInRequest(context.Request))
@@ -24,13 +21,13 @@ namespace Loupe.Agent.Web.Module.Handlers
 
         private void AddContextItem(HttpContextBase context)
         {
-            var sessionId = context.Request.Cookies[CookieName].Value;
-            context.Items.Add(LoupeSessionHeader,sessionId);
+            var sessionId = context.Request.Cookies[Constants.SessionId].Value;
+            context.Items.Add(Constants.SessionId, sessionId);
         }
 
         private void AddSessionCookie(HttpContextBase context)
         {
-            var loupeCookie = new HttpCookie(CookieName);
+            var loupeCookie = new HttpCookie(Constants.SessionId);
             loupeCookie.HttpOnly = true;
             loupeCookie.Value = Guid.NewGuid().ToString();
             
@@ -40,7 +37,7 @@ namespace Loupe.Agent.Web.Module.Handlers
 
         private bool CookieDoesNotExist(HttpRequestBase request)
         {
-            return request.Cookies[CookieName] == null;
+            return request.Cookies[Constants.SessionId] == null;
         }
 
 

@@ -48,6 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Handlers\HeaderHandler.cs" />
+    <Compile Include="Infrastructure\Constants.cs" />
     <Compile Include="Infrastructure\HostCORSConfiguration.cs" />
     <Compile Include="Handlers\CookieHandler.cs" />
     <Compile Include="DetailBuilders\DetailsBuilderBase.cs" />
