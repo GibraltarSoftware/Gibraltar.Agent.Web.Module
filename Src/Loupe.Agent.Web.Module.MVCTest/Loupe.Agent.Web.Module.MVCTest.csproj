@@ -43,6 +43,10 @@
       <HintPath>..\..\packages\Gibraltar.Agent.3.7.4.2481\lib\4.0\Gibraltar.Agent.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Gibraltar.Agent.Web.Mvc, Version=3.8.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Gibraltar.Agent.Web.Mvc.3.8.0-beta\lib\net40\Gibraltar.Agent.Web.Mvc.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -170,10 +174,6 @@
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Gibraltar.Agent.Web.Mvc\Src\Agent.Web.Mvc\Agent.Web.Mvc.csproj">
-      <Project>{5ceab23a-edf0-4f45-b74c-ae16047c1ecc}</Project>
-      <Name>Agent.Web.Mvc</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Loupe.Agent.Web.Module\Loupe.Agent.Web.Module.csproj">
       <Project>{ea8936c9-44c3-4766-a515-e75a12b7f2c1}</Project>
       <Name>Loupe.Agent.Web.Module</Name>

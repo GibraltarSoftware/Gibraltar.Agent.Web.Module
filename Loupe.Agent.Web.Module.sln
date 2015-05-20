@@ -9,11 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Loupe.Agent.Web.Module.Test
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Loupe.Agent.Web.Module.MVCTest", "Src\Loupe.Agent.Web.Module.MVCTest\Loupe.Agent.Web.Module.MVCTest.csproj", "{7F6A0788-29C5-4F28-AF4D-E51137335F54}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Agent.Web.Mvc", "..\Gibraltar.Agent.Web.Mvc\Src\Agent.Web.Mvc\Agent.Web.Mvc.csproj", "{5CEAB23A-EDF0-4F45-B74C-AE16047C1ECC}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Loupe.Agent.Web.Module.WebFormTest", "Src\Loupe.Agent.Web.Module.WebFormTest\Loupe.Agent.Web.Module.WebFormTest.csproj", "{7E151F25-AB5D-4020-BEEC-85797CF770DC}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Agent.Web", "..\Gibraltar.Agent.Web\src\Agent.Web\Agent.Web.csproj", "{B15EB772-5642-43AC-8F80-20A8C9D1EE34}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,18 +29,10 @@ Global
 		{7F6A0788-29C5-4F28-AF4D-E51137335F54}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7F6A0788-29C5-4F28-AF4D-E51137335F54}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7F6A0788-29C5-4F28-AF4D-E51137335F54}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5CEAB23A-EDF0-4F45-B74C-AE16047C1ECC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5CEAB23A-EDF0-4F45-B74C-AE16047C1ECC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5CEAB23A-EDF0-4F45-B74C-AE16047C1ECC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5CEAB23A-EDF0-4F45-B74C-AE16047C1ECC}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7E151F25-AB5D-4020-BEEC-85797CF770DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7E151F25-AB5D-4020-BEEC-85797CF770DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7E151F25-AB5D-4020-BEEC-85797CF770DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7E151F25-AB5D-4020-BEEC-85797CF770DC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B15EB772-5642-43AC-8F80-20A8C9D1EE34}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B15EB772-5642-43AC-8F80-20A8C9D1EE34}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B15EB772-5642-43AC-8F80-20A8C9D1EE34}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B15EB772-5642-43AC-8F80-20A8C9D1EE34}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
