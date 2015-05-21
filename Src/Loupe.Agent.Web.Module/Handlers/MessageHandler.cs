@@ -2,6 +2,7 @@
 using System.IO;
 using System.Net;
 using System.Web;
+using System.Web.Caching;
 using Gibraltar.Agent;
 using Loupe.Agent.Web.Module.DetailBuilders;
 using Loupe.Agent.Web.Module.Infrastructure;
@@ -163,7 +164,7 @@ namespace Loupe.Agent.Web.Module.Handlers
         {
             var sessionId = context.Items[Constants.SessionId] as string;
             if (sessionId != null && logRequest.Session != null && logRequest.Session.Client != null) {
-                context.Cache.Insert(sessionId, logRequest.Session.Client);     
+                context.Cache.Insert(sessionId, logRequest.Session.Client,null,Cache.NoAbsoluteExpiration,TimeSpan.FromMinutes(5));
             }
         }
 
