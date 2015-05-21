@@ -75,6 +75,11 @@ namespace Loupe.Agent.Web.Module.Tests
             SetContextLoupeSessionId("");
         }
 
+        protected void ClearAgentSessionId()
+        {
+            SetContextAgentSessionId("");
+        }
+
         protected void SetContextLoupeSessionId(string value)
         {
             ContextItems[Constants.SessionId] = value;

@@ -169,8 +169,14 @@ namespace Loupe.Agent.Web.Module.Handlers
 
         private void AddSessionId(HttpContextBase context, LogRequest logRequest)
         {
-            var sessionId = context.Items[Constants.SessionId];
-            var agentSessionId = context.Items[Constants.AgentSessionId];
+            var sessionId = context.Items[Constants.SessionId] as string;
+            var agentSessionId = context.Items[Constants.AgentSessionId] as string;
+
+            if (string.IsNullOrWhiteSpace(agentSessionId) && logRequest.Session != null &&
+                !string.IsNullOrWhiteSpace(logRequest.Session.CurrentAgentSessionId))
+            {
+                context.Items[Constants.AgentSessionId] = logRequest.Session.CurrentAgentSessionId;
+            }  
 
             for (int i = 0; i < logRequest.LogMessages.Count; i++)
             {
@@ -188,12 +194,12 @@ namespace Loupe.Agent.Web.Module.Handlers
 
                 if (string.IsNullOrWhiteSpace(message.SessionId))
                 {
-                    message.SessionId = sessionId.ToString();
+                    message.SessionId = sessionId;
                 }
 
                 if (string.IsNullOrWhiteSpace(message.AgentSessionId))
                 {
-                    message.AgentSessionId = agentSessionId.ToString();
+                    message.AgentSessionId = agentSessionId;
                 }
 
             }

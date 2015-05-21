@@ -11,7 +11,7 @@ using Exception = Loupe.Agent.Web.Module.Models.Exception;
 namespace Loupe.Agent.Web.Module.Tests.Message_Handler
 {
     [TestFixture]
-    public class When_receives_request_to_log: TestBase
+    public class When_receives_request_to_log : TestBase
     {
         private JavaScriptLogger _fakeLogger;
 
@@ -24,15 +24,15 @@ namespace Loupe.Agent.Web.Module.Tests.Message_Handler
 
         [Test]
         public void Should_return_204([Values("http://www.test.com/loupe/log",
-                                              "http://www.test.com/Loupe/log",
-                                              "http://www.test.com/loupe/Log",
-                                              "http://www.test.com/Loupe/Log",
-                                              "http://www.test.com/loupe/log/")] string url)
+            "http://www.test.com/Loupe/log",
+            "http://www.test.com/loupe/Log",
+            "http://www.test.com/Loupe/Log",
+            "http://www.test.com/loupe/log/")] string url)
         {
-            
+
             SendRequest("{Session:null, LogMessages:[]}");
- 
-            Assert.That(HttpResponse.StatusCode, Is.EqualTo(204));            
+
+            Assert.That(HttpResponse.StatusCode, Is.EqualTo(204));
         }
 
         [Test]
@@ -47,13 +47,14 @@ namespace Loupe.Agent.Web.Module.Tests.Message_Handler
         [Test]
         public void Should_pass_object_to_log()
         {
-            SendRequest("{Session:null,LogMessages:[{severity: 8,category: 'Test',caption: 'test log',description: 'tests logs message',paramters: null,details: null,exception: {},methodSourceInfo: {}}]}");
+            SendRequest("{Session:null, LogMessages:[{severity: 8,category: 'Test',caption: 'test log',description: 'tests logs message',paramters: null,details: null,exception: {},methodSourceInfo: {}}]}");
 
             var expected = new LogRequest
             {
                 LogMessages = new List<LogMessage>
                 {
-                    new LogMessage {
+                    new LogMessage
+                    {
                         Severity = LogMessageSeverity.Information,
                         Category = "Test",
                         Caption = "test log",
@@ -78,7 +79,7 @@ namespace Loupe.Agent.Web.Module.Tests.Message_Handler
         [Test]
         public void Should_have_session_details()
         {
-            const string requestBody = "{ session: { client: {description:'Firefox 37.0 32-bit on Windows 8.1 64-bit',layout:'Gecko',manufacturer:null,name:'Firefox',prerelease:null,product:null,ua:'Mozilla/5.0 (Windows NT 6.3; WOW64; rv:37.0) Gecko/20100101 Firefox/37.0',version:'37.0',os:{architecture:64,family:'Windows',version:'8.1'},size:{width:1102,height:873}}},LogMessages:[{severity: 8,category: 'Test',caption: 'test log',description: 'tests logs message',paramters: null,details: null,exception: {},methodSourceInfo: {}}]}";
+            string requestBody = "{ session: { currentAgentSessionId: '" + DefaultAgentSessionId + "', client: {description:'Firefox 37.0 32-bit on Windows 8.1 64-bit',layout:'Gecko',manufacturer:null,name:'Firefox',prerelease:null,product:null,ua:'Mozilla/5.0 (Windows NT 6.3; WOW64; rv:37.0) Gecko/20100101 Firefox/37.0',version:'37.0',os:{architecture:64,family:'Windows',version:'8.1'},size:{width:1102,height:873}}},LogMessages:[{severity: 8,category: 'Test',caption: 'test log',description: 'tests logs message',paramters: null,details: null,exception: {},methodSourceInfo: {}}]}";
 
             SendRequest(requestBody);
 
@@ -86,32 +87,34 @@ namespace Loupe.Agent.Web.Module.Tests.Message_Handler
             {
                 Session = new ClientSession
                 {
-                   Client = new ClientDetails
-                   {
-                       Description = "Firefox 37.0 32-bit on Windows 8.1 64-bit",
-                       Layout = "Gecko",
-                       Manufacturer = null,
-                       Name = "Firefox",
-                       Prerelease = null,
-                       Product = null,
-                       UserAgentString = "Mozilla/5.0 (Windows NT 6.3; WOW64; rv:37.0) Gecko/20100101 Firefox/37.0",
-                       Version = "37.0",
-                       OS = new ClientOS
-                       {
-                           Architecture = 64,
-                           Family = "Windows",
-                           Version = "8.1"
-                       },
-                       Size = new ClientDimensions
-                       {
-                           Width = 1102,
-                           Height = 873
-                       }
-                   }
+                    CurrentAgentSessionId = DefaultAgentSessionId,
+                    Client = new ClientDetails
+                    {
+                        Description = "Firefox 37.0 32-bit on Windows 8.1 64-bit",
+                        Layout = "Gecko",
+                        Manufacturer = null,
+                        Name = "Firefox",
+                        Prerelease = null,
+                        Product = null,
+                        UserAgentString = "Mozilla/5.0 (Windows NT 6.3; WOW64; rv:37.0) Gecko/20100101 Firefox/37.0",
+                        Version = "37.0",
+                        OS = new ClientOS
+                        {
+                            Architecture = 64,
+                            Family = "Windows",
+                            Version = "8.1"
+                        },
+                        Size = new ClientDimensions
+                        {
+                            Width = 1102,
+                            Height = 873
+                        }
+                    }
                 },
                 LogMessages = new List<LogMessage>
                 {
-                    new LogMessage {
+                    new LogMessage
+                    {
                         Severity = LogMessageSeverity.Information,
                         Category = "Test",
                         Caption = "test log",
@@ -136,13 +139,15 @@ namespace Loupe.Agent.Web.Module.Tests.Message_Handler
         [Test]
         public void Should_have_methodSourceInfo()
         {
-            SendRequest("{Session:null,LogMessages:[{severity: 8,category: 'Test',caption: 'test log',description: 'tests logs message',paramters: null,details: null,exception: {},methodSourceInfo: { file: 'app.js', line: 18, column: 37}}]}");
+            SendRequest(
+                "{Session:null,LogMessages:[{severity: 8,category: 'Test',caption: 'test log',description: 'tests logs message',paramters: null,details: null,exception: {},methodSourceInfo: { file: 'app.js', line: 18, column: 37}}]}");
 
             var expected = new LogRequest
             {
                 LogMessages = new List<LogMessage>
                 {
-                    new LogMessage {
+                    new LogMessage
+                    {
                         Severity = LogMessageSeverity.Information,
                         Category = "Test",
                         Caption = "test log",
@@ -167,7 +172,7 @@ namespace Loupe.Agent.Web.Module.Tests.Message_Handler
             }.ToExpectedObject();
 
             // ReSharper disable once SuspiciousTypeConversion.Global
-            _fakeLogger.Received().Log(Arg.Is<LogRequest>(x => expected.Equals(x)));            
+            _fakeLogger.Received().Log(Arg.Is<LogRequest>(x => expected.Equals(x)));
         }
 
         [Test]
@@ -178,7 +183,9 @@ namespace Loupe.Agent.Web.Module.Tests.Message_Handler
 
             var jsonTimeStamp = timeStamp.ToString("yyyy-MM-ddTHH:mm:ss.fffzzz");
 
-            SendRequest("{Session:null,LogMessages:[{severity: 8,category: 'Test',caption: 'test log',description: 'tests logs message',paramters: null,details: null,exception: {},methodSourceInfo: {}, timeStamp: '" + jsonTimeStamp + "', sequence: 1}]}");
+            SendRequest(
+                "{Session:null,LogMessages:[{severity: 8,category: 'Test',caption: 'test log',description: 'tests logs message',paramters: null,details: null,exception: {},methodSourceInfo: {}, timeStamp: '" +
+                jsonTimeStamp + "', sequence: 1}]}");
 
             var expected = new LogRequest
             {
@@ -202,7 +209,7 @@ namespace Loupe.Agent.Web.Module.Tests.Message_Handler
                 },
                 User = FakeUser
             }.ToExpectedObject()
-             .Configure(ctx => ctx.PushStrategy<DateTimeOffSetComparisonStrategy>());
+                .Configure(ctx => ctx.PushStrategy<DateTimeOffSetComparisonStrategy>());
 
             // ReSharper disable once SuspiciousTypeConversion.Global
             _fakeLogger.Received().Log(Arg.Is<LogRequest>(x => expected.Equals(x)));
@@ -228,15 +235,17 @@ namespace Loupe.Agent.Web.Module.Tests.Message_Handler
         }
 
         [Test]
-        public void Should_have_agent_session_id()
+        public void Should_have_agent_session_id_on_message()
         {
-            SendRequest("{Session:null,LogMessages:[{severity: 8,category: 'Test',caption: 'test log',description: 'tests logs message',paramters: null,details: null,exception: {},methodSourceInfo: { file: 'app.js', line: 18, column: 37}}]}");
+            SendRequest(
+                "{Session:null,LogMessages:[{severity: 8,category: 'Test',caption: 'test log',description: 'tests logs message',paramters: null,details: null,exception: {},methodSourceInfo: { file: 'app.js', line: 18, column: 37}}]}");
 
             var expected = new LogRequest
             {
                 LogMessages = new List<LogMessage>
                 {
-                    new LogMessage {
+                    new LogMessage
+                    {
                         Severity = LogMessageSeverity.Information,
                         Category = "Test",
                         Caption = "test log",
@@ -263,5 +272,19 @@ namespace Loupe.Agent.Web.Module.Tests.Message_Handler
             // ReSharper disable once SuspiciousTypeConversion.Global
             _fakeLogger.Received().Log(Arg.Is<LogRequest>(x => expected.Equals(x)));
         }
-    }
+
+        [Test]
+        public void Should_set_agentSessionId_if_not_set_on_context()
+        {
+            var agentSessionId = Guid.NewGuid().ToString();
+
+            ClearAgentSessionId();
+
+            string requestBody = "{ session: { currentAgentSessionId: '" + agentSessionId + "', client: {description:'Firefox 37.0 32-bit on Windows 8.1 64-bit',layout:'Gecko',manufacturer:null,name:'Firefox',prerelease:null,product:null,ua:'Mozilla/5.0 (Windows NT 6.3; WOW64; rv:37.0) Gecko/20100101 Firefox/37.0',version:'37.0',os:{architecture:64,family:'Windows',version:'8.1'},size:{width:1102,height:873}}},LogMessages:[{severity: 8,category: 'Test',caption: 'test log',description: 'tests logs message',paramters: null,details: null,exception: {},methodSourceInfo: {}}]}";
+
+            SendRequest(requestBody);
+
+            Assert.That(ContextItems[Constants.AgentSessionId] , Is.EqualTo(agentSessionId));
+        }
+}
 }
