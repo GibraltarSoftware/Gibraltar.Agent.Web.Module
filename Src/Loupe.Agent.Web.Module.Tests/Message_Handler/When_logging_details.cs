@@ -253,9 +253,9 @@ namespace Loupe.Agent.Web.Module.Tests.Message_Handler
 
             WaitForEvent();
 
-            var expected = CreateClientDetails().ToExpectedObject();
+            var expected = CreateClientDetails();
 
-            expected.ShouldEqual(HttpContext.Cache[DefaultTestSessionId]);
+            Assert.That(HttpContext.Cache[DefaultTestSessionId], Is.EqualTo(expected));
 
         }
 
@@ -269,9 +269,7 @@ namespace Loupe.Agent.Web.Module.Tests.Message_Handler
 
             WaitForEvent();
 
-            var expected = existingDetails.ToExpectedObject();
-
-            expected.ShouldEqual(HttpContext.Cache[DefaultTestSessionId]);
+            Assert.That(HttpContext.Cache[DefaultTestSessionId], Is.EqualTo(existingDetails));
         }
 
         [Test]
@@ -287,26 +285,9 @@ namespace Loupe.Agent.Web.Module.Tests.Message_Handler
             Assert.That(HttpContext.Cache.Count, Is.EqualTo(1));
         }
 
-        private ClientDetails CreateClientDetails() {
-           return new ClientDetails
-            {
-                Description = "Firefox 37.0 32-bit on Windows 8.1 64-bit",
-                Layout = "Gecko",
-                Name = "Firefox",
-                UserAgentString = "Mozilla/5.0 (Windows NT 6.3; WOW64; rv:37.0) Gecko/20100101 Firefox/37.0",
-                Version = "37.0",
-                OS = new ClientOS
-                {
-                    Architecture = 64,
-                    Family = "Windows",
-                    Version = "8.1"
-                },
-                Size = new ClientDimensions
-                {
-                    Height = 873,
-                    Width = 1102
-                }
-            };            
+        private string CreateClientDetails()
+        {
+            return "<ClientDetails><Description>Firefox 37.0 32-bit on Windows 8.1 64-bit</Description><Layout>Gecko</Layout><Name>Firefox</Name><UserAgentString>Mozilla/5.0 (Windows NT 6.3; WOW64; rv:37.0) Gecko/20100101 Firefox/37.0</UserAgentString><Version>37.0</Version><OS><Architecture>64</Architecture><Family>Windows</Family><Version>8.1</Version></OS><Size><Height>873</Height><Width>1102</Width></Size></ClientDetails>";
         }
 
         void Log_MessageAlert(object sender, LogMessageAlertEventArgs e)

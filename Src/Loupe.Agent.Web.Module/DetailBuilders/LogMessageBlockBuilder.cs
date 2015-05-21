@@ -20,7 +20,8 @@ namespace Loupe.Agent.Web.Module.DetailBuilders
         {
             if (_clientDetails == null)
             {
-                _clientDetails = CreateClientDetailString(_request);
+                var clientDetailsBuilder = new ClientDetailsBuilder();
+                _clientDetails = clientDetailsBuilder.Build(_request);
             }
 
             DetailBuilder.Clear();

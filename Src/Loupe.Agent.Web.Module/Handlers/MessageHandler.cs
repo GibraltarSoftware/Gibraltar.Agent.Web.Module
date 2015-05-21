@@ -163,8 +163,11 @@ namespace Loupe.Agent.Web.Module.Handlers
         private void CacheClientDetails(HttpContextBase context, LogRequest logRequest) 
         {
             var sessionId = context.Items[Constants.SessionId] as string;
-            if (sessionId != null && logRequest.Session != null && logRequest.Session.Client != null) {
-                context.Cache.Insert(sessionId, logRequest.Session.Client,null,Cache.NoAbsoluteExpiration,TimeSpan.FromMinutes(5));
+            if (sessionId != null && logRequest.Session != null && logRequest.Session.Client != null)
+            {
+                var clientDetailsBuilder = new ClientDetailsBuilder();
+                
+                context.Cache.Insert(sessionId, clientDetailsBuilder.Build(logRequest) ,null,Cache.NoAbsoluteExpiration,TimeSpan.FromMinutes(10));
             }
         }
 

@@ -47,6 +47,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DetailBuilders\ClientDetailsBuilder.cs" />
     <Compile Include="Handlers\HeaderHandler.cs" />
     <Compile Include="Infrastructure\Constants.cs" />
     <Compile Include="Infrastructure\HostCORSConfiguration.cs" />
