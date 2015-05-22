@@ -16,6 +16,9 @@ namespace Loupe.Agent.Web.Module.MVCTest.Controllers
             return View();
         }
 
+        // Add Output cache to ensure the get from the js isn't
+        // cached by IE
+        [OutputCache(NoStore = true, Duration = 0)]
         public HttpResponseMessage data()
         {
 
