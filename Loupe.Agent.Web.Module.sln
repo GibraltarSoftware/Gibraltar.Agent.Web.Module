@@ -13,6 +13,17 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Loupe.Agent.Web.Module.WebF
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Loupe.Agent.Web.Module.WebApiTest", "Src\Loupe.Agent.Web.Module.WebApiTest\Loupe.Agent.Web.Module.WebApiTest.csproj", "{ABE20997-E74F-4141-8C90-998C829D8460}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{29544F81-C5F4-4763-9579-A335E3F40620}"
+	ProjectSection(SolutionItems) = preProject
+		LICENSE.txt = LICENSE.txt
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "dependencies", "dependencies", "{9B2A88CD-4419-4EFC-BDF8-3D4AAE5109A2}"
+	ProjectSection(SolutionItems) = preProject
+		dependencies\NuGet.exe = dependencies\NuGet.exe
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

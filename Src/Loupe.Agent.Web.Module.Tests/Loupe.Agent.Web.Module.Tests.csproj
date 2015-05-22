@@ -77,7 +77,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Loupe.Agent.Web.Module\Loupe.Agent.Web.Module.csproj">
       <Project>{ea8936c9-44c3-4766-a515-e75a12b7f2c1}</Project>
-      <Name>Gibraltar.Agent.Web.Module</Name>
+      <Name>Loupe.Agent.Web.Module</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
