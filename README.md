@@ -6,7 +6,7 @@ but it also provide session tracking of users.
 
 It adds to an existing Loupe system so all your existing code continues to work as it does now
 and it extends the [Loupe Agent for WebForms](https://github.com/GibraltarSoftware/Gibraltar.Agent.Web) and/or
-the [Loupe Agent for Mvx/WebApi](https://github.com/GibraltarSoftware/Gibraltar.Agent.Web.Mvc) enabling you
+the [Loupe Agent for Mvc/WebApi](https://github.com/GibraltarSoftware/Gibraltar.Agent.Web.Mvc) enabling you
 to still use any viewer for Loupe to review the agent's information
 
 Using the Module
