@@ -63,11 +63,8 @@
     function makeAjaxCall() {
         $("#ajaxCallResult").text("");
 
-        var header = requestHeader.headerName;
-        var headerValue = requestHeader.headerValue;
-
         var loupeHeader = {};
-        loupeHeader[header] = headerValue;
+        loupeHeader[requestHeader.headerName] = requestHeader.headerValue;
 
         $.ajax({
             type: "GET",
