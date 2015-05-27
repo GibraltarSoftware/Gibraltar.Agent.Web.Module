@@ -3,7 +3,7 @@
   <metadata>
     <id>Loupe.Agent.Web.Module</id>
     <version>$version$</version>
-    <title>Loupe Agent HttpModule</title>
+    <title>Loupe Agent Web Module</title>
     <authors>Gibraltar Software</authors>
     <owners>Gibraltar Software</owners>
     <licenseUrl>https://github.com/GibraltarSoftware/Gibraltar.Agent.Web.Module/blob/master/LICENsE.txt</licenseUrl>
