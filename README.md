@@ -9,12 +9,12 @@ and it extends the [Loupe Agent for WebForms](https://github.com/GibraltarSoftwa
 the [Loupe Agent for Mvc/WebApi](https://github.com/GibraltarSoftware/Gibraltar.Agent.Web.Mvc) enabling you
 to still use any viewer for Loupe to review the agent's information
 
+You can install it directly from nuget [here](https://www.nuget.org/packages/Loupe.Agent.Web.Module/)
+
 Using the Module
 ---------------
 
-If you install the module via Nuget there is nothing you need to do, if you wish to add it to an existing
-system manually then you need to alter the web cofig and add the following to the ```<system.webServer><modules>``` 
-section: ```<add name="Loupe.JSLogging" type="Loupe.Agent.Web.Module.Logging" />```
+If you install the module via Nuget there is nothing you need to do, if you wish to build it yourself and add it to an existing system manually then you need to alter the web cofig and add the following to the ```<system.webServer><modules>``` section: ```<add name="Loupe.JSLogging" type="Loupe.Agent.Web.Module.Logging" />```
 
 
 Building the Agent
