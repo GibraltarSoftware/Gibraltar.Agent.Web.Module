@@ -60,7 +60,7 @@ namespace Loupe.Agent.Web.Module.Models
         /// </summary>
         /// <remarks>This method is only used by the code creating a <see cref="JavaScriptException"/>
         /// as such it only needs to know if message and stack trace are not null.
-        /// We need this method as if a request is recived with an empty object rather
+        /// We need this method as if a request is received with an empty object rather
         /// than null for Error then JSON.net will create a new empty object with no data
         /// which we don't want to log.</remarks>
         /// <returns>true if necessary properties not null; otherwise false</returns>

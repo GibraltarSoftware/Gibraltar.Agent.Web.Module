@@ -78,7 +78,7 @@ namespace Loupe.Agent.Web.Module.Handlers
             {
 #if DEBUG
                 Log.Write(LogMessageSeverity.Critical, LogSystem, 0, ex, LogWriteMode.Queued,
-                    CreateStandardRequestDetailXml(context), Category, "Exception attempting to process message",
+                    CreateStandardRequestDetailXml(context), Category, "Unable to process message due to " + ex.GetType(),
                     "Exception caught in top level catch block, this should have be caught by error handler specific to the part of the request processing that failed.");
 #endif
             }

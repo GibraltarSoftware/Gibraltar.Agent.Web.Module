@@ -124,8 +124,8 @@ namespace Loupe.Agent.Web.Module.DetailBuilders
             }
             catch
             {
-                // deatils are not json or we cannot convert to
-                // xml so we will simply add the details to the block
+                // details are not JSON or we cannot convert to
+                // XML so we will simply add the details to the block
                 // as a string
             }
 
