@@ -75,9 +75,8 @@ namespace Loupe.Agent.Web.Module.Handlers
                 catch (System.Exception ex)
                 {
 #if DEBUG
-                    Log.Write(LogMessageSeverity.Critical, "Loupe", 0, ex, LogWriteMode.Queued,
-                        null, "Loupe.Internal", "Exception attempting to handle CORS request",
-                        "Exception occured trying to handle the {0} request of a CORS request", context.Request.HttpMethod);
+                    Log.Critical(ex, "Loupe.Internal", "Unable to handle CORS request due to " + ex.GetType(),
+                        "Exception occurred trying to handle the {0} request of a CORS request\r\n{1}", context.Request.HttpMethod, ex.Message);
 #endif
                     context.Response.StatusCode = (int) HttpStatusCode.InternalServerError;
                     handled = true;

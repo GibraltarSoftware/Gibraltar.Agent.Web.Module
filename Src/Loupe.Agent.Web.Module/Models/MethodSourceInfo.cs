@@ -23,12 +23,12 @@ namespace Loupe.Agent.Web.Module.Models
     public class MethodSourceInfo
     {
         /// <summary>
-        /// File that the error occured in
+        /// File that the error occurred in
         /// </summary>
         public string File { get; set; }
 
         /// <summary>
-        /// Function that was being executed when error occured
+        /// Function that was being executed when error occurred
         /// </summary>
         public string Method { get; set; }
 

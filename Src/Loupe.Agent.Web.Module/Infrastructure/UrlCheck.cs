@@ -40,11 +40,11 @@ namespace Loupe.Agent.Web.Module.Infrastructure
             catch (Exception ex)
             {
                 // for whatever reason the match has thrown an error, in 
-                // normal circumnstances this should not happen but to ensure
-                // we do not cause problems elsewhere we will swall this 
+                // normal circumstances this should not happen but to ensure
+                // we do not cause problems elsewhere we will swallow this 
                 // exception and let the request continue through the pipeline
 #if DEBUG
-                Log.Write(LogMessageSeverity.Error, "Loupe", 0, ex, LogWriteMode.Queued, null, "Loupe.Internal", "Unable to match regex",
+                Log.Write(LogMessageSeverity.Error, "Loupe", 0, ex, LogWriteMode.Queued, null, "Loupe.Internal", "Unable to match regex due to " + ex.GetType(),
                     "Exception thrown when attempting to match the regex against the local path");
 #endif
             }
