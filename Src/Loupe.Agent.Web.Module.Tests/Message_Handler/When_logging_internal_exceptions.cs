@@ -61,7 +61,7 @@ namespace Loupe.Agent.Web.Module.Tests.Message_Handler
             Assert.That(loggedMessage, Is.Not.Null);
 
             var expectedDetails =
-                "<Request>We were unable to record details from the Request itself due to an exception occuring whilst extracting information from the Request.</Request>";
+                "<Request>We were unable to record details from the Request itself due to an exception occurring whilst extracting information from the Request.</Request>";
 
             Assert.That(loggedMessage.Details, Is.EqualTo(expectedDetails));
 

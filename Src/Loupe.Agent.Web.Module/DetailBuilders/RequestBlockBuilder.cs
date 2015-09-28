@@ -56,12 +56,11 @@ namespace Loupe.Agent.Web.Module.DetailBuilders
             catch (System.Exception ex)
             {
 #if DEBUG                
-                Log.Write(LogMessageSeverity.Error, "Loupe", 0, ex, LogWriteMode.Queued,""
-                    , "Loupe.Internal", "Exception building standard Request details block",
-                    "Exception occured whilst trying to build the standard Request details block, no request will be added to detail");
+                Log.Error(ex, "Loupe.Internal", "Unable to build standard Request details block due to " + ex.GetType(),
+                    "Exception occurred whilst trying to build the standard Request details block, no request will be added to detail\r\n{0}", ex.Message);
 #endif
                 DetailBuilder.Append(
-                    "We were unable to record details from the Request itself due to an exception occuring whilst extracting information from the Request.");
+                    "We were unable to record details from the Request itself due to an exception occurring whilst extracting information from the Request.");
             }
 
             if (_requestBody != null)

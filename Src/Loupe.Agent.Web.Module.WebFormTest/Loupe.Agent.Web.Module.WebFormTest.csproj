@@ -38,12 +38,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Gibraltar.Agent, Version=3.7.3.0, Culture=neutral, PublicKeyToken=ca42a1ee8d2e42d3, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Gibraltar.Agent.3.7.4.2481\lib\4.0\Gibraltar.Agent.dll</HintPath>
+    <Reference Include="Gibraltar.Agent, Version=4.0.0.0, Culture=neutral, PublicKeyToken=ca42a1ee8d2e42d3, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Gibraltar.Agent.4.0.0.3015\lib\net40\Gibraltar.Agent.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Gibraltar.Agent.Web, Version=3.8.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Gibraltar.Agent.Web.3.8.0-beta\lib\net20\Gibraltar.Agent.Web.dll</HintPath>
+    <Reference Include="Gibraltar.Agent.Web, Version=4.0.0.0, Culture=neutral, PublicKeyToken=ca42a1ee8d2e42d3, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Gibraltar.Agent.Web.4.0.0.3015\lib\net20\Gibraltar.Agent.Web.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
