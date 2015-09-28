@@ -12,7 +12,6 @@
     <iconUrl>http://www.gibraltarsoftware.com/loupe.ico</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>HttpModule that handles logging of messages/exceptions from Loupe JavaScript agent.</description>
-    <releaseNotes>Initial version.</releaseNotes>
     <tags>Loupe Logging ASP.NET</tags>
   </metadata>
   <files>
