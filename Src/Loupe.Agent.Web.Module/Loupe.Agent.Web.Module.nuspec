@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>Loupe.Agent.Web.Module</id>
-    <version>$version$-beta</version>
+    <version>$version$</version>
     <title>Loupe Agent Web Module</title>
     <authors>Gibraltar Software</authors>
     <owners>Gibraltar Software</owners>
