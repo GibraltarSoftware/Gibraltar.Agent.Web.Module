@@ -14,7 +14,8 @@
         critical: logCritical,
         write: logWrite,
         unhandledException: throwUnhandledException,
-        ajaxCall: makeAjaxCall
+        ajaxCall: makeAjaxCall,
+        login: login
     }
 
     function logVerbose() {
@@ -75,6 +76,31 @@
         }).error(function(jqXHR, textStatus) {
             $('#ajaxCallResult').text("failed:" + jqXHR.status + " " + jqXHR.statusText);
         });
+    }
+
+    function login() {
+        $('#loginStatus').text('Attempting login');
+
+        makeRequest('/account/logon').done(function (result) {
+            $('#loginStatus').text('Logged in');
+
+        }).fail(function (result) {
+            $('#loginStatus').text('Error logging in');
+            $('#returnedData').text(result.statusText);
+        });
+    }
+
+    function makeRequest(url) {
+        var ajaxSettings = {
+            type: 'POST',
+            url: url,
+            contentType: 'application/json',
+            data: "{userName: 'jane smith', password: 'jane smith'}"
+            //contentType: 'application/x-www-form-urlencoded',
+            //data: 'UserName=jane+smith&Password=jane+smith'
+        };
+
+        return $.ajax(ajaxSettings);
     }
 
     function getInputVal(inputName) {

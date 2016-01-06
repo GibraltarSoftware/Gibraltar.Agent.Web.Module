@@ -1,7 +1,6 @@
-﻿using System.Web;
-using System.Web.Optimization;
+﻿using System.Web.Optimization;
 
-namespace Loupe.Agent.Web.Module.MVCTest
+namespace Loupe.Agent.Web.Module.WebApiTest
 {
     public class BundleConfig
     {
@@ -28,7 +27,7 @@ namespace Loupe.Agent.Web.Module.MVCTest
                       "~/Content/site.css"));
 
             bundles.Add(new ScriptBundle("~/bundles/logging").Include(
-                "~/Scripts/Loupe.Agent.Native.min.js",
+                "~/Scripts/Loupe.Agent.Native.js",
                 "~/Scripts/logging.js",
                 "~/Scripts/handlers.js"));
         }

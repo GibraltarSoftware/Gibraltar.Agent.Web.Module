@@ -17,6 +17,7 @@
 // </copyright>
 
 using System;
+using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Web;
 using Gibraltar.Agent;
@@ -29,11 +30,21 @@ namespace Loupe.Agent.Web.Module.Infrastructure
     {
         private readonly Regex _urlRegex = new Regex("/[Ll]oupe/[Ll]og(?!/.)", RegexOptions.Compiled);
 
+        public bool IsLoupeUrl(HttpRequestMessage request)
+        {
+            return CheckUrl(request.RequestUri.LocalPath);
+        }
+
         public bool IsLoupeUrl(HttpContextBase context)
+        {
+            return CheckUrl(context.Request.Url.LocalPath);
+        }
+
+        private bool CheckUrl(string path)
         {
             try
             {
-                var urlMatch = _urlRegex.Match(context.Request.Url.LocalPath);
+                var urlMatch = _urlRegex.Match(path);
 
                 return urlMatch.Success;
             }

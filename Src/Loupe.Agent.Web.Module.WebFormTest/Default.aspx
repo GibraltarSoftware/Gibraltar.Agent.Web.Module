@@ -18,6 +18,12 @@
 </div>
 
 <div class="row">
+    <h3>Login</h3>
+    <p><button id="login">Click</button> to login</p>
+    <p>Login status: <span id="loginStatus"></span></p>
+</div>    
+
+<div class="row">
     <div>
         <h3>Logging</h3>
         <div class="form-horizontal col-md-12">

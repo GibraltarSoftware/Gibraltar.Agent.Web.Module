@@ -173,7 +173,7 @@ namespace Loupe.Agent.Web.Module.Handlers
 #if DEBUG
                     Log.Write(LogMessageSeverity.Error, LogSystem, 0, ex, LogWriteMode.Queued,
                         CreateStandardRequestDetailXml(context), Category, "Error writing log to Loupe",
-                        "An exception occured whilst attempting to record the LogRequest in Loupe");                                  
+                        "An exception occurred whilst attempting to record the LogRequest in Loupe");                                  
 #endif
                     ResponseHandled(context,HttpStatusCode.InternalServerError,"Unable to record log request");
                 }
@@ -258,7 +258,7 @@ namespace Loupe.Agent.Web.Module.Handlers
 #if DEBUG
                 Log.Write(LogMessageSeverity.Error, LogSystem, 0, ex, LogWriteMode.Queued,
                     CreateStandardRequestDetailXml(context), Category, "Error reading input stream",
-                    "An exception occured whilst attempting to read the request input stream to enable deserialization of the data");
+                    "An exception occurred whilst attempting to read the request input stream to enable deserialization of the data");
 #endif
             }
 
@@ -278,7 +278,7 @@ namespace Loupe.Agent.Web.Module.Handlers
 #if DEBUG
                 Log.Write(LogMessageSeverity.Error, LogSystem, 0, ex, LogWriteMode.Queued,
                     CreateStandardRequestDetailXml(context,body), Category, "Error deserializing request body",
-                    "An exception occured whilst attempting to deserialize the request body");
+                    "An exception occurred whilst attempting to deserialize the request body");
 #endif
             }
 
@@ -287,9 +287,9 @@ namespace Loupe.Agent.Web.Module.Handlers
 
         private static string CreateStandardRequestDetailXml(HttpContextBase context, string requestBody = null)
         {
-            var builder = new RequestBlockBuilder(context, requestBody);
+            var builder = new RequestBlockBuilder(new HttpContextRequestDetailBuilder(context));
 
-            return builder.Build();
+            return builder.Build(requestBody);
         }
 
         private readonly string[] _sizeSuffixes = { "bytes", "KB", "MB", "GB" };

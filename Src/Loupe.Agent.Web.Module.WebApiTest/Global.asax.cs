@@ -6,7 +6,7 @@ using System.Web.Routing;
 using Gibraltar.Agent;
 using Gibraltar.Agent.Web.Mvc.Filters;
 
-namespace Loupe.Agent.Web.Module.MVCTest
+namespace Loupe.Agent.Web.Module.WebApiTest
 {
     public class MvcApplication : HttpApplication
     {
@@ -15,10 +15,12 @@ namespace Loupe.Agent.Web.Module.MVCTest
 
             Log.StartSession(); //Prompt the Loupe Agent to start immediately
             GlobalConfiguration.Configuration.Filters.Add(new WebApiRequestMonitorAttribute());
+
             GlobalFilters.Filters.Add(new MvcRequestMonitorAttribute());
             GlobalFilters.Filters.Add(new UnhandledExceptionAttribute());
-
+           
             GlobalConfiguration.Configure(WebApiConfig.Register);
+
             AreaRegistration.RegisterAllAreas();
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);

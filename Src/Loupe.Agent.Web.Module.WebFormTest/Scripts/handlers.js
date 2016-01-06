@@ -39,5 +39,9 @@
         e.preventDefault();
         logging.ajaxCall();
     });
-    
+ 
+    $('#login').click(function (e) {
+        e.preventDefault();
+        logging.login();
+    });
 }

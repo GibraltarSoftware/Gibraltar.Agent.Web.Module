@@ -1,9 +1,6 @@
-﻿using System;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 
-namespace Loupe.Agent.Web.Module.MVCTest.Controllers
+namespace Loupe.Agent.Web.Module.WebApiTest.Controllers
 {
     public class HomeController : Controller
     {
