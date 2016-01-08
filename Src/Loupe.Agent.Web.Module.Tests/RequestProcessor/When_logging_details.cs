@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Linq;
 using System.Threading;
-using System.Web;
-using ExpectedObjects;
 using Gibraltar.Agent;
 using Loupe.Agent.Web.Module.Models;
 using NUnit.Framework;
 
-namespace Loupe.Agent.Web.Module.Tests.Message_Handler
+namespace Loupe.Agent.Web.Module.Tests.Controller
 {
     /// <summary>
     /// All messages sent in these tests have their severity set to Warning to ensure that
@@ -15,10 +13,13 @@ namespace Loupe.Agent.Web.Module.Tests.Message_Handler
     /// have logged to ensure they are created correctly
     /// </summary>
     [TestFixture]
-    public class When_logging_details:TestBase
+    public class When_logging_details:RequestProcessorTestBase
     {
         private ManualResetEventSlim _resetEvent;
         private LogMessageAlertEventArgs _eventArgs;
+
+        private LogMessage _standardTestMessage;
+        private LogRequestBuilder _requestBuilder;
 
         private const string ExpectedMethodSourceInfo =
             "<MethodSourceInfo><File>app.js</File><Line>3</Line><Column>5</Column></MethodSourceInfo>";
@@ -45,6 +46,16 @@ namespace Loupe.Agent.Web.Module.Tests.Message_Handler
         {
             _eventArgs = null;
             _resetEvent = new ManualResetEventSlim();
+
+            _requestBuilder = new LogRequestBuilder();
+            _standardTestMessage = new LogMessage
+            {
+                Severity = LogMessageSeverity.Error,
+                Category = "Test",
+                Caption = "test log",
+                Description = "tests logs message",
+                Sequence = 1
+            };
         }
 
         [Test]
@@ -53,9 +64,14 @@ namespace Loupe.Agent.Web.Module.Tests.Message_Handler
             var currentDateTime = DateTime.Now;
             var timeStamp = new DateTimeOffset(currentDateTime, TimeZoneInfo.Local.GetUtcOffset(DateTime.Now));
 
-            var jsonTimeStamp = timeStamp.ToString("yyyy-MM-ddTHH:mm:ss.fffzzz");
+            _standardTestMessage.TimeStamp = timeStamp;
 
-            SendRequest("{ session: { client: {description:'Firefox 37.0 32-bit on Windows 8.1 64-bit',layout:'Gecko',manufacturer:null,name:'Firefox',prerelease:null,product:null,ua:'Mozilla/5.0 (Windows NT 6.3; WOW64; rv:37.0) Gecko/20100101 Firefox/37.0',version:'37.0',os:{architecture:64,family:'Windows',version:'8.1'},size:{width:1102,height:873}}},LogMessages:[{severity: 4,category: 'Test',caption: 'test log',description: 'tests logs message',paramters: null,details: null,exception: {},methodSourceInfo: {}, timeStamp: '" + jsonTimeStamp + "', sequence: 1}]}");
+            var request = _requestBuilder.AddSession()
+                                         .AddClientDetails()
+                                         .AddMessage(_standardTestMessage)
+                                         .Build();
+
+            Target.Process(HttpContext, request);
 
             WaitForEvent();
 
@@ -69,7 +85,9 @@ namespace Loupe.Agent.Web.Module.Tests.Message_Handler
         [Test]
         public void Should_not_log_timestamp_if_not_provided()
         {
-            SendRequest("{Session:null,LogMessages:[{severity: 4,category: 'Test',caption: 'test log',description: 'tests logs message',paramters: null,details: '',exception: {},methodSourceInfo: {}}]}");
+            var request = _requestBuilder.AddMessage(_standardTestMessage).Build();
+
+            Target.Process(HttpContext, request);
 
             WaitForEvent();
 
@@ -83,8 +101,11 @@ namespace Loupe.Agent.Web.Module.Tests.Message_Handler
         [Test]
         public void Should_log_method_source_info_details()
         {
+            _standardTestMessage.MethodSourceInfo = StdMethodSourceInfo;
 
-            SendRequest("{Session:null,LogMessages:[{severity: 4,category: 'Test',caption: 'test log',description: 'tests logs message',paramters: null,details: null,exception: {},methodSourceInfo: {file:'app.js', line: 3, column: 5}}]}");
+            var request = _requestBuilder.AddMessage(_standardTestMessage).Build();
+
+            Target.Process(HttpContext, request);
 
             WaitForEvent();
 
@@ -98,7 +119,12 @@ namespace Loupe.Agent.Web.Module.Tests.Message_Handler
         [Test]
         public void Should_log_client_details()
         {
-            SendRequest("{session: { client: {description:'Firefox 37.0 32-bit on Windows 8.1 64-bit',layout:'Gecko',manufacturer:null,name:'Firefox',prerelease:null,product:null,ua:'Mozilla/5.0 (Windows NT 6.3; WOW64; rv:37.0) Gecko/20100101 Firefox/37.0',version:'37.0',os:{architecture:64,family:'Windows',version:'8.1'},size:{width:1102,height:873}}},logMessages:[{severity: 4,category: 'Test',caption: 'test log',description: 'tests logs message',paramters: null,details: null,exception: {},methodSourceInfo: {file:'app.js', line: 3, column: 5}}]}");
+            var request = _requestBuilder.AddSession()
+                                         .AddClientDetails()
+                                         .AddMessage(_standardTestMessage)
+                                         .Build();
+            
+            Target.Process(HttpContext, request);
 
             WaitForEvent();
 
@@ -112,7 +138,10 @@ namespace Loupe.Agent.Web.Module.Tests.Message_Handler
         [Test]
         public void Should_output_user_supplied_JSON_as_xml()
         {
-            SendRequest("{Session:null,LogMessages:[{severity: 4,category: 'Test',caption: 'test log',description: 'tests logs message',paramters: null,details: \"{ numericValue: 1, stringValue: 'text value', objectValue: {childNumber: 3, childText: 'child text'}}\",exception: {},methodSourceInfo: {file:'app.js', line: 3, column: 5}}]}");
+            _standardTestMessage.Details = "{ numericValue: 1, stringValue: 'text value', objectValue: {childNumber: 3, childText: 'child text'}}";
+            var request = _requestBuilder.AddMessage(_standardTestMessage).Build();
+
+            Target.Process(HttpContext, request);
 
             WaitForEvent();
 
@@ -127,7 +156,10 @@ namespace Loupe.Agent.Web.Module.Tests.Message_Handler
         [Test]
         public void Should_output_user_supplied_details_as_string()
         {
-            SendRequest("{Session:null,LogMessages:[{severity: 4,category: 'Test',caption: 'test log',description: 'tests logs message',paramters: null,details: 'this is user supplied details',exception: {},methodSourceInfo: {file:'app.js', line: 3, column: 5}}]}");
+            _standardTestMessage.Details = "this is user supplied details";
+            var request = _requestBuilder.AddMessage(_standardTestMessage).Build();
+
+            Target.Process(HttpContext, request);
 
             WaitForEvent();
 
@@ -141,7 +173,9 @@ namespace Loupe.Agent.Web.Module.Tests.Message_Handler
         [Test]
         public void Should_output_session_id_in_details_block_even_if_no_session_details()
         {
-            SendRequest("{Session:null,LogMessages:[{severity: 4,category: 'Test',caption: 'test log',description: 'tests logs message',paramters: null,details: null,exception: null,methodSourceInfo: null}]}");
+            var request = _requestBuilder.AddMessage(_standardTestMessage).Build();
+
+            Target.Process(HttpContext, request);
 
             WaitForEvent();
 
@@ -159,7 +193,12 @@ namespace Loupe.Agent.Web.Module.Tests.Message_Handler
             var sessionId = Guid.NewGuid().ToString();
             SetContextLoupeSessionId(sessionId);
 
-            SendRequest("{Session:{ client: {description:'Firefox 37.0 32-bit on Windows 8.1 64-bit',layout:'Gecko',manufacturer:null,name:'Firefox',prerelease:null,product:null,ua:'Mozilla/5.0 (Windows NT 6.3; WOW64; rv:37.0) Gecko/20100101 Firefox/37.0',version:'37.0',os:{architecture:64,family:'Windows',version:'8.1'},size:{width:1102,height:873}}},LogMessages:[{severity: 4,category: 'Test',caption: 'test log',description: 'tests logs message',paramters: null,details: null,exception: null,methodSourceInfo: null}]}");
+            var request = _requestBuilder.AddSession()
+                                         .AddClientDetails()
+                                         .AddMessage(_standardTestMessage)
+                                         .Build();
+
+            Target.Process(HttpContext, request);
 
             WaitForEvent();
 
@@ -176,7 +215,7 @@ namespace Loupe.Agent.Web.Module.Tests.Message_Handler
         {
             ClearLoupeSessionIdValue();
 
-            SendRequest("{Session:{sessionId: 'session-123'},LogMessages:[{severity: 4,category: 'Test',caption: 'test log',description: 'tests logs message',paramters: null,details: null,exception: null,methodSourceInfo: null}]}");
+            //SendRequest("{Session:{sessionId: 'session-123'},LogMessages:[{severity: 4,category: 'Test',caption: 'test log',description: 'tests logs message',paramters: null,details: null,exception: null,methodSourceInfo: null}]}");
 
             WaitForEvent();
 
@@ -191,7 +230,12 @@ namespace Loupe.Agent.Web.Module.Tests.Message_Handler
         [Test, Ignore]
         public void Should_output_session_id_from_request_when_exists_even_if_cookie_present()
         {
-            SendRequest("{Session:{sessionId: 'session-123'},LogMessages:[{severity: 4,category: 'Test',caption: 'test log',description: 'tests logs message',paramters: null,details: null,exception: null,methodSourceInfo: null}]}");
+            _standardTestMessage.SessionId = "session-123";
+            var request = _requestBuilder.AddSession()
+                                         .AddMessage(_standardTestMessage)
+                                         .Build();
+
+            Target.Process(HttpContext, request);
 
             WaitForEvent();
 
@@ -208,7 +252,11 @@ namespace Loupe.Agent.Web.Module.Tests.Message_Handler
         {
             ContextItems.Clear();
 
-            SendRequest("{Session:{ client: {description:'Firefox 37.0 32-bit on Windows 8.1 64-bit',layout:'Gecko',manufacturer:null,name:'Firefox',prerelease:null,product:null,ua:'Mozilla/5.0 (Windows NT 6.3; WOW64; rv:37.0) Gecko/20100101 Firefox/37.0',version:'37.0',os:{architecture:64,family:'Windows',version:'8.1'},size:{width:1102,height:873}}},LogMessages:[{severity: 4,category: 'Test',caption: 'test log',description: 'tests logs message',paramters: null,details: null,exception: null,methodSourceInfo: null}]}");
+            var request = _requestBuilder.AddSession()
+                                         .AddMessage(_standardTestMessage)
+                                         .Build();
+
+            Target.Process(HttpContext, request);
 
             WaitForEvent();
 
@@ -230,9 +278,15 @@ namespace Loupe.Agent.Web.Module.Tests.Message_Handler
             var currentDateTime = DateTime.Now;
             var timeStamp = new DateTimeOffset(currentDateTime, TimeZoneInfo.Local.GetUtcOffset(DateTime.Now));
 
-            var jsonTimeStamp = timeStamp.ToString("yyyy-MM-ddTHH:mm:ss.fffzzz");
+            _standardTestMessage.TimeStamp = timeStamp;
+            _standardTestMessage.MethodSourceInfo = StdMethodSourceInfo;
+            _standardTestMessage.Details = "{ numericValue: 1, stringValue: 'text value', objectValue: {childNumber: 3, childText: 'child text'}}";
+            var request = _requestBuilder.AddSession()
+                                         .AddClientDetails()
+                                         .AddMessage(_standardTestMessage)
+                                         .Build();
 
-            SendRequest("{ session: { client: {description:'Firefox 37.0 32-bit on Windows 8.1 64-bit',layout:'Gecko',manufacturer:null,name:'Firefox',prerelease:null,product:null,ua:'Mozilla/5.0 (Windows NT 6.3; WOW64; rv:37.0) Gecko/20100101 Firefox/37.0',version:'37.0',os:{architecture:64,family:'Windows',version:'8.1'},size:{width:1102,height:873}}},LogMessages:[{severity: 4,category: 'Test',caption: 'test log',description: 'tests logs message',paramters: null,details: \"{ numericValue: 1, stringValue: 'text value', objectValue: {childNumber: 3, childText: 'child text'}}\",exception: {},methodSourceInfo: {file:'app.js', line: 3, column: 5}, timeStamp: '" + jsonTimeStamp + "', sequence: 1}]}");
+            Target.Process(HttpContext, request);
 
             WaitForEvent();
 
@@ -249,7 +303,14 @@ namespace Loupe.Agent.Web.Module.Tests.Message_Handler
         [Test]
         public void Should_cache_client_details()
         {
-            SendRequest("{session: { client: {description:'Firefox 37.0 32-bit on Windows 8.1 64-bit',layout:'Gecko',manufacturer:null,name:'Firefox',prerelease:null,product:null,ua:'Mozilla/5.0 (Windows NT 6.3; WOW64; rv:37.0) Gecko/20100101 Firefox/37.0',version:'37.0',os:{architecture:64,family:'Windows',version:'8.1'},size:{width:1102,height:873}}},logMessages:[{severity: 4,category: 'Test',caption: 'test log',description: 'tests logs message',paramters: null,details: null,exception: {},methodSourceInfo: {file:'app.js', line: 3, column: 5}}]}");
+            //SendRequest("{session: { client: {description:'Firefox 37.0 32-bit on Windows 8.1 64-bit',layout:'Gecko',manufacturer:null,name:'Firefox',prerelease:null,product:null,ua:'Mozilla/5.0 (Windows NT 6.3; WOW64; rv:37.0) Gecko/20100101 Firefox/37.0',version:'37.0',os:{architecture:64,family:'Windows',version:'8.1'},size:{width:1102,height:873}}},logMessages:[{severity: 4,category: 'Test',caption: 'test log',description: 'tests logs message',paramters: null,details: null,exception: {},methodSourceInfo: {file:'app.js', line: 3, column: 5}}]}");
+
+            var request = _requestBuilder.AddSession()
+                                         .AddClientDetails()
+                                         .AddMessage(_standardTestMessage)
+                                         .Build();
+
+            Target.Process(HttpContext, request);
 
             WaitForEvent();
 
@@ -265,7 +326,9 @@ namespace Loupe.Agent.Web.Module.Tests.Message_Handler
             
             HttpContext.Cache.Insert(DefaultTestSessionId, existingDetails);
 
-            SendRequest("{Session:null,LogMessages:[{severity: 4,category: 'Test',caption: 'test log',description: 'tests logs message',paramters: null,details: null,exception: null,methodSourceInfo: null}]}");
+            var request = _requestBuilder.AddMessage(_standardTestMessage).Build();
+
+            Target.Process(HttpContext, request);
 
             WaitForEvent();
 
@@ -278,7 +341,13 @@ namespace Loupe.Agent.Web.Module.Tests.Message_Handler
 
             HttpContext.Cache.Insert(DefaultTestSessionId, existingDetails);
 
-            SendRequest("{session: { client: {description:'Firefox 37.0 32-bit on Windows 8.1 64-bit',layout:'Gecko',manufacturer:null,name:'Firefox',prerelease:null,product:null,ua:'Mozilla/5.0 (Windows NT 6.3; WOW64; rv:37.0) Gecko/20100101 Firefox/37.0',version:'37.0',os:{architecture:64,family:'Windows',version:'8.1'},size:{width:1102,height:873}}},logMessages:[{severity: 4,category: 'Test',caption: 'test log',description: 'tests logs message',paramters: null,details: null,exception: {},methodSourceInfo: {file:'app.js', line: 3, column: 5}}]}");
+            _standardTestMessage.MethodSourceInfo = StdMethodSourceInfo;
+            var request = _requestBuilder.AddSession()
+                                         .AddClientDetails()
+                                         .AddMessage(_standardTestMessage)
+                                         .Build();
+
+            Target.Process(HttpContext, request);
 
             WaitForEvent();
 

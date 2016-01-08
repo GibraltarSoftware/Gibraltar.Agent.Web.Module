@@ -3,20 +3,11 @@ using System.IO;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace Loupe.Agent.Web.Module.Tests.Message_Handler
+namespace Loupe.Agent.Web.Module.Tests.Request_Handler
 {
     [TestFixture]
     public class When_validating_request: TestBase
     {
-        [Test]
-        public void Should_only_handle_POST([Values("GET", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS")] string method)
-        {
-            HttpRequest.HttpMethod.Returns(method);
-
-            SendRequest(null);
-
-            Assert.That(HttpResponse.StatusCode, Is.EqualTo(405));
-        }
 
         [Test]
         public void Should_return_400_if_no_content_in_stream()
@@ -27,7 +18,7 @@ namespace Loupe.Agent.Web.Module.Tests.Message_Handler
         }
 
         [Test]
-        public void Should_return_400_if_content_exceeds_2k()
+        public void Should_return_400_if_content_exceeds_20k()
         {
             using (var stream = new MemoryStream())
             using(var writer = new StreamWriter(stream))
@@ -36,7 +27,7 @@ namespace Loupe.Agent.Web.Module.Tests.Message_Handler
                 {
                     writer.Write('X');
                     writer.Flush();
-                } while (stream.Length < 2049);
+                } while (stream.Length < 204801);
 
                 HttpRequest.Url.Returns(new Uri(LogUrl));
                 HttpRequest.InputStream.Returns(stream);

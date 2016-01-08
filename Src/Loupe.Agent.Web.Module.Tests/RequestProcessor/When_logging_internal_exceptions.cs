@@ -3,14 +3,15 @@ using System.Linq;
 using System.Threading;
 using System.Web;
 using Gibraltar.Agent;
+using Gibraltar.Agent.Data;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace Loupe.Agent.Web.Module.Tests.Message_Handler
+namespace Loupe.Agent.Web.Module.Tests.Controller
 {
 #if DEBUG
     [TestFixture]
-    public class When_logging_internal_exceptions:TestBase
+    public class When_logging_internal_exceptions:RequestProcessorTestBase
     {
         private ManualResetEventSlim _resetEvent;
         private LogMessageAlertEventArgs _eventArgs;
@@ -50,9 +51,9 @@ namespace Loupe.Agent.Web.Module.Tests.Message_Handler
             HttpRequest.UserHostAddress.Returns("216.58.211.4");
             HttpRequest.UserHostName.Returns("www.google.com");
 
-            HttpRequest.HttpMethod.Returns("PUT");
+            HttpRequest.HttpMethod.Returns("POST");
 
-            SendRequest(null);
+            Target.Process(HttpContext, null);
 
             WaitForEvent();
 

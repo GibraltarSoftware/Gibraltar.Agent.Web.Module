@@ -1,6 +1,6 @@
 ﻿#region File Header
 
-// <copyright file="Constants.cs" company="Gibraltar Software Inc.">
+// <copyright file="LoupeAppStart.cs" company="Gibraltar Software Inc.">
 // Gibraltar Software Inc. All rights reserved.
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,13 +16,24 @@
 // limitations under the License.
 // </copyright>
 
+using System.Web.Http;
+using Loupe.Agent.Web.Module;
+
 #endregion
 
-namespace Loupe.Agent.Web.Module.Infrastructure {
-    public class Constants {
-        public const string SessionId = "LoupeSessionId";
-        public const string AgentSessionId = "LoupeAgentSessionId";
-        internal const string LogSystem = "Loupe";
-        internal const string Category = "Loupe.Internal";
+[assembly: WebActivatorEx.PreApplicationStartMethod(typeof(LoupeConfig),"LoupePreStart")]
+namespace Loupe.Agent.Web.Module
+{
+    public static class LoupeConfig
+    {
+        public static void LoupePreStart()
+        {
+            GlobalConfiguration.Configuration.Routes.MapHttpRoute(
+                name: "LoupeLog",
+                routeTemplate: "loupe/log",
+                defaults: new { controller="Loupe", action="Log"}
+                );
+        }
     }
 }
+

@@ -18,6 +18,7 @@
 
 using System.Collections.Generic;
 using System.Web;
+using Loupe.Agent.Web.Module.DetailBuilders;
 
 #endregion
 
@@ -33,5 +34,13 @@ namespace Loupe.Agent.Web.Module.Infrastructure
                    !request.CurrentExecutionFilePath.Contains("__browserLink");
         }
 
+
+        public static string StandardXmlRequestBlock(this HttpContextBase context, string requestBody = null)
+        {
+            var builder = new RequestBlockBuilder(new HttpContextRequestDetailBuilder(context));
+
+            return builder.Build(requestBody);            
+        }
+        
     }
 }

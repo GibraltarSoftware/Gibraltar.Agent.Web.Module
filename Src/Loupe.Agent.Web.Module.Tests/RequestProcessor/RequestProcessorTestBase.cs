@@ -3,21 +3,22 @@ using System.Collections;
 using System.IO;
 using System.Security.Principal;
 using System.Web;
-using Loupe.Agent.Web.Module.Handlers;
+using System.Web.Http.Controllers;
 using Loupe.Agent.Web.Module.Infrastructure;
+using Loupe.Agent.Web.Module.Models;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace Loupe.Agent.Web.Module.Tests
+namespace Loupe.Agent.Web.Module.Tests.Controller
 {
-    public class TestBase
+    public class RequestProcessorTestBase
     {
         protected const string LogUrl = "http://www.test.com/loupe/log";
 
         protected HttpContextBase HttpContext;
         protected HttpRequestBase HttpRequest;
         protected HttpResponseBase HttpResponse;
-        protected RequestHandler Target;
+        protected RequestProcessor Target;
         protected MemoryStream InputStream;
         protected IPrincipal FakeUser;
         protected IIdentity FakeIdentity;
@@ -25,14 +26,25 @@ namespace Loupe.Agent.Web.Module.Tests
         protected string DefaultAgentSessionId;
         protected Hashtable ContextItems;
 
+        protected readonly MethodSourceInfo StdMethodSourceInfo = new MethodSourceInfo
+        {
+            File = "app.js",
+            Line = 3,
+            Column = 5
+        };
+
+
         [SetUp]
         public void BaseSetUp()
         {
-            Target = new RequestHandler();
+            
 
+            Target = new RequestProcessor();
+            
             HttpContext = Substitute.For<HttpContextBase>();
             HttpRequest = Substitute.For<HttpRequestBase>();
             HttpResponse = Substitute.For<HttpResponseBase>();
+
 
             InputStream = new MemoryStream();
             HttpRequest.InputStream.Returns(InputStream);
@@ -51,7 +63,7 @@ namespace Loupe.Agent.Web.Module.Tests
             SetContextLoupeSessionId(DefaultTestSessionId);
             SetContextAgentSessionId(DefaultAgentSessionId);
 
-
+            
             HttpContext.Items.Returns(ContextItems);
             HttpContext.Request.Returns(HttpRequest);
             HttpContext.Response.Returns(HttpResponse);
@@ -90,19 +102,5 @@ namespace Loupe.Agent.Web.Module.Tests
             ContextItems[Constants.AgentSessionId] = value;
         }
 
-        protected bool SendRequest(string body)
-        {
-            using (var writer = new StreamWriter(InputStream))
-            {
-                writer.Write(body);
-                writer.Flush();
-
-
-                HttpRequest.Url.Returns(new Uri(LogUrl));
-                HttpRequest.InputStream.Returns(InputStream);
-
-                return Target.HandleRequest(HttpContext);
-            }            
-        }
     }
 }
