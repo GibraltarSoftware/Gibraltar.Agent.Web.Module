@@ -17,7 +17,7 @@ namespace Loupe.Agent.Web.Module.Tests
         protected HttpContextBase HttpContext;
         protected HttpRequestBase HttpRequest;
         protected HttpResponseBase HttpResponse;
-        protected MessageHandler Target;
+        protected RequestHandler Target;
         protected MemoryStream InputStream;
         protected IPrincipal FakeUser;
         protected IIdentity FakeIdentity;
@@ -28,7 +28,7 @@ namespace Loupe.Agent.Web.Module.Tests
         [SetUp]
         public void BaseSetUp()
         {
-            Target = new MessageHandler();
+            Target = new RequestHandler();
 
             HttpContext = Substitute.For<HttpContextBase>();
             HttpRequest = Substitute.For<HttpRequestBase>();
@@ -90,7 +90,7 @@ namespace Loupe.Agent.Web.Module.Tests
             ContextItems[Constants.AgentSessionId] = value;
         }
 
-        protected void SendRequest(string body)
+        protected bool SendRequest(string body)
         {
             using (var writer = new StreamWriter(InputStream))
             {
@@ -101,7 +101,7 @@ namespace Loupe.Agent.Web.Module.Tests
                 HttpRequest.Url.Returns(new Uri(LogUrl));
                 HttpRequest.InputStream.Returns(InputStream);
 
-                Target.HandleRequest(HttpContext);
+                return Target.HandleRequest(HttpContext);
             }            
         }
     }

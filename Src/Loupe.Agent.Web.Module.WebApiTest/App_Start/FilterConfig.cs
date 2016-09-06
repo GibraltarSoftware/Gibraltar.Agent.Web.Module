@@ -1,7 +1,6 @@
-﻿using System.Web;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 
-namespace Loupe.Agent.Web.Module.MVCTest
+namespace Loupe.Agent.Web.Module.WebApiTest
 {
     public class FilterConfig
     {

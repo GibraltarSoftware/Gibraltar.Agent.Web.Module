@@ -1,5 +1,6 @@
 ﻿function Logging() {
 
+    var token = null;
     var requestHeader = loupe.clientSessionHeader();
     var agentSessionId = requestHeader.headerValue;
 
@@ -14,7 +15,8 @@
         critical: logCritical,
         write: logWrite,
         unhandledException: throwUnhandledException,
-        ajaxCall: makeAjaxCall
+        ajaxCall: makeAjaxCall,
+        login: login
     }
 
     function logVerbose() {
@@ -66,6 +68,7 @@
         var loupeHeader = {};
         loupeHeader[requestHeader.headerName] = requestHeader.headerValue;
 
+
         $.ajax({
             type: "GET",
             url: '/api/my/data',
@@ -76,6 +79,35 @@
             $('#ajaxCallResult').text("failed:" + jqXHR.status + " " + jqXHR.statusText);
         });
     }
+
+    function login() {
+        $('#loginStatus').text('Attempting login');
+
+        makeRequest('/api/account/logon').done(function (result) {
+            $('#loginStatus').text('Logged in');
+        }).fail(function (result) {
+            $('#loginStatus').text('Error logging in');
+        });
+    }
+
+
+    function makeRequest(url) {
+
+        var loginModel = {
+            userName: "jane smith",
+            password: "jane smith"
+        }
+
+        var ajaxSettings = {
+            type: 'POST',
+            url: url,
+            contentType: 'application/json',
+            data: JSON.stringify(loginModel)
+        };
+
+        return $.ajax(ajaxSettings);
+    }
+
 
     function getInputVal(inputName) {
         return $(inputName).val();

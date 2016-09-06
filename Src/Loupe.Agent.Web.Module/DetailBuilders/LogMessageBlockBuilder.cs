@@ -27,7 +27,6 @@ namespace Loupe.Agent.Web.Module.DetailBuilders
     {
         private readonly LogRequest _request;
         private string _clientDetails;
-        private string _sessionDetails;
 
         public LogMessageBlockBuilder(LogRequest request)
         {
@@ -55,16 +54,6 @@ namespace Loupe.Agent.Web.Module.DetailBuilders
             DetailBuilder.Append("</Details>");
 
             return DetailBuilder.ToString();
-        }
-
-        private string CreateClientDetailString(LogRequest logRequest)
-        {
-            if (logRequest.Session != null && logRequest.Session.Client != null)
-            {
-                return ObjectToXmlString(logRequest.Session.Client);
-            }
-
-            return null;
         }
 
         private static string SessionDetailString(LogMessage message)

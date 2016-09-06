@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web.Http;
+﻿using System.Web.Http;
 
-namespace Loupe.Agent.Web.Module.MVCTest
+namespace Loupe.Agent.Web.Module.WebApiTest
 {
     public static class WebApiConfig
     {

@@ -31,5 +31,8 @@
     $('#ajaxCall').click(function (e) {
         logging.ajaxCall();
     });
-    
+
+    $('#login').click(function(e) {
+        logging.login();
+    });
 }

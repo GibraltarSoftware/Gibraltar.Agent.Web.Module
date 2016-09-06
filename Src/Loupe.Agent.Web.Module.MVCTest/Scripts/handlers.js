@@ -32,4 +32,7 @@
         logging.ajaxCall();
     });
     
+    $('#login').click(function (e) {
+        logging.login();
+    });
 }

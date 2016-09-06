@@ -4,7 +4,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 
-namespace Loupe.Agent.Web.Module.MVCTest.Controllers
+namespace Loupe.Agent.Web.Module.WebApiTest.Controllers
 {
     public class MyController : ApiController
     {

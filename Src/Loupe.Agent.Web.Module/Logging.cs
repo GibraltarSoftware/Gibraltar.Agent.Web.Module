@@ -17,7 +17,11 @@
 // </copyright>
 
 using System;
+using System.Collections.Generic;
 using System.Web;
+using System.Web.Http;
+using System.Web.Http.Controllers;
+using System.Web.Http.Routing;
 using Loupe.Agent.Web.Module.Handlers;
 
 #endregion
@@ -27,14 +31,14 @@ namespace Loupe.Agent.Web.Module
     public class Logging:IHttpModule
     {
         private CORSHandler _corsHandler;
-        private MessageHandler _messageHandler;
+        private RequestHandler _requestHandler;
         private CookieHandler _cookieHandler;
         private HeaderHandler _headerHandler;
 
         public void Init(HttpApplication application)
         {
             _corsHandler = new CORSHandler();
-            _messageHandler = new MessageHandler();
+            _requestHandler = new RequestHandler();
             _cookieHandler = new CookieHandler();
             _headerHandler = new HeaderHandler();
             application.PostAuthenticateRequest += OnPostAuthenticateRequest;
@@ -60,7 +64,7 @@ namespace Loupe.Agent.Web.Module
         {
             var application = (HttpApplication) sender;
 
-            var handled = _messageHandler.HandleRequest(new HttpContextWrapper(application.Context));
+            var handled = _requestHandler.HandleRequest(new HttpContextWrapper(application.Context));
 
             if (handled)
             {

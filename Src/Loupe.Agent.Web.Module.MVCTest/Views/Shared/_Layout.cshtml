@@ -17,9 +17,9 @@
     @Scripts.Render("~/bundles/bootstrap")
     @Scripts.Render("~/bundles/logging")
     @RenderSection("scripts", required: false)
-<script>
-    var logFunctions = new Logging();
-    var handler = new Handlers(window.jQuery, logFunctions);
-</script>
+    <script>
+        var logFunctions = new Logging();
+        var handler = new Handlers(window.jQuery, logFunctions);
+    </script>
 </body>
 </html>

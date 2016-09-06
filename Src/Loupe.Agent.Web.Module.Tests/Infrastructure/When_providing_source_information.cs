@@ -3,8 +3,7 @@ using Loupe.Agent.Web.Module.Infrastructure;
 using Loupe.Agent.Web.Module.Models;
 using NUnit.Framework;
 
-
-namespace Loupe.Agent.Web.Module.Tests.Message_Handler
+namespace Loupe.Agent.Web.Module.Tests.Infrastructure
 {
     [TestFixture]
     public class When_providing_source_information
