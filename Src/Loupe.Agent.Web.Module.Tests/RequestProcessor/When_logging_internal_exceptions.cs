@@ -17,13 +17,13 @@ namespace Loupe.Agent.Web.Module.Tests.Controller
         private LogMessageAlertEventArgs _eventArgs;
         private HttpBrowserCapabilitiesBase _fakeBrowser;
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void FixtureSetUp()
         {
             Log.MessageAlert += Log_MessageAlert;
         }
 
-        [TestFixtureTearDown]
+        [OneTimeTearDown]
         public void FixtureTearDown()
         {
             Log.MessageAlert -= Log_MessageAlert;
