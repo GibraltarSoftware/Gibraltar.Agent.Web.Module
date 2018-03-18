@@ -50,6 +50,8 @@ namespace Loupe.Agent.Web.Module.Infrastructure
             }
             catch (Exception ex)
             {
+                GC.KeepAlive(ex);
+
                 // for whatever reason the match has thrown an error, in 
                 // normal circumstances this should not happen but to ensure
                 // we do not cause problems elsewhere we will swallow this 

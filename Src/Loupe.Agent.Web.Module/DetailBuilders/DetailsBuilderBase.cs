@@ -16,6 +16,7 @@
 // limitations under the License.
 // </copyright>
 
+using System;
 using System.IO;
 using System.Text;
 using System.Xml;
@@ -69,6 +70,7 @@ namespace Loupe.Agent.Web.Module.DetailBuilders
             }
             catch (System.Exception ex)
             {
+                GC.KeepAlive(ex);
 #if DEBUG
                     Log.Write(LogMessageSeverity.Error, "Loupe", 0, ex, LogWriteMode.Queued,
                         "", "Loupe.Internal", "Failed to serialize object",

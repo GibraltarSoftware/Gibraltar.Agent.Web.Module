@@ -16,6 +16,7 @@
 // limitations under the License.
 // </copyright>
 
+using System;
 using System.Web;
 using Gibraltar.Agent;
 
@@ -56,6 +57,7 @@ namespace Loupe.Agent.Web.Module.DetailBuilders
             }
             catch (System.Exception ex)
             {
+                GC.KeepAlive(ex);
 #if DEBUG
                 Log.Error(ex, "Loupe.Internal", "Unable to build standard Request details block due to " + ex.GetType(),
                     "Exception occurred whilst trying to build the standard Request details block, no request will be added to detail\r\n{0}",

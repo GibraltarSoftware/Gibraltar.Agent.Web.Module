@@ -24,6 +24,7 @@ using Loupe.Agent.Web.Module.Infrastructure;
 using Exception = System.Exception;
 
 #endregion
+#pragma warning disable 1591
 
 namespace Loupe.Agent.Web.Module.Handlers
 {
@@ -48,6 +49,7 @@ namespace Loupe.Agent.Web.Module.Handlers
             }
             catch (Exception ex)
             {
+                GC.KeepAlive(ex);
 #if DEBUG
                 Log.Write(LogMessageSeverity.Critical, Constants.LogSystem, 0, ex, LogWriteMode.Queued,
                     context.StandardXmlRequestBlock(), Constants.Category, "Unable to process message due to " + ex.GetType(),

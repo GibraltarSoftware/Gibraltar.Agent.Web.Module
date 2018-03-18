@@ -29,13 +29,13 @@ namespace Loupe.Agent.Web.Module.Tests.Controller
 
         private const string ExpectedUserSuppliedJson = "<UserSupplied><numericValue>1</numericValue><stringValue>text value</stringValue><objectValue><childNumber>3</childNumber><childText>child text</childText></objectValue></UserSupplied>";
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void FixtureSetUp()
         {
             Log.MessageAlert += Log_MessageAlert;
         }
 
-        [TestFixtureTearDown]
+        [OneTimeTearDown]
         public void FixtureTearDown()
         {
             Log.MessageAlert -= Log_MessageAlert;
@@ -79,7 +79,7 @@ namespace Loupe.Agent.Web.Module.Tests.Controller
 
             Assert.That(loggedMessage, Is.Not.Null);
 
-            Assert.That(loggedMessage.Details, Is.StringContaining("<TimeStamp>" + timeStamp + "</TimeStamp><Sequence>1</Sequence>"));
+            Assert.That(loggedMessage.Details, Does.Contain("<TimeStamp>" + timeStamp + "</TimeStamp><Sequence>1</Sequence>"));
         }
 
         [Test]
@@ -95,7 +95,7 @@ namespace Loupe.Agent.Web.Module.Tests.Controller
 
             Assert.That(loggedMessage, Is.Not.Null);
 
-            Assert.That(loggedMessage.Details, Is.Not.StringContaining("<TimeStamp>01/01/0001 00:00:00 +00:00</TimeStamp>"));            
+            Assert.That(loggedMessage.Details, Does.Not.Contain("<TimeStamp>01/01/0001 00:00:00 +00:00</TimeStamp>"));            
         }
 
         [Test]
@@ -113,7 +113,7 @@ namespace Loupe.Agent.Web.Module.Tests.Controller
 
             Assert.That(loggedMessage, Is.Not.Null);
 
-            Assert.That(loggedMessage.Details, Is.StringContaining(ExpectedMethodSourceInfo));
+            Assert.That(loggedMessage.Details, Does.Contain(ExpectedMethodSourceInfo));
         }
 
         [Test]
@@ -132,7 +132,7 @@ namespace Loupe.Agent.Web.Module.Tests.Controller
 
             Assert.That(loggedMessage, Is.Not.Null);
 
-            Assert.That(loggedMessage.Details, Is.StringContaining(ExpectedClientDetails));
+            Assert.That(loggedMessage.Details, Does.Contain(ExpectedClientDetails));
         }
 
         [Test]
@@ -149,7 +149,7 @@ namespace Loupe.Agent.Web.Module.Tests.Controller
 
             Assert.That(loggedMessage, Is.Not.Null);
 
-            Assert.That(loggedMessage.Details, Is.StringContaining(ExpectedUserSuppliedJson));
+            Assert.That(loggedMessage.Details, Does.Contain(ExpectedUserSuppliedJson));
 
         }
 
@@ -167,7 +167,7 @@ namespace Loupe.Agent.Web.Module.Tests.Controller
 
             Assert.That(loggedMessage, Is.Not.Null);
 
-            Assert.That(loggedMessage.Details, Is.StringContaining("<UserSupplied>this is user supplied details</UserSupplied>"));            
+            Assert.That(loggedMessage.Details, Does.Contain("<UserSupplied>this is user supplied details</UserSupplied>"));            
         }
 
         [Test]
@@ -183,7 +183,7 @@ namespace Loupe.Agent.Web.Module.Tests.Controller
 
             Assert.That(loggedMessage, Is.Not.Null);
 
-            Assert.That(loggedMessage.Details, Is.StringContaining("<SessionId>" + Guid.Empty + "</SessionId>"));            
+            Assert.That(loggedMessage.Details, Does.Contain("<SessionId>" + Guid.Empty + "</SessionId>"));            
             
         }
 
@@ -206,11 +206,11 @@ namespace Loupe.Agent.Web.Module.Tests.Controller
 
             Assert.That(loggedMessage, Is.Not.Null);
 
-            Assert.That(loggedMessage.Details, Is.StringContaining("<SessionId>" + sessionId + "</SessionId>"));
+            Assert.That(loggedMessage.Details, Does.Contain("<SessionId>" + sessionId + "</SessionId>"));
 
         }
 
-        [Test, Ignore]
+        [Test, Ignore("Raw debugging test")]
         public void Should_output_session_id_from_request_when_exists_and_no_cookie()
         {
             ClearLoupeSessionIdValue();
@@ -223,11 +223,11 @@ namespace Loupe.Agent.Web.Module.Tests.Controller
 
             Assert.That(loggedMessage, Is.Not.Null);
 
-            Assert.That(loggedMessage.Details, Is.StringContaining("<SessionId>session-123</SessionId>"));            
+            Assert.That(loggedMessage.Details, Does.Contain("<SessionId>session-123</SessionId>"));            
             
         }
 
-        [Test, Ignore]
+        [Test, Ignore("Raw debugging test")]
         public void Should_output_session_id_from_request_when_exists_even_if_cookie_present()
         {
             _standardTestMessage.SessionId = "session-123";
@@ -243,7 +243,7 @@ namespace Loupe.Agent.Web.Module.Tests.Controller
 
             Assert.That(loggedMessage, Is.Not.Null);
 
-            Assert.That(loggedMessage.Details, Is.StringContaining("<SessionId>session-123</SessionId>"));
+            Assert.That(loggedMessage.Details, Does.Contain("<SessionId>session-123</SessionId>"));
 
         }
 
@@ -264,7 +264,7 @@ namespace Loupe.Agent.Web.Module.Tests.Controller
 
             Assert.That(loggedMessage, Is.Not.Null);
             
-            Assert.That(loggedMessage.Details, Is.Not.StringContaining("<SessionId>"));
+            Assert.That(loggedMessage.Details, Does.Not.Contain("<SessionId>"));
         }
 
         [Test]

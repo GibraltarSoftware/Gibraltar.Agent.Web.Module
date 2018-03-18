@@ -10,7 +10,7 @@ namespace Loupe.Agent.Web.Module.Tests.Infrastructure
     {
         private JavaScriptSourceProvider _sourceProvider;
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void FixtureSetup()
         {
             _sourceProvider = new JavaScriptSourceProvider();
