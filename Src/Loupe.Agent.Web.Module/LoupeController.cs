@@ -16,6 +16,7 @@
 // limitations under the License.
 // </copyright>
 
+using System;
 using System.Net;
 using System.Net.Http;
 using System.Web;
@@ -49,6 +50,7 @@ namespace Loupe.Agent.Web.Module
             }
             catch (System.Exception ex)
             {
+                GC.KeepAlive(ex);
 #if DEBUG
                 Gibraltar.Agent.Log.Write(LogMessageSeverity.Critical, Constants.LogSystem, 0, ex, LogWriteMode.Queued,
                     context.StandardXmlRequestBlock(Request.Content.ReadAsStringAsync().Result), Constants.Category, "Unable to process message due to " + ex.GetType(),

@@ -125,7 +125,7 @@ namespace Loupe.Agent.Web.Module.Tests.CORS_Handler
 
             Assert.That(actual, Is.True);
 
-            Assert.That(HttpResponse.Headers["Access-Control-Allow-Origin"], Is.EqualTo("*"));
+            Assert.That(HttpResponse.Headers["Access-Control-Allow-Origin"], Is.EqualTo("http://www.mysite.com/loupe/log"));
         }
 
         [Test]

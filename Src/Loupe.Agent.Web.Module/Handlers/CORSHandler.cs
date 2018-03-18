@@ -16,6 +16,7 @@
 // limitations under the License.
 // </copyright>
 
+using System;
 using System.Net;
 using System.Web;
 using Gibraltar.Agent;
@@ -72,10 +73,11 @@ namespace Loupe.Agent.Web.Module.Handlers
                             break;
                     }
                 }
-                catch (System.Exception ex)
+                catch (Exception ex)
                 {
+                    GC.KeepAlive(ex);
 #if DEBUG
-                    Log.Critical(ex, "Loupe.Internal", "Unable to handle CORS request due to " + ex.GetType(),
+                    Log.Error(ex, "Loupe.Internal", "Unable to handle CORS request due to " + ex.GetType(),
                         "Exception occurred trying to handle the {0} request of a CORS request\r\n{1}", context.Request.HttpMethod, ex.Message);
 #endif
                     context.Response.StatusCode = (int) HttpStatusCode.InternalServerError;
@@ -121,7 +123,19 @@ namespace Loupe.Agent.Web.Module.Handlers
         {
             if (!Configuration.GlobalAllowOrigin)
             {
-                context.Response.AddHeader("Access-Control-Allow-Origin", "*");
+                var origin = "*";
+
+                //make sure we don't add a duplicate CORS header.
+                var requestedOrigin = context.Request.Headers.Get("origin");
+                if (string.IsNullOrWhiteSpace(requestedOrigin) == false)
+                {
+                    origin = requestedOrigin;
+
+                    //and since we're being specific we can allow credentials.
+                    context.Response.AddHeader("Access-Control-Allow-Credentials", "true");
+                }
+
+                context.Response.AddHeader("Access-Control-Allow-Origin", origin);
             }
         }
 

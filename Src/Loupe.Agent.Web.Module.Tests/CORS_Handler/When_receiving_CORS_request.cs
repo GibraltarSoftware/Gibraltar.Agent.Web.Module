@@ -46,7 +46,7 @@ namespace Loupe.Agent.Web.Module.Tests.CORS_Handler
             var actual = Target.HandleRequest(HttpContext);
 
             Assert.That(actual, Is.False);
-            Assert.That(HttpResponse.Headers["Access-Control-Allow-Origin"], Is.EqualTo("*"));
+            Assert.That(HttpResponse.Headers["Access-Control-Allow-Origin"], Is.EqualTo("http://www.mysite.com/loupe/log"));
         }
 
         [Test]

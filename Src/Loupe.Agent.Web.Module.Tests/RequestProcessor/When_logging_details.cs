@@ -95,7 +95,7 @@ namespace Loupe.Agent.Web.Module.Tests.Controller
 
             Assert.That(loggedMessage, Is.Not.Null);
 
-            Assert.That(loggedMessage.Details, Is.Not.StringContaining("<TimeStamp>01/01/0001 00:00:00 +00:00</TimeStamp>"));            
+            Assert.That(loggedMessage.Details, Does.Not.Contain("<TimeStamp>01/01/0001 00:00:00 +00:00</TimeStamp>"));            
         }
 
         [Test]
@@ -264,7 +264,7 @@ namespace Loupe.Agent.Web.Module.Tests.Controller
 
             Assert.That(loggedMessage, Is.Not.Null);
             
-            Assert.That(loggedMessage.Details, Is.Not.StringContaining("<SessionId>"));
+            Assert.That(loggedMessage.Details, Does.Not.Contain("<SessionId>"));
         }
 
         [Test]

@@ -6,15 +6,15 @@ namespace Loupe.Agent.Web.Module.Tests
     [SetUpFixture]
     public class AssemblySetup
     {
-        [SetUp]
+        [OneTimeSetUp]
         public void Setup()
         {
             Log.Initializing += Log_Initializing;
 
-            Log.StartSession("Start Http Module Test Suite");
+            Log.StartSession("Start HTTP Module Test Suite");
         }
 
-        [TearDown]
+        [OneTimeTearDown]
         public void TearDown()
         {
             Log.EndSession("Test suite complete.");
@@ -23,7 +23,7 @@ namespace Loupe.Agent.Web.Module.Tests
         void Log_Initializing(object sender, LogInitializingEventArgs e)
         {
             var publisherConfig = e.Configuration.Publisher;
-            publisherConfig.ApplicationDescription = "Http Module Unit Tests";
+            publisherConfig.ApplicationDescription = "HTTp Module Unit Tests";
             publisherConfig.ApplicationName = "Unit Tests";
             publisherConfig.ProductName = "Loupe.Agent.Web.Module";
             publisherConfig.EnvironmentName = "Development";
