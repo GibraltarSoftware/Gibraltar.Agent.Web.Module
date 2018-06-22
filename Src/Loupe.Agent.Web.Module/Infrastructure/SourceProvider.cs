@@ -47,6 +47,7 @@ namespace Loupe.Agent.Web.Module.Infrastructure
             if (message.MethodSourceInfo != null && !message.MethodSourceInfo.IsEmpty())
             {
                 sourceProvider.FileName = message.MethodSourceInfo.File;
+                sourceProvider.ClassName = message.MethodSourceInfo.Class;
                 sourceProvider.MethodName = message.MethodSourceInfo.Method;
                 if (message.MethodSourceInfo.Line.HasValue)
                 {
