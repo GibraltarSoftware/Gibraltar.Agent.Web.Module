@@ -28,6 +28,12 @@ namespace Loupe.Agent.Web.Module.Models
         public string File { get; set; }
 
         /// <summary>
+        /// Class that the error occured in
+        /// </summary>
+        /// <value>The class.</value>
+        public string Class { get; set; }
+
+        /// <summary>
         /// Function that was being executed when error occurred
         /// </summary>
         public string Method { get; set; }
