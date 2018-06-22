@@ -18,6 +18,6 @@ using System.Runtime.InteropServices;
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 [assembly: Guid("91ed3e99-b693-4291-bb93-793ceaa7416b")]
 [assembly: AssemblyVersion("4.5.0.0")]
-[assembly: AssemblyFileVersion("4.6.4.0")]
-[assembly: AssemblyInformationalVersion("4.6.4.0")]
+[assembly: AssemblyFileVersion("4.6.5.0")]
+[assembly: AssemblyInformationalVersion("4.6.5.0")]
 [assembly: InternalsVisibleTo("Loupe.Agent.Web.Module.Tests")]

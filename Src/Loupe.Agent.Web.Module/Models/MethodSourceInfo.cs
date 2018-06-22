@@ -50,7 +50,10 @@ namespace Loupe.Agent.Web.Module.Models
 
         public bool IsEmpty()
         {
-            return string.IsNullOrWhiteSpace(File) && string.IsNullOrWhiteSpace(Method) && !Line.HasValue && !Column.HasValue;
+            return string.IsNullOrWhiteSpace(File) 
+                   && string.IsNullOrWhiteSpace(Class) 
+                   && string.IsNullOrWhiteSpace(Method) 
+                   && !Line.HasValue && !Column.HasValue;
         }
     }
 }
