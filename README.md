@@ -14,13 +14,15 @@ You can install it directly from nuget [here](https://www.nuget.org/packages/Lou
 Using the Module
 ---------------
 
-If you install the module via Nuget there is nothing you need to do, if you wish to build it yourself and add it to an existing system manually then you need to alter the web cofig and add the following to the ```<system.webServer><modules>``` section: ```<add name="Loupe.JSLogging" type="Loupe.Agent.Web.Module.Logging" />```
+If you install the module via Nuget there is nothing you need to do, if you wish to build it yourself
+and add it to an existing system manually then you need to alter the web cofig and add the following to
+the ```<system.webServer><modules>``` section: ```<add name="Loupe.JSLogging" type="Loupe.Agent.Web.Module.Logging" />```
 
 
 Building the Agent
 ------------------
 
-This project is designed for use with Visual Studio 2013 with NuGet package restore enabled.
+This project is designed for use with Visual Studio 2017 with NuGet package restore enabled.
 When you build it the first time it will retrieve dependencies from NuGet.
 
 Contributing
