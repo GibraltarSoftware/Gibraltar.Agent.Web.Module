@@ -107,6 +107,9 @@ namespace Loupe.Agent.Web.Module.DetailBuilders
                 return null;
             }
 
+            if (logMessage.Details.Equals("null", StringComparison.OrdinalIgnoreCase))
+                return null; //we've seen this in the JSON...
+
             try
             {
                 return JObjectToXmlString(logMessage.Details);
