@@ -10,14 +10,14 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Gibraltar Software, Inc.")]
 [assembly: AssemblyProduct("Loupe")]
-[assembly: AssemblyCopyright("Copyright © 2015 - 2018 Gibraltar Software, Inc.")]
+[assembly: AssemblyCopyright("Copyright © 2015 - 2020 Gibraltar Software, Inc.")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 [assembly: Guid("91ed3e99-b693-4291-bb93-793ceaa7416b")]
-[assembly: AssemblyVersion("4.7.0.0")]
-[assembly: AssemblyFileVersion("4.7.10.0")]
-[assembly: AssemblyInformationalVersion("4.7.10.0")]
+[assembly: AssemblyVersion("4.9.0.0")]
+[assembly: AssemblyFileVersion("4.9.5.0")]
+[assembly: AssemblyInformationalVersion("4.9.5.0")]
 [assembly: InternalsVisibleTo("Loupe.Agent.Web.Module.Tests")]
