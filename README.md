@@ -1,7 +1,7 @@
 Loupe Agent Web Module (Moved to Gibraltar.Agent)
 ===================
 
-**This repository has been merged with the [Gibraltar.Agent](https://github.com/GibraltarSoftware/Gibfraltar.Agent)
+**This repository has been merged with the [Gibraltar.Agent](https://github.com/GibraltarSoftware/Gibraltar.Agent)
 Repository and is now maintained there.**
 
 This module enables you to not only utilise a [Loupe JavaScript agent](https://github.com/GibraltarSoftware/Gibraltar.Agent.Web.JavaScript)
